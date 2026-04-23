@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="cineseat.client/cineseat.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="CineSeat.Server/CineSeat.Server.csproj" />
+</Solution>
