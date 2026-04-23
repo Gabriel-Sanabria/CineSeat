@@ -9,7 +9,10 @@
 
 - **C#** — Lenguaje de programación del backend
 - **ASP.NET Core 10** — Framework Web API
-- **Entity Framework Core** — ORM code-first con SQL Server
+- **Entity Framework Core 10.0.7** — ORM code-first con SQL Server
+  - `Microsoft.EntityFrameworkCore` 10.0.7
+  - `Microsoft.EntityFrameworkCore.SqlServer` 10.0.7
+  - `Microsoft.EntityFrameworkCore.Tools` 10.0.7
 - **TypeScript** — Lenguaje de programación del frontend
 - **Angular 18** — Framework SPA con NgModules
 - **SQL Server** — Base de datos relacional
@@ -84,7 +87,11 @@ CineSeat/
 ### Pasos para Ejecutar
 
 1. Clona este repositorio
-2. Configura la cadena de conexión en `CineSeat.Server/appsettings.Development.json`:
+2. Instala las dependencias del backend:
+```bash
+dotnet restore --project CineSeat.Server
+```
+3. Configura la cadena de conexión en `CineSeat.Server/appsettings.Development.json`:
 ```json
 {
   "ConnectionStrings": {
@@ -92,15 +99,15 @@ CineSeat/
   }
 }
 ```
-3. Aplica las migraciones para crear la base de datos:
+4. Aplica las migraciones para crear la base de datos:
 ```bash
 dotnet ef database update --project CineSeat.Server
 ```
-4. Instala las dependencias del cliente:
+5. Instala las dependencias del cliente:
 ```bash
 cd cineseat.client && npm install
 ```
-5. Ejecuta la aplicación:
+6. Ejecuta la aplicación:
 ```bash
 dotnet run --project CineSeat.Server
 ```
