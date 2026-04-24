@@ -13,6 +13,7 @@
   - `Microsoft.EntityFrameworkCore` 10.0.7
   - `Microsoft.EntityFrameworkCore.SqlServer` 10.0.7
   - `Microsoft.EntityFrameworkCore.Tools` 10.0.7
+- **BCrypt.Net-Next 4.1.0** — Hash seguro de contraseñas
 - **TypeScript** — Lenguaje de programación del frontend
 - **Angular 18** — Framework SPA con NgModules
 - **SQL Server** — Base de datos relacional
@@ -58,6 +59,7 @@ CineSeat/
 │   ├── Controllers/               # Endpoints HTTP
 │   ├── Services/                  # Lógica de negocio (interfaces + implementaciones)
 │   ├── Models/                    # Entidades EF Core
+    ├── Data/                      # Contexto de base de datos y migraciones
 │   ├── DTOs/                      # Contratos de la API (Request / Response)
 │   ├── Program.cs                 # Configuración y arranque
 │   └── appsettings.json           # Configuración general
@@ -95,7 +97,7 @@ dotnet restore --project CineSeat.Server
 ```json
 {
   "ConnectionStrings": {
-    "CineSeat": "Server=localhost;Database=CineSeat;Trusted_Connection=True;"
+    "CineSeat": "Server=localhost;Database=CineSeat;Trusted_Connection=True;TrustServerCertificate=True;"
   }
 }
 ```
