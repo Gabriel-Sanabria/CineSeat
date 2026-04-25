@@ -1,0 +1,48 @@
+<app-navbar activo="cartelera" [emailUsuario]="emailUsuario"></app-navbar>
+
+<main class="pagina-cartelera">
+
+  <!-- Encabezado -->
+  <div class="pagina-cartelera__header">
+    <div>
+      <h1 class="titulo-display titulo-cartelera">Cartelera</h1>
+      <p class="pagina-cartelera__subtitulo">Selecciona una película y elige tu función</p>
+    </div>
+  </div>
+
+  <!-- Barra de filtros -->
+  <div class="barra-filtros">
+    <div class="campo-busqueda">
+      <app-icono nombre="search" [tamano]="16" class="campo-busqueda__icono"></app-icono>
+      <input
+        name="busqueda"
+        type="text"
+        class="campo-busqueda__input"
+        placeholder="Buscar película..."
+        [(ngModel)]="textoBusqueda"
+      >
+    </div>
+
+    <div class="chips-genero">
+      <button
+        *ngFor="let genero of generos"
+        class="chip-genero"
+        [class.chip-genero--activo]="generoSeleccionado === genero"
+        (click)="filtrarPorGenero(genero)"
+        type="button"
+      >{{ genero }}</button>
+    </div>
+  </div>
+
+  <!-- Grid de películas -->
+  <div class="grid-peliculas">
+    <app-movie-card
+      *ngFor="let pelicula of peliculas"
+      [pelicula]="pelicula"
+      modo="ver"
+      (clickAccion)="verDetalle($event)"
+    ></app-movie-card>
+  </div>
+
+</main>
+

@@ -1,0 +1,238 @@
+<app-navbar activo="peliculas" [emailUsuario]="emailUsuario"></app-navbar>
+
+<main class="pagina-crear">
+
+  <!-- Barra superior -->
+  <div class="crear-topbar">
+    <button class="btn btn-ghost btn-sm btn-volver" (click)="volver()" type="button">
+      ← Volver
+    </button>
+    <h2 class="crear-topbar__titulo titulo-gold">
+      <span *ngIf="!modoEdicion">Nueva Película</span>
+      <span *ngIf="modoEdicion">Editar: {{ pelicula?.titulo }}</span>
+    </h2>
+    <div class="crear-topbar__acciones">
+      <button
+        *ngIf="modoEdicion"
+        class="btn btn-danger btn-sm"
+        (click)="eliminarPelicula()"
+        type="button"
+      >
+        <app-icono nombre="trash" [tamano]="14"></app-icono>
+        Eliminar
+      </button>
+      <button class="btn btn-ghost btn-sm" (click)="cancelar()" type="button">
+        Cancelar
+      </button>
+      <button class="btn btn-gold btn-sm" (click)="guardar()" type="button">
+        <app-icono nombre="check" [tamano]="14"></app-icono>
+        Guardar
+      </button>
+    </div>
+  </div>
+
+  <!-- Layout principal -->
+  <div class="crear-layout">
+
+    <!-- COLUMNA IZQUIERDA -->
+    <div class="crear-columna-izq">
+
+      <!-- Card: Información general -->
+      <div class="card-form">
+        <h3 class="card-form__titulo titulo-gold">Información general</h3>
+
+        <form #formPelicula="ngForm" novalidate>
+
+          <!-- Título -->
+          <div class="campo">
+            <label class="campo-label" for="titulo">Título</label>
+            <input
+              id="titulo"
+              name="titulo"
+              type="text"
+              class="campo-input"
+              placeholder="Nombre de la película"
+              [(ngModel)]="pelicula.titulo"
+              required
+              #tituloCtrl="ngModel"
+            >
+            <span class="campo-error" *ngIf="tituloCtrl.invalid && tituloCtrl.touched">
+              Título requerido
+            </span>
+          </div>
+
+          <!-- Fila: Género · Duración · Clasificación -->
+          <div class="campos-fila">
+            <div class="campo">
+              <label class="campo-label" for="genero">Género</label>
+              <select id="genero" name="genero" class="campo-select" [(ngModel)]="pelicula.genero">
+                <option value="">Seleccionar...</option>
+                <option *ngFor="let g of generos" [value]="g">{{ g }}</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label class="campo-label" for="duracion">Duración</label>
+              <input
+                id="duracion"
+                name="duracion"
+                type="text"
+                class="campo-input"
+                placeholder="2h 00m"
+                [(ngModel)]="pelicula.duracion"
+              >
+            </div>
+            <div class="campo campo--clasificacion">
+              <label class="campo-label" for="clasificacion">Clasif.</label>
+              <select id="clasificacion" name="clasificacion" class="campo-select" [(ngModel)]="pelicula.clasificacion">
+                <option value="">—</option>
+                <option value="G">G</option>
+                <option value="PG">PG</option>
+                <option value="PG-13">PG-13</option>
+                <option value="R">R</option>
+                <option value="NC-17">NC-17</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Director -->
+          <div class="campo">
+            <label class="campo-label" for="director">Director</label>
+            <input
+              id="director"
+              name="director"
+              type="text"
+              class="campo-input"
+              placeholder="Nombre del director"
+              [(ngModel)]="pelicula.director"
+            >
+          </div>
+
+          <!-- Sinopsis -->
+          <div class="campo">
+            <label class="campo-label" for="sinopsis">Sinopsis</label>
+            <textarea
+              id="sinopsis"
+              name="sinopsis"
+              class="campo-textarea"
+              rows="4"
+              placeholder="Descripción de la película..."
+              [(ngModel)]="pelicula.sinopsis"
+            ></textarea>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Card: Portada -->
+      <div class="card-form">
+        <h3 class="card-form__titulo titulo-gold">Portada</h3>
+
+        <div class="portada-preview">
+          <app-movie-poster
+            [titulo]="pelicula?.titulo || ''"
+            [genero]="pelicula?.genero || ''"
+            [ancho]="90"
+            [alto]="130"
+          ></app-movie-poster>
+
+          <div class="zona-drop">
+            <app-icono nombre="upload" [tamano]="28" class="zona-drop__icono"></app-icono>
+            <p class="zona-drop__texto">Arrastra imagen o</p>
+            <button class="btn btn-dark btn-sm" (click)="subirArchivo()" type="button">
+              Subir archivo
+            </button>
+            <p class="zona-drop__hint">JPG / PNG · mín. 500×700px</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COLUMNA DERECHA: Funciones -->
+    <div class="crear-columna-der">
+      <div class="card-form">
+        <h3 class="card-form__titulo titulo-gold">Funciones</h3>
+
+        <!-- Lista de funciones -->
+        <div class="lista-funciones-crear" *ngIf="pelicula.funciones && pelicula.funciones.length > 0">
+          <div class="funcion-item" *ngFor="let funcion of pelicula.funciones; let i = index">
+
+            <div class="funcion-item__cabecera">
+              <span class="funcion-item__numero">Función {{ i + 1 }}</span>
+              <button class="btn-eliminar-funcion" (click)="eliminarFuncion(i)" type="button" title="Eliminar función">
+                <app-icono nombre="trash" [tamano]="14"></app-icono>
+              </button>
+            </div>
+
+            <!-- Fecha y Hora -->
+            <div class="campos-fila">
+              <div class="campo">
+                <label class="campo-label">Fecha</label>
+                <input
+                  [name]="'fecha_' + i"
+                  type="date"
+                  class="campo-input"
+                  [(ngModel)]="funcion.fecha"
+                >
+              </div>
+              <div class="campo">
+                <label class="campo-label">Hora</label>
+                <input
+                  [name]="'hora_' + i"
+                  type="time"
+                  class="campo-input"
+                  [(ngModel)]="funcion.hora"
+                >
+              </div>
+            </div>
+
+            <!-- Tipo de sala -->
+            <div class="campo">
+              <label class="campo-label">Tipo de sala</label>
+              <div class="selector-tipo-sala">
+                <button
+                  *ngFor="let tipo of tiposSala"
+                  class="btn-tipo-sala"
+                  [class.btn-tipo-sala--activo]="funcion.tipo === tipo.valor"
+                  (click)="funcion.tipo = tipo.valor"
+                  type="button"
+                >{{ tipo.etiqueta }}</button>
+              </div>
+            </div>
+
+            <!-- Precio -->
+            <div class="campo">
+              <label class="campo-label">Precio por boleto</label>
+              <div class="precio-funcion">
+                <span class="precio-funcion__simbolo">$</span>
+                <input
+                  [name]="'precio_' + i"
+                  type="number"
+                  class="campo-input"
+                  [(ngModel)]="funcion.precio"
+                  min="0"
+                >
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Sin funciones -->
+        <p class="sin-funciones" *ngIf="!pelicula.funciones || pelicula.funciones.length === 0">
+
+          Aún no hay funciones programadas.
+        </p>
+
+        <!-- Botón agregar función -->
+        <button class="btn btn-dark btn-agregar-funcion" (click)="agregarFuncion()" type="button">
+          <app-icono nombre="plus" [tamano]="14"></app-icono>
+          Agregar función
+        </button>
+
+      </div>
+    </div>
+
+  </div>
+
+</main>

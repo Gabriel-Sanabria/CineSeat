@@ -1,0 +1,33 @@
+<nav class="barra-navegacion">
+  <a class="barra-navegacion__marca" routerLink="/cartelera">
+    <app-icono nombre="film" [tamano]="22" class="icono-logo"></app-icono>
+    <span class="barra-navegacion__titulo">CineSeat</span>
+  </a>
+
+  <div class="barra-navegacion__tabs">
+    <a
+      routerLink="/cartelera"
+      class="tab-nav"
+      [class.tab-nav--activo]="activo === 'cartelera'"
+    >Cartelera</a>
+    <a
+      routerLink="/peliculas"
+      class="tab-nav"
+      [class.tab-nav--activo]="activo === 'peliculas'"
+    >Películas</a>
+    <a
+      routerLink="/dashboard"
+      class="tab-nav"
+      [class.tab-nav--activo]="activo === 'dashboard'"
+    >Dashboard</a>
+  </div>
+
+  <div class="barra-navegacion__usuario">
+    <app-icono nombre="user" [tamano]="16"></app-icono>
+    <span class="usuario-email">{{ emailUsuario }}</span>
+    <button class="btn-cerrar-sesion" (click)="cerrarSesion()" title="Cerrar sesión">
+      <app-icono nombre="logout" [tamano]="16"></app-icono>
+    </button>
+  </div>
+</nav>
+

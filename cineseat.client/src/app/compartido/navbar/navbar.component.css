@@ -1,0 +1,90 @@
+.barra-navegacion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--gold-dim);
+  padding: 0 40px;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.barra-navegacion__marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--gold);
+}
+
+.icono-logo {
+  color: var(--gold);
+}
+
+.barra-navegacion__titulo {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 2px;
+}
+
+.barra-navegacion__tabs {
+  display: flex;
+  gap: 4px;
+  height: 100%;
+  align-items: center;
+}
+
+.tab-nav {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tab-nav:hover {
+  color: var(--cream);
+}
+
+.tab-nav--activo {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+.barra-navegacion__usuario {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--cream-dim);
+}
+
+.usuario-email {
+  font-size: 13px;
+}
+
+.btn-cerrar-sesion {
+  background: transparent;
+  border: none;
+  color: var(--cream-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 3px;
+  transition: color 0.2s;
+}
+
+.btn-cerrar-sesion:hover {
+  color: var(--gold);
+}

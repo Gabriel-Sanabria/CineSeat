@@ -1,0 +1,199 @@
+<app-navbar activo="cartelera" [emailUsuario]="emailUsuario"></app-navbar>
+
+<div class="pagina-reserva" *ngIf="!reservaConfirmada">
+
+  <!-- Layout principal -->
+  <div class="reserva-layout">
+
+    <!-- COLUMNA IZQUIERDA: selección de asientos -->
+    <div class="reserva-asientos">
+
+      <!-- Encabezado con botón volver -->
+      <button class="btn btn-ghost btn-sm btn-volver" (click)="volver()" type="button">
+        ← {{ pelicula?.titulo }} · {{ funcion?.hora }} {{ funcion?.sala }}
+      </button>
+
+      <h2 class="reserva-titulo titulo-display">Selecciona tus asientos</h2>
+
+      <!-- Pantalla simulada -->
+      <div class="pantalla-cine">
+        <div class="pantalla-cine__linea"></div>
+        <span class="pantalla-cine__label">PANTALLA</span>
+      </div>
+
+      <!-- Grid de asientos -->
+      <div class="grilla-asientos">
+        <!-- Fila de números de columna -->
+        <div class="grilla-asientos__fila grilla-asientos__fila--numeros">
+          <span class="grilla-asientos__etiqueta-fila"></span>
+          <span class="grilla-asientos__num-col" *ngFor="let col of columnas">{{ col }}</span>
+          <span class="grilla-asientos__etiqueta-fila"></span>
+        </div>
+
+        <div class="grilla-asientos__fila" *ngFor="let fila of filas">
+          <span class="grilla-asientos__etiqueta-fila">{{ fila }}</span>
+
+          <button
+            *ngFor="let col of columnas"
+            class="asiento"
+            [class.asiento--libre]="!estaOcupado(fila, col) && !estaSeleccionado(fila, col)"
+            [class.asiento--ocupado]="estaOcupado(fila, col)"
+            [class.asiento--elegido]="estaSeleccionado(fila, col)"
+            [disabled]="estaOcupado(fila, col)"
+            (click)="toggleAsiento(fila, col)"
+            type="button"
+          >{{ col }}</button>
+
+          <span class="grilla-asientos__etiqueta-fila">{{ fila }}</span>
+        </div>
+      </div>
+
+      <!-- Leyenda -->
+      <div class="leyenda-asientos">
+        <div class="leyenda-asientos__item">
+          <div class="muestra-asiento muestra-asiento--libre"></div>
+          <span>Libre</span>
+        </div>
+        <div class="leyenda-asientos__item">
+          <div class="muestra-asiento muestra-asiento--elegido"></div>
+          <span>Seleccionado</span>
+        </div>
+        <div class="leyenda-asientos__item">
+          <div class="muestra-asiento muestra-asiento--ocupado"></div>
+          <span>Ocupado</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COLUMNA DERECHA: panel de pago -->
+    <div class="panel-pago">
+
+      <!-- Encabezado del panel -->
+      <div class="panel-pago__header">
+        <h3 class="panel-pago__titulo titulo-gold">Resumen</h3>
+        <p class="panel-pago__funcion">{{ funcion?.hora }} · {{ funcion?.sala }} · {{ funcion?.tipo }}</p>
+      </div>
+
+      <!-- Resumen de costos -->
+      <div class="panel-pago__resumen">
+        <div class="resumen-fila">
+          <span>{{ asientosSeleccionados.length }} boleto(s) × ${{ precioBoleto }}</span>
+          <span>${{ asientosSeleccionados.length * precioBoleto }}</span>
+        </div>
+        <div class="resumen-fila">
+          <span>Cargo de servicio (10%)</span>
+          <span>${{ cargoServicio }}</span>
+        </div>
+        <div class="resumen-fila resumen-fila--total">
+          <span>Total</span>
+          <span class="resumen-total">${{ total }}</span>
+        </div>
+      </div>
+
+      <!-- Chips de asientos seleccionados -->
+      <div class="asientos-chips" *ngIf="asientosSeleccionados.length > 0">
+        <span
+          *ngFor="let asiento of asientosSeleccionados"
+          class="chip-asiento"
+        >{{ asiento }}</span>
+      </div>
+      <p class="sin-asientos" *ngIf="asientosSeleccionados.length === 0">
+        Selecciona al menos un asiento
+      </p>
+
+      <!-- Formulario de tarjeta -->
+      <form class="form-pago" (ngSubmit)="pagar()" #formPago="ngForm" novalidate>
+        <div class="campo">
+          <label class="campo-label" for="num-tarjeta">Número de tarjeta</label>
+          <input
+            id="num-tarjeta"
+            name="numeroTarjeta"
+            type="text"
+            class="campo-input"
+            placeholder="1234 5678 9012 3456"
+            [(ngModel)]="numeroTarjeta"
+            maxlength="19"
+            required
+            #numTarjetaCtrl="ngModel"
+          >
+          <span class="campo-error" *ngIf="numTarjetaCtrl.invalid && numTarjetaCtrl.touched">
+            Número requerido
+          </span>
+        </div>
+
+        <div class="form-pago__fila">
+          <div class="campo">
+            <label class="campo-label" for="vencimiento">MM/AA</label>
+            <input
+              id="vencimiento"
+              name="vencimientoTarjeta"
+              type="text"
+              class="campo-input"
+              placeholder="MM/AA"
+              [(ngModel)]="vencimientoTarjeta"
+              maxlength="5"
+              required
+              #vencimientoCtrl="ngModel"
+            >
+          </div>
+          <div class="campo">
+            <label class="campo-label" for="cvv">CVV</label>
+            <input
+              id="cvv"
+              name="cvvTarjeta"
+              type="text"
+              class="campo-input"
+              placeholder="123"
+              [(ngModel)]="cvvTarjeta"
+              maxlength="3"
+              required
+              #cvvCtrl="ngModel"
+            >
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-gold btn-pagar"
+          [disabled]="asientosSeleccionados.length === 0"
+        >
+          Pagar ${{ total }}
+        </button>
+      </form>
+
+      <!-- Nota de pago simulado -->
+      <p class="nota-pago-simulado">
+        <app-icono nombre="lock" [tamano]="12"></app-icono>
+        Pago simulado — no se realiza ningún cobro
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Vista de éxito (tras reserva confirmada) -->
+<div class="reserva-exito" *ngIf="reservaConfirmada">
+  <app-icono nombre="ticket" [tamano]="56" class="exito-icono"></app-icono>
+  <h2 class="exito-titulo titulo-display">¡Reserva confirmada!</h2>
+  <p class="exito-mensaje">
+    Tu reserva para <strong>{{ pelicula?.titulo }}</strong> a las
+    <strong>{{ funcion?.hora }}</strong> en <strong>{{ funcion?.sala }}</strong>
+    ha sido procesada exitosamente.
+  </p>
+  <div class="exito-asientos">
+    <span *ngFor="let asiento of asientosSeleccionados" class="chip-asiento chip-asiento--exito">
+      {{ asiento }}
+    </span>
+  </div>
+  <div class="exito-acciones">
+    <button class="btn btn-ghost btn-md" (click)="volverACartelera()" type="button">
+      Volver a cartelera
+    </button>
+    <button class="btn btn-gold btn-md" (click)="nuevaReserva()" type="button">
+      Nueva reserva
+    </button>
+  </div>
+</div>

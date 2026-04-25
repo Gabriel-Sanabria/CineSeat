@@ -1,0 +1,126 @@
+<div class="pagina-login">
+  <!-- Gradiente decorativo superior -->
+  <div class="pagina-login__gradiente"></div>
+
+  <!-- Línea dorada superior -->
+  <div class="pagina-login__linea-top"></div>
+
+  <!-- Card central -->
+  <div class="card-login">
+
+    <!-- Encabezado -->
+    <div class="card-login__header">
+      <app-icono nombre="film" [tamano]="48" class="card-login__icono"></app-icono>
+      <h1 class="card-login__titulo">CineSeat</h1>
+      <p class="card-login__subtitulo">Tu butaca te espera</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="card-login__tabs">
+      <button
+        class="card-login__tab"
+        [class.card-login__tab--activo]="tabActiva === 'login'"
+        (click)="cambiarTab('login')"
+        type="button"
+      >Iniciar sesión</button>
+      <button
+        class="card-login__tab"
+        [class.card-login__tab--activo]="tabActiva === 'registro'"
+        (click)="cambiarTab('registro')"
+        type="button"
+      >Registro</button>
+    </div>
+
+    <!-- Formulario de inicio de sesión -->
+    <form
+      *ngIf="tabActiva === 'login'"
+      class="card-login__form"
+      (ngSubmit)="iniciarSesion()"
+      #formLogin="ngForm"
+      novalidate
+    >
+      <div class="campo">
+        <label class="campo-label" for="correo-login">Correo electrónico</label>
+        <input
+          id="correo-login"
+          name="correoLogin"
+          type="email"
+          class="campo-input"
+          placeholder="usuario@email.com"
+          [(ngModel)]="correoLogin"
+          required
+          #correoLoginCtrl="ngModel"
+        >
+        <span class="campo-error" *ngIf="correoLoginCtrl.invalid && correoLoginCtrl.touched">
+          Correo requerido
+        </span>
+      </div>
+
+      <div class="campo">
+        <label class="campo-label" for="contrasena-login">Contraseña</label>
+        <input
+          id="contrasena-login"
+          name="contrasenaLogin"
+          type="password"
+          class="campo-input"
+          placeholder="••••••••"
+          [(ngModel)]="contrasenaLogin"
+          required
+          #contrasenaLoginCtrl="ngModel"
+        >
+        <span class="campo-error" *ngIf="contrasenaLoginCtrl.invalid && contrasenaLoginCtrl.touched">
+          Contraseña requerida
+        </span>
+      </div>
+
+      <button type="submit" class="btn btn-gold btn-login">Entrar</button>
+    </form>
+
+    <!-- Formulario de registro -->
+    <form
+      *ngIf="tabActiva === 'registro'"
+      class="card-login__form"
+      (ngSubmit)="registrar()"
+      #formRegistro="ngForm"
+      novalidate
+    >
+      <div class="campo">
+        <label class="campo-label" for="correo-registro">Correo electrónico</label>
+        <input
+          id="correo-registro"
+          name="correoRegistro"
+          type="email"
+          class="campo-input"
+          placeholder="usuario@email.com"
+          [(ngModel)]="correoRegistro"
+          required
+          #correoRegistroCtrl="ngModel"
+        >
+        <span class="campo-error" *ngIf="correoRegistroCtrl.invalid && correoRegistroCtrl.touched">
+          Correo requerido
+        </span>
+      </div>
+
+      <div class="campo">
+        <label class="campo-label" for="contrasena-registro">Contraseña</label>
+        <input
+          id="contrasena-registro"
+          name="contrasenaRegistro"
+          type="password"
+          class="campo-input"
+          placeholder="••••••••"
+          [(ngModel)]="contrasenaRegistro"
+          required
+          #contrasenaRegistroCtrl="ngModel"
+        >
+        <span class="campo-error" *ngIf="contrasenaRegistroCtrl.invalid && contrasenaRegistroCtrl.touched">
+          Contraseña requerida
+        </span>
+      </div>
+
+      <button type="submit" class="btn btn-gold btn-login">Crear cuenta</button>
+    </form>
+
+  </div>
+</div>
+

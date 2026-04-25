@@ -1,0 +1,39 @@
+<div class="tarjeta-pelicula">
+
+  <!-- Tiras absolutas que cubren la altura completa -->
+  <div class="tira-pelicula tira-pelicula--izq"></div>
+  <div class="tira-pelicula tira-pelicula--der"></div>
+
+  <!-- Contenido centrado con margen para las tiras -->
+  <div class="tarjeta-pelicula__contenido">
+
+    <app-movie-poster
+      [titulo]="pelicula?.titulo || ''"
+      [genero]="pelicula?.genero || ''"
+      [ancho]="192"
+      [alto]="288"
+    ></app-movie-poster>
+
+    <div class="tarjeta-pelicula__info">
+      <h3 class="tarjeta-pelicula__titulo">{{ pelicula?.titulo }}</h3>
+      <p class="tarjeta-pelicula__meta">
+        <span>{{ pelicula?.genero }}</span>
+        <span class="separador">·</span>
+        <span>{{ pelicula?.duracion }}</span>
+      </p>
+
+      <button
+        class="btn tarjeta-pelicula__btn"
+        [class.btn-gold]="modo === 'ver'"
+        [class.btn-cream]="modo === 'editar'"
+        (click)="accionClick()"
+      >
+        <app-icono *ngIf="modo === 'ver'" nombre="ticket" [tamano]="14"></app-icono>
+        <app-icono *ngIf="modo === 'editar'" nombre="edit" [tamano]="14"></app-icono>
+        <span *ngIf="modo === 'ver'">Ver funciones</span>
+        <span *ngIf="modo === 'editar'">Editar</span>
+      </button>
+    </div>
+
+  </div>
+</div>

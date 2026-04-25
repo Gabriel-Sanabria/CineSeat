@@ -40,15 +40,6 @@ namespace CineSeat.Server.Controllers {
             throw new NotImplementedException();
         }
 
-        // PUT api/usuarios/{id}
-        [HttpPut("{id}")]
-        public async Task<ActionResult<UsuarioRespuestaDTO>> Actualizar(int id, [FromBody] UsuarioCrearDTO dto) {
-            // TODO: Llamar a _servicioUsuarios.Actualizar(id, dto).
-            //       Si retorna null, retornar NotFound().
-            //       Si existe, retornar Ok(resultado).
-            throw new NotImplementedException();
-        }
-
         // DELETE api/usuarios/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> Eliminar(int id) {

@@ -1,0 +1,91 @@
+<app-navbar activo="cartelera" [emailUsuario]="emailUsuario"></app-navbar>
+
+<div class="pagina-detalle">
+
+  <!-- Hero con info de la película -->
+  <div class="detalle-hero">
+    <button class="btn btn-ghost btn-sm btn-volver" (click)="volver()">
+      ← Volver a cartelera
+    </button>
+
+    <div class="detalle-hero__contenido">
+      <!-- Poster -->
+      <app-movie-poster
+        [titulo]="pelicula?.titulo || ''"
+        [genero]="pelicula?.genero || ''"
+        [ancho]="180"
+        [alto]="260"
+      ></app-movie-poster>
+
+      <!-- Info -->
+      <div class="detalle-info">
+        <div class="detalle-info__badges">
+          <app-badge>{{ pelicula?.genero }}</app-badge>
+          <app-badge>{{ pelicula?.clasificacion }}</app-badge>
+        </div>
+
+        <h1 class="detalle-info__titulo titulo-display">{{ pelicula?.titulo }}</h1>
+
+        <p class="detalle-info__meta">
+          {{ pelicula?.duracion }} · Dir. {{ pelicula?.director }}
+        </p>
+
+        <!-- Estrellas -->
+        <div class="detalle-info__estrellas">
+          <app-icono
+            *ngFor="let e of estrellas"
+            nombre="star"
+            [tamano]="16"
+            class="estrella"
+            [class.estrella--llena]="e <= (pelicula?.calificacion / 2)"
+          ></app-icono>
+          <span class="detalle-info__rating">{{ pelicula?.calificacion }}</span>
+        </div>
+
+        <p class="detalle-info__sinopsis">{{ pelicula?.sinopsis }}</p>
+      </div>
+
+      <!-- Panel de funciones -->
+      <div class="panel-funciones">
+        <h3 class="panel-funciones__titulo titulo-gold">Selecciona función</h3>
+
+        <div class="campo">
+          <label class="campo-label">Fecha</label>
+          <input
+            name="fechaSeleccionada"
+            type="date"
+            class="campo-input"
+            [(ngModel)]="fechaSeleccionada"
+          >
+        </div>
+
+        <div class="lista-funciones">
+          <button
+            *ngFor="let funcion of funciones"
+            class="boton-funcion"
+            [class.boton-funcion--activo]="funcionSeleccionada?.id === funcion.id"
+            (click)="seleccionarFuncion(funcion)"
+            type="button"
+          >
+            <span class="boton-funcion__hora">{{ funcion.hora }}</span>
+            <span class="boton-funcion__sala">{{ funcion.sala }} · {{ funcion.tipo }}</span>
+            <span class="boton-funcion__asientos">{{ funcion.asientosDisponibles }} disponibles</span>
+            <span class="boton-funcion__precio">${{ funcion.precio }}</span>
+          </button>
+        </div>
+
+        <button
+          *ngIf="funcionSeleccionada"
+          class="btn btn-gold btn-reservar"
+          (click)="irAReserva()"
+          type="button"
+        >
+          <app-icono nombre="ticket" [tamano]="16"></app-icono>
+          Reservar asientos
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+

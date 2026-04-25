@@ -1,0 +1,21 @@
+.separador-visual {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.separador-visual__linea {
+  flex: 1;
+  height: 1px;
+  background: var(--surface-3);
+}
+
+.separador-visual__etiqueta {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  white-space: nowrap;
+}

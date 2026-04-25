@@ -1,0 +1,150 @@
+.pagina-detalle {
+  min-height: calc(100vh - 56px);
+}
+
+.detalle-hero {
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--gold-dim);
+  padding: 32px 40px;
+}
+
+.btn-volver {
+  margin-bottom: 24px;
+  transition: box-shadow 0.25s, border-color 0.25s, color 0.25s;
+}
+
+.btn-volver:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  box-shadow: var(--glow-sm);
+}
+
+.detalle-hero__contenido {
+  display: grid;
+  grid-template-columns: auto 1fr 300px;
+  gap: 40px;
+  align-items: start;
+}
+
+/* Info de la película */
+.detalle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.detalle-info__badges {
+  display: flex;
+  gap: 8px;
+}
+
+.detalle-info__titulo {
+  font-size: 36px;
+  line-height: 1.2;
+}
+
+.detalle-info__meta {
+  font-size: 14px;
+  color: var(--cream-dim);
+}
+
+.detalle-info__estrellas {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.estrella {
+  color: var(--surface-3);
+}
+
+.estrella--llena {
+  color: var(--gold);
+}
+
+.detalle-info__rating {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-left: 8px;
+}
+
+.detalle-info__sinopsis {
+  font-size: 14px;
+  color: var(--cream-dim);
+  line-height: 1.7;
+}
+
+/* Panel de funciones */
+.panel-funciones {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel-funciones__titulo {
+  font-size: 16px;
+}
+
+.lista-funciones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.boton-funcion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--surface-3);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: border-color 0.25s, box-shadow 0.25s;
+  width: 100%;
+  text-align: left;
+}
+
+.boton-funcion:hover {
+  border-color: var(--gold);
+  box-shadow: var(--glow-md);
+}
+
+.boton-funcion--activo {
+  border-color: var(--gold);
+  background: rgba(201, 160, 55, 0.06);
+}
+
+.boton-funcion__hora {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.boton-funcion__sala {
+  font-size: 12px;
+  color: var(--cream-dim);
+}
+
+.boton-funcion__asientos {
+  font-size: 11px;
+  color: var(--cream-dim);
+  opacity: 0.7;
+}
+
+.boton-funcion__precio {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-top: 6px;
+}
+
+.btn-reservar {
+  width: 100%;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+}

@@ -5,23 +5,15 @@ namespace CineSeat.Server.Services {
 
     public class UsuarioServicio : IUsuarioServicio {
 
-        private readonly AppDBContext _contexto;
+        private readonly AppDBContext _contextoBD;
 
-        public UsuarioServicio(AppDBContext contexto) {
-            _contexto = contexto;
+        public UsuarioServicio(AppDBContext contextoBD) {
+            _contextoBD = contextoBD;
         }
 
         public async Task<UsuarioRespuestaDTO> Crear(UsuarioCrearDTO dto) {
             // TODO: Crear una nueva entidad Usuario a partir del dto.
             //       Agregar al contexto, guardar cambios y retornar el UsuarioRespuestaDTO con el Id generado.
-            throw new NotImplementedException();
-        }
-
-        public async Task<UsuarioRespuestaDTO?> Actualizar(int id, UsuarioCrearDTO dto) {
-            // TODO: Buscar el usuario por Id.
-            //       Si no existe, retornar null.
-            //       Si existe, actualizar sus propiedades con los valores del dto, guardar cambios
-            //       y retornar el UsuarioRespuestaDTO actualizado.
             throw new NotImplementedException();
         }
 

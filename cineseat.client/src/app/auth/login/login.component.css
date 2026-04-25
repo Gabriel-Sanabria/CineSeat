@@ -1,0 +1,128 @@
+.pagina-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 40px 20px;
+}
+
+/* Gradiente radial dorado en la parte superior */
+.pagina-login__gradiente {
+  position: fixed;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 600px;
+  background: radial-gradient(ellipse at center top, rgba(201, 160, 55, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Línea dorada horizontal en el tope */
+.pagina-login__linea-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  z-index: 1;
+}
+
+/* Card principal */
+.card-login {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface-1);
+  border: 1px solid var(--gold-dim);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.card-login__header {
+  text-align: center;
+  padding: 36px 32px 24px;
+  border-bottom: 1px solid var(--surface-3);
+}
+
+.card-login__icono {
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.card-login__titulo {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+
+.card-login__subtitulo {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+
+/* Tabs */
+.card-login__tabs {
+  display: flex;
+  border-bottom: 1px solid var(--surface-3);
+}
+
+.card-login__tab {
+  flex: 1;
+  padding: 14px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--cream-dim);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.card-login__tab:hover {
+  color: var(--cream);
+}
+
+.card-login__tab--activo {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+/* Formulario */
+.card-login__form {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo-error {
+  font-size: 11px;
+  color: #e05555;
+}
+
+.btn-login {
+  width: 100%;
+  justify-content: center;
+  padding: 12px;
+  font-size: 13px;
+  margin-top: 4px;
+}
