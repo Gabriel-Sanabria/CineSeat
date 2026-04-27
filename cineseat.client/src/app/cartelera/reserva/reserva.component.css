@@ -5,7 +5,7 @@
 .reserva-layout {
   display: flex;
   gap: 32px;
-  align-items: flex-start;
+  align-items: center;
 }
 
 /* ── Columna izquierda: asientos ── */
@@ -36,6 +36,9 @@
   position: relative;
   text-align: center;
   margin-bottom: 8px;
+  width: 460px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .pantalla-cine__linea {
@@ -126,6 +129,9 @@
   border-color: var(--gold);
   transform: scale(1.1);
   color: #0d0b09;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0;
 }
 
 /* Leyenda */
@@ -134,6 +140,7 @@
   gap: 20px;
   font-size: 12px;
   color: var(--cream-dim);
+  justify-content: center;
 }
 
 .leyenda-asientos__item {
@@ -167,14 +174,12 @@
 
 /* ── Columna derecha: panel de pago ── */
 .panel-pago {
-  width: 300px;
+  width: 380px;
   flex-shrink: 0;
-  position: sticky;
-  top: 20px;
   background: var(--surface-1);
   border: 1px solid var(--surface-3);
   border-radius: 4px;
-  padding: 24px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -289,42 +294,239 @@
 }
 
 /* ── Vista de éxito ── */
+.reserva-exito-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(6px);
+}
+
 .reserva-exito {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - 56px);
-  padding: 40px;
-  text-align: center;
   gap: 20px;
 }
 
-.exito-icono {
-  color: var(--gold);
+/* Boleto clásico vertical */
+.boleto {
+  position: relative;
+  width: 290px;
+  background: var(--surface-1);
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  box-shadow: var(--glow-md);
+  overflow: hidden;
 }
 
-.exito-titulo {
-  font-size: 32px;
-  color: var(--cream);
+/* Tiras de película decorativas */
+.boleto__tira {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 14px;
+  background: #0c0a07;
+  background-image: repeating-linear-gradient(
+    180deg,
+    transparent 0px,
+    transparent 8px,
+    rgba(255,255,255,0.08) 8px,
+    rgba(255,255,255,0.08) 10px,
+    transparent 10px,
+    transparent 18px
+  );
+  z-index: 0;
 }
 
-.exito-mensaje {
-  font-size: 14px;
+.boleto__tira--izq {
+  left: 0;
+}
+
+.boleto__tira--der {
+  right: 0;
+}
+
+/* Zona 1: encabezado del cine */
+.boleto__cabecera {
+  position: relative;
+  z-index: 1;
+  padding: 20px 28px 14px;
+  text-align: center;
+}
+
+.boleto__sello {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 12px;
+}
+
+.boleto__cabecera-divisor {
+  height: 1px;
+  background: var(--gold-dim);
+  opacity: 0.4;
+  margin-bottom: 12px;
+}
+
+.boleto__badges {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.boleto__badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   color: var(--cream-dim);
-  max-width: 480px;
-  line-height: 1.6;
+  background: var(--surface-2);
+  border: 1px solid var(--surface-3);
+  border-radius: 2px;
+  padding: 2px 8px;
 }
 
-.exito-asientos {
+.boleto__badge--clasificacion {
+  border-color: var(--gold-dim);
+  color: var(--gold-dim);
+}
+
+/* Zona 2: título de la película */
+.boleto__pelicula {
+  position: relative;
+  z-index: 1;
+  padding: 18px 28px 20px;
+  text-align: center;
+}
+
+.boleto__titulo {
+  font-size: 28px;
+  color: var(--gold);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.boleto__subtitulo {
+  font-size: 11px;
+  color: var(--cream-dim);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Separador punteado con semicírculos */
+.boleto__corte {
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  height: 18px;
+}
+
+.boleto__corte-circulo {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--gold-dim);
+  z-index: 3;
+  flex-shrink: 0;
+}
+
+.boleto__corte-circulo--izq {
+  left: -9px;
+}
+
+.boleto__corte-circulo--der {
+  right: -9px;
+}
+
+.boleto__corte-linea {
+  flex: 1;
+  height: 0;
+  border-top: 1px dashed var(--gold-dim);
+  margin: 0 12px;
+  opacity: 0.5;
+}
+
+/* Zona 3: filas de datos */
+.boleto__datos {
+  position: relative;
+  z-index: 1;
+  padding: 4px 28px;
+}
+
+.boleto__fila-dato {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(63, 60, 56, 0.6);
+}
+
+.boleto__fila-dato:last-child {
+  border-bottom: none;
+}
+
+.boleto__fila-dato--asientos {
+  gap: 8px;
+}
+
+.boleto__etiqueta {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+}
+
+.boleto__valor {
+  font-size: 14px;
+  color: var(--cream);
+  font-weight: 500;
+}
+
+.boleto__asientos-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
+}
+
+/* Zona 4: talón inferior */
+.boleto__talon {
+  position: relative;
+  z-index: 1;
+  background: var(--surface-2);
+  padding: 14px 20px 16px;
+  display: flex;
   justify-content: center;
 }
 
-.exito-acciones {
-  display: flex;
-  gap: 12px;
-  margin-top: 8px;
+.btn-aceptar {
+  padding: 7px 48px;
+  font-size: 11px;
+  justify-content: center;
+}
+
+.boleto__codigo {
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--cream-dim);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.boleto__aviso {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--cream-dim);
+  opacity: 0.55;
+  text-transform: lowercase;
 }

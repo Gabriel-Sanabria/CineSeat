@@ -19,7 +19,7 @@ export class ReservaComponent {
   pelicula: any = { titulo: 'La Sombra del Tiempo' };
   funcion: any = { hora: '19:30', sala: 'Sala 3', tipo: '2D', precio: 90 };
   asientosSeleccionados: string[] = [];
-  filas: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  filas: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
   columnas: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   // Simulación de asientos ocupados

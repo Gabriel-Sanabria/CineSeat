@@ -10,7 +10,7 @@ export class DetalleComponent {
   constructor(private router: Router, private ruta: ActivatedRoute) { }
 
   emailUsuario: string = '';
-  fechaSeleccionada: string = '';
+  fechaSeleccionada: string = new Date().toISOString().split('T')[0];
   funcionSeleccionada: any = null;
 
   // Datos de ejemplo para visualizar mientras se desarrolla la lógica:
@@ -40,6 +40,10 @@ export class DetalleComponent {
 
   seleccionarFuncion(funcion: any): void {
     this.funcionSeleccionada = funcion;
+  }
+
+  deseleccionarFuncion(): void {
+    this.funcionSeleccionada = null;
   }
 
   irAReserva(): void {

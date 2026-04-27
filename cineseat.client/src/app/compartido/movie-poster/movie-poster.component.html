@@ -1,7 +1,7 @@
 <div
   class="cartel-pelicula"
-  [style.width.px]="ancho"
-  [style.height.px]="alto"
+  [style.width.px]="ancho ?? null"
+  [style.height.px]="alto ?? null"
 >
   <div class="cartel-pelicula__fondo"></div>
   <div class="cartel-pelicula__lineas"></div>

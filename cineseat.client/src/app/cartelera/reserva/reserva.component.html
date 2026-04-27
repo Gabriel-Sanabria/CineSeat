@@ -42,7 +42,7 @@
             [disabled]="estaOcupado(fila, col)"
             (click)="toggleAsiento(fila, col)"
             type="button"
-          >{{ col }}</button>
+          >{{ fila }}{{ col }}</button>
 
           <span class="grilla-asientos__etiqueta-fila">{{ fila }}</span>
         </div>
@@ -175,25 +175,78 @@
 </div>
 
 <!-- Vista de éxito (tras reserva confirmada) -->
-<div class="reserva-exito" *ngIf="reservaConfirmada">
-  <app-icono nombre="ticket" [tamano]="56" class="exito-icono"></app-icono>
-  <h2 class="exito-titulo titulo-display">¡Reserva confirmada!</h2>
-  <p class="exito-mensaje">
-    Tu reserva para <strong>{{ pelicula?.titulo }}</strong> a las
-    <strong>{{ funcion?.hora }}</strong> en <strong>{{ funcion?.sala }}</strong>
-    ha sido procesada exitosamente.
-  </p>
-  <div class="exito-asientos">
-    <span *ngFor="let asiento of asientosSeleccionados" class="chip-asiento chip-asiento--exito">
-      {{ asiento }}
-    </span>
+<div class="reserva-exito-overlay" *ngIf="reservaConfirmada">
+<div class="reserva-exito">
+
+  <!-- Boleto clásico vertical -->
+  <div class="boleto">
+
+    <!-- Tiras de película izquierda y derecha -->
+    <div class="boleto__tira boleto__tira--izq"></div>
+    <div class="boleto__tira boleto__tira--der"></div>
+
+    <!-- Zona 1: encabezado del cine -->
+    <div class="boleto__cabecera">
+      <p class="boleto__sello">&#10086; CINESEAT &#10086;</p>
+      <div class="boleto__cabecera-divisor"></div>
+      <div class="boleto__badges">
+        <span class="boleto__badge" *ngIf="pelicula?.genero">{{ pelicula?.genero }}</span>
+        <span class="boleto__badge boleto__badge--clasificacion" *ngIf="pelicula?.clasificacion">{{ pelicula?.clasificacion }}</span>
+      </div>
+    </div>
+
+    <!-- Zona 2: título de la película -->
+    <div class="boleto__pelicula">
+      <h2 class="boleto__titulo titulo-display">{{ pelicula?.titulo }}</h2>
+      <p class="boleto__subtitulo">{{ funcion?.tipo }}</p>
+    </div>
+
+    <!-- Separador punteado con semicírculos (entre película y datos) -->
+    <div class="boleto__corte">
+      <div class="boleto__corte-circulo boleto__corte-circulo--izq"></div>
+      <div class="boleto__corte-linea"></div>
+      <div class="boleto__corte-circulo boleto__corte-circulo--der"></div>
+    </div>
+
+    <!-- Zona 3: filas de datos -->
+    <div class="boleto__datos">
+      <div class="boleto__fila-dato">
+        <span class="boleto__etiqueta">SALA</span>
+        <span class="boleto__valor">{{ funcion?.sala }}</span>
+      </div>
+      <div class="boleto__fila-dato">
+        <span class="boleto__etiqueta">HORA</span>
+        <span class="boleto__valor">{{ funcion?.hora }}</span>
+      </div>
+      <div class="boleto__fila-dato">
+        <span class="boleto__etiqueta">FORMATO</span>
+        <span class="boleto__valor">{{ funcion?.tipo }}</span>
+      </div>
+      <div class="boleto__fila-dato boleto__fila-dato--asientos">
+        <span class="boleto__etiqueta">ASIENTOS</span>
+        <div class="boleto__asientos-chips">
+          <span *ngFor="let asiento of asientosSeleccionados" class="chip-asiento chip-asiento--exito">
+            {{ asiento }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Separador punteado con semicírculos (entre datos y talón) -->
+    <div class="boleto__corte">
+      <div class="boleto__corte-circulo boleto__corte-circulo--izq"></div>
+      <div class="boleto__corte-linea"></div>
+      <div class="boleto__corte-circulo boleto__corte-circulo--der"></div>
+    </div>
+
+    <!-- Zona 4: talón inferior con botón -->
+    <div class="boleto__talon">
+      <button class="btn btn-gold btn-aceptar" (click)="volverACartelera()" type="button">
+        Aceptar
+      </button>
+    </div>
+
   </div>
-  <div class="exito-acciones">
-    <button class="btn btn-ghost btn-md" (click)="volverACartelera()" type="button">
-      Volver a cartelera
-    </button>
-    <button class="btn btn-gold btn-md" (click)="nuevaReserva()" type="button">
-      Nueva reserva
-    </button>
-  </div>
+
+</div>
 </div>

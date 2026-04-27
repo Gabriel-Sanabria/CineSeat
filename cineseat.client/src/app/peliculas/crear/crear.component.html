@@ -7,10 +7,6 @@
     <button class="btn btn-ghost btn-sm btn-volver" (click)="volver()" type="button">
       ← Volver
     </button>
-    <h2 class="crear-topbar__titulo titulo-gold">
-      <span *ngIf="!modoEdicion">Nueva Película</span>
-      <span *ngIf="modoEdicion">Editar: {{ pelicula?.titulo }}</span>
-    </h2>
     <div class="crear-topbar__acciones">
       <button
         *ngIf="modoEdicion"
@@ -21,21 +17,46 @@
         <app-icono nombre="trash" [tamano]="14"></app-icono>
         Eliminar
       </button>
-      <button class="btn btn-ghost btn-sm" (click)="cancelar()" type="button">
-        Cancelar
-      </button>
       <button class="btn btn-gold btn-sm" (click)="guardar()" type="button">
         <app-icono nombre="check" [tamano]="14"></app-icono>
         Guardar
       </button>
     </div>
   </div>
+  <h2 class="crear-titulo titulo-display">
+    <span *ngIf="!modoEdicion">Nueva Película</span>
+    <span *ngIf="modoEdicion">Editar {{ pelicula?.titulo }}</span>
+  </h2>
 
   <!-- Layout principal -->
   <div class="crear-layout">
 
-    <!-- COLUMNA IZQUIERDA -->
-    <div class="crear-columna-izq">
+    <!-- COLUMNA 1: Portada -->
+    <div class="crear-columna-portada">
+      <div class="card-form">
+        <h3 class="card-form__titulo titulo-gold">Portada</h3>
+
+        <div class="portada-preview">
+          <app-movie-poster
+            [titulo]="pelicula?.titulo || ''"
+            [genero]="pelicula?.genero || ''"
+            [ancho]="220"
+            [alto]="330"
+          ></app-movie-poster>
+
+          <div class="zona-drop">
+            <app-icono nombre="upload" [tamano]="28" class="zona-drop__icono"></app-icono>
+            <p class="zona-drop__texto">Arrastrar imagen</p>
+            <button class="btn btn-dark btn-sm" (click)="subirArchivo()" type="button">
+              Subir archivo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUMNA 2: Información general -->
+    <div class="crear-columna-info">
 
       <!-- Card: Información general -->
       <div class="card-form">
@@ -61,8 +82,8 @@
             </span>
           </div>
 
-          <!-- Fila: Género · Duración · Clasificación -->
-          <div class="campos-fila">
+          <!-- Fila 1: Género · Clasificación -->
+          <div class="campos-fila campos-fila--genero-clasif">
             <div class="campo">
               <label class="campo-label" for="genero">Género</label>
               <select id="genero" name="genero" class="campo-select" [(ngModel)]="pelicula.genero">
@@ -70,27 +91,45 @@
                 <option *ngFor="let g of generos" [value]="g">{{ g }}</option>
               </select>
             </div>
-            <div class="campo">
-              <label class="campo-label" for="duracion">Duración</label>
-              <input
-                id="duracion"
-                name="duracion"
-                type="text"
-                class="campo-input"
-                placeholder="2h 00m"
-                [(ngModel)]="pelicula.duracion"
-              >
-            </div>
             <div class="campo campo--clasificacion">
-              <label class="campo-label" for="clasificacion">Clasif.</label>
+              <label class="campo-label" for="clasificacion">Clasificación</label>
               <select id="clasificacion" name="clasificacion" class="campo-select" [(ngModel)]="pelicula.clasificacion">
                 <option value="">—</option>
-                <option value="G">G</option>
-                <option value="PG">PG</option>
-                <option value="PG-13">PG-13</option>
-                <option value="R">R</option>
-                <option value="NC-17">NC-17</option>
+                <option value="AA">AA (Niños)</option>
+                <option value="A">A (Todo público)</option>
+                <option value="B">B (Adolescentes, 12+)</option>
+                <option value="B-15">B-15 (Jóvenes, 15+)</option>
+                <option value="C">C (Adultos, 18+)</option>
+                <option value="D">D (Adultos, contenido explícito)</option>
               </select>
+            </div>
+          </div>
+
+          <!-- Fila 2: Duración -->
+          <div class="campos-fila campos-fila--duracion">
+            <div class="campo">
+              <label class="campo-label">Duración</label>
+              <div class="duracion-inputs">
+                <input
+                  name="duracionHoras"
+                  type="number"
+                  class="campo-input"
+                  placeholder="0"
+                  min="0" max="9"
+                  [(ngModel)]="pelicula.duracionHoras"
+                >
+                <span class="duracion-unidad">h</span>
+                <input
+                  name="duracionMinutos"
+                  type="number"
+                  class="campo-input"
+                  placeholder="00"
+                  min="0" max="59"
+                  [ngModel]="pelicula.duracionMinutos | number:'2.0-0'"
+                  (ngModelChange)="pelicula.duracionMinutos = +$event"
+                >
+                <span class="duracion-unidad">m</span>
+              </div>
             </div>
           </div>
 
@@ -123,33 +162,10 @@
         </form>
       </div>
 
-      <!-- Card: Portada -->
-      <div class="card-form">
-        <h3 class="card-form__titulo titulo-gold">Portada</h3>
-
-        <div class="portada-preview">
-          <app-movie-poster
-            [titulo]="pelicula?.titulo || ''"
-            [genero]="pelicula?.genero || ''"
-            [ancho]="90"
-            [alto]="130"
-          ></app-movie-poster>
-
-          <div class="zona-drop">
-            <app-icono nombre="upload" [tamano]="28" class="zona-drop__icono"></app-icono>
-            <p class="zona-drop__texto">Arrastra imagen o</p>
-            <button class="btn btn-dark btn-sm" (click)="subirArchivo()" type="button">
-              Subir archivo
-            </button>
-            <p class="zona-drop__hint">JPG / PNG · mín. 500×700px</p>
-          </div>
-        </div>
-      </div>
-
     </div>
 
-    <!-- COLUMNA DERECHA: Funciones -->
-    <div class="crear-columna-der">
+    <!-- COLUMNA 3: Funciones -->
+    <div class="crear-columna-funciones">
       <div class="card-form">
         <h3 class="card-form__titulo titulo-gold">Funciones</h3>
 

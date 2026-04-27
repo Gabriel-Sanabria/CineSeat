@@ -8,6 +8,6 @@ import { Component, Input } from '@angular/core';
 export class MoviePosterComponent {
   @Input() titulo: string = '';
   @Input() genero: string = '';
-  @Input() ancho: number = 180;
-  @Input() alto: number = 260;
+  @Input() ancho?: number;
+  @Input() alto?: number;
 }

@@ -1,6 +1,6 @@
 <app-navbar activo="cartelera" [emailUsuario]="emailUsuario"></app-navbar>
 
-<div class="pagina-detalle">
+<div class="pagina-detalle" (click)="deseleccionarFuncion()">
 
   <!-- Hero con info de la película -->
   <div class="detalle-hero">
@@ -10,12 +10,12 @@
 
     <div class="detalle-hero__contenido">
       <!-- Poster -->
-      <app-movie-poster
-        [titulo]="pelicula?.titulo || ''"
-        [genero]="pelicula?.genero || ''"
-        [ancho]="180"
-        [alto]="260"
-      ></app-movie-poster>
+      <div class="poster-detalle">
+        <app-movie-poster
+          [titulo]="pelicula?.titulo || ''"
+          [genero]="pelicula?.genero || ''"
+        ></app-movie-poster>
+      </div>
 
       <!-- Info -->
       <div class="detalle-info">
@@ -30,23 +30,11 @@
           {{ pelicula?.duracion }} · Dir. {{ pelicula?.director }}
         </p>
 
-        <!-- Estrellas -->
-        <div class="detalle-info__estrellas">
-          <app-icono
-            *ngFor="let e of estrellas"
-            nombre="star"
-            [tamano]="16"
-            class="estrella"
-            [class.estrella--llena]="e <= (pelicula?.calificacion / 2)"
-          ></app-icono>
-          <span class="detalle-info__rating">{{ pelicula?.calificacion }}</span>
-        </div>
-
         <p class="detalle-info__sinopsis">{{ pelicula?.sinopsis }}</p>
       </div>
 
       <!-- Panel de funciones -->
-      <div class="panel-funciones">
+      <div class="panel-funciones" (click)="$event.stopPropagation()">
         <h3 class="panel-funciones__titulo titulo-gold">Selecciona función</h3>
 
         <div class="campo">
@@ -75,8 +63,8 @@
         </div>
 
         <button
-          *ngIf="funcionSeleccionada"
           class="btn btn-gold btn-reservar"
+          [disabled]="!funcionSeleccionada"
           (click)="irAReserva()"
           type="button"
         >

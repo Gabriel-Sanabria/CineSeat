@@ -5,22 +5,45 @@
 .crear-topbar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
-  margin-bottom: 28px;
+  margin-bottom: 16px;
+}
+
+.crear-titulo {
+  font-size: 30px;
+  margin-bottom: 24px;
 }
 
 .btn-volver {
   flex-shrink: 0;
 }
 
-.crear-topbar__titulo {
-  flex: 1;
-  font-size: 20px;
-}
 
 .crear-topbar__acciones {
   display: flex;
   gap: 10px;
+}
+
+.duracion-inputs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.duracion-inputs .campo-input {
+  width: 60px;
+  text-align: center;
+}
+
+.duracion-inputs .campo-input:last-of-type {
+  width: 76px;
+}
+
+.duracion-unidad {
+  font-size: 13px;
+  color: var(--cream-dim);
+  flex-shrink: 0;
 }
 
 .crear-layout {
@@ -29,15 +52,60 @@
   align-items: flex-start;
 }
 
-.crear-columna-izq {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.campo--clasificacion {
+  min-width: 220px;
 }
 
-.crear-columna-der {
-  width: 380px;
+/* Columna 1: Portada — ancho fijo */
+.crear-columna-portada {
+  width: 340px;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.crear-columna-portada .card-form,
+.crear-columna-funciones .card-form {
+  height: 520px;
+}
+
+/* Columna 2: Información general — ocupa espacio disponible */
+.crear-columna-info {
+  flex: 1;
+  align-self: flex-start;
+}
+
+/* Columna 3: Funciones — ancho fijo y autocontenida */
+.crear-columna-funciones {
+  width: 340px;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.crear-columna-funciones .card-form {
+  height: 500px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.crear-columna-funciones .lista-funciones-crear {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.crear-columna-funciones .card-form__titulo {
+  flex-shrink: 0;
+}
+
+.crear-columna-funciones .lista-funciones-crear {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  padding-right: 4px;
+}
+
+.crear-columna-funciones .btn-agregar-funcion {
   flex-shrink: 0;
 }
 
@@ -57,28 +125,49 @@
   border-bottom: 1px solid var(--surface-3);
 }
 
+/* Fila generica — base flex para filas de campos */
 .campos-fila {
-  display: grid;
-  grid-template-columns: 1fr 1fr 120px;
+  display: flex;
   gap: 14px;
+  align-items: flex-start;
+}
+
+/* Fila 1: Género ocupa el espacio disponible, Clasificación tiene ancho fijo */
+.campos-fila--genero-clasif {
+  align-items: flex-end;
+}
+
+.campos-fila--genero-clasif .campo:first-child {
+  flex: 1;
+}
+
+/* Fila 2: Duración alineada a la izquierda, sin estirar */
+.campos-fila--duracion {
+  align-items: flex-start;
+}
+
+.campo--clasificacion {
+  width: 260px;
+  flex-shrink: 0;
 }
 
 .portada-preview {
   display: flex;
+  flex-direction: column;
   gap: 20px;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .zona-drop {
-  flex: 1;
+  width: 100%;
   border: 2px dashed var(--gold-dim);
   border-radius: 4px;
-  padding: 24px 16px;
+  padding: 10px 16px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 10px;
-  text-align: center;
+  gap: 12px;
+  text-align: left;
 }
 
 .zona-drop__icono {
@@ -112,6 +201,15 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.funcion-item .campos-fila {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.funcion-item .campo {
+  width: 100%;
 }
 
 .funcion-item__cabecera {
