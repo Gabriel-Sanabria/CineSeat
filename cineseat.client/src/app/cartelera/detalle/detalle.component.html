@@ -1,4 +1,4 @@
-<app-navbar activo="cartelera" [emailUsuario]="emailUsuario"></app-navbar>
+<app-header activo="cartelera" [emailUsuario]="emailUsuario"></app-header>
 
 <div class="pagina-detalle" (click)="deseleccionarFuncion()">
 
@@ -11,17 +11,17 @@
     <div class="detalle-hero__contenido">
       <!-- Poster -->
       <div class="poster-detalle">
-        <app-movie-poster
+        <app-portada-pelicula
           [titulo]="pelicula?.titulo || ''"
           [genero]="pelicula?.genero || ''"
-        ></app-movie-poster>
+        ></app-portada-pelicula>
       </div>
 
       <!-- Info -->
       <div class="detalle-info">
         <div class="detalle-info__badges">
-          <app-badge>{{ pelicula?.genero }}</app-badge>
-          <app-badge>{{ pelicula?.clasificacion }}</app-badge>
+          <span class="badge">{{ pelicula?.genero }}</span>
+          <span class="badge">{{ pelicula?.clasificacion }}</span>
         </div>
 
         <h1 class="detalle-info__titulo titulo-display">{{ pelicula?.titulo }}</h1>
@@ -48,18 +48,12 @@
         </div>
 
         <div class="lista-funciones">
-          <button
+          <app-item-funcion
             *ngFor="let funcion of funciones"
-            class="boton-funcion"
-            [class.boton-funcion--activo]="funcionSeleccionada?.id === funcion.id"
-            (click)="seleccionarFuncion(funcion)"
-            type="button"
-          >
-            <span class="boton-funcion__hora">{{ funcion.hora }}</span>
-            <span class="boton-funcion__sala">{{ funcion.sala }} · {{ funcion.tipo }}</span>
-            <span class="boton-funcion__asientos">{{ funcion.asientosDisponibles }} disponibles</span>
-            <span class="boton-funcion__precio">${{ funcion.precio }}</span>
-          </button>
+            [funcion]="funcion"
+            [activo]="funcionSeleccionada?.id === funcion.id"
+            (seleccionar)="seleccionarFuncion(funcion)"
+          ></app-item-funcion>
         </div>
 
         <button
@@ -68,7 +62,7 @@
           (click)="irAReserva()"
           type="button"
         >
-          <app-icono nombre="ticket" [tamano]="16"></app-icono>
+          <i class="fa-solid fa-couch" style="font-size:16px"></i>
           Reservar asientos
         </button>
       </div>

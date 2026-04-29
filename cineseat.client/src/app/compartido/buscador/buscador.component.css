@@ -1,22 +1,6 @@
-.pagina-peliculas {
-  padding: 40px;
-}
-
-.pagina-peliculas__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+:host {
+  display: block;
   margin-bottom: 28px;
-}
-
-.titulo-peliculas {
-  font-size: 30px;
-  margin-bottom: 6px;
-}
-
-.pagina-peliculas__subtitulo {
-  font-size: 14px;
-  color: var(--cream-dim);
 }
 
 .barra-filtros {
@@ -24,7 +8,6 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 32px;
   flex-wrap: wrap;
 }
 
@@ -98,33 +81,4 @@
 
 .chip-genero--activo:hover {
   color: var(--bg);
-}
-
-.grid-peliculas {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(224px, 1fr));
-  gap: 16px;
-}
-
-.grid-peliculas app-tarjeta-pelicula {
-  width: 100%;
-}
-
-.estado-vacio {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  padding: 60px 40px;
-  text-align: center;
-}
-
-.estado-vacio__icono {
-  color: var(--gold-dim);
-  opacity: 0.5;
-}
-
-.estado-vacio__texto {
-  font-size: 14px;
-  color: var(--cream-dim);
 }

@@ -1,4 +1,4 @@
-<app-navbar activo="dashboard" [emailUsuario]="emailUsuario"></app-navbar>
+<app-header activo="dashboard" [emailUsuario]="emailUsuario"></app-header>
 
 <main class="pagina-dashboard">
 
@@ -6,6 +6,14 @@
     <h1 class="titulo-display titulo-dashboard">Dashboard</h1>
     <p class="pagina-dashboard__subtitulo">Métricas de ocupación y recaudación</p>
   </div>
+
+  <!-- Barra de filtros -->
+  <app-buscador
+    [generos]="generos"
+    placeholder="Buscar película..."
+    (textoCambia)="textoBusqueda = $event"
+    (generoCambia)="filtrarPorGenero($event)"
+  ></app-buscador>
 
   <!-- Lista de cards por película -->
   <div class="lista-dashboard">
@@ -35,22 +43,32 @@
           <span>Ingresos</span>
         </div>
 
-        <!-- Filas de funciones -->
-        <div class="tabla-funciones__fila" *ngFor="let funcion of item.funciones">
-          <span class="funcion-nombre">{{ funcion.hora }} · {{ funcion.tipo }}</span>
-          <div class="barra-ocupacion">
-            <div
-              class="barra-ocupacion__relleno"
-              [class.barra-ocupacion--alta]="funcion.porcentaje > 70"
-              [class.barra-ocupacion--media]="funcion.porcentaje > 45 && funcion.porcentaje <= 70"
-              [class.barra-ocupacion--baja]="funcion.porcentaje <= 45"
-              [style.width.%]="funcion.porcentaje"
-            ></div>
+        <!-- Grupos por fecha -->
+        <ng-container *ngFor="let grupo of agruparPorFecha(item.funciones)">
+
+          <!-- Separador de fecha -->
+          <div class="tabla-funciones__fecha">
+            <span>{{ formatearFecha(grupo.fecha) }}</span>
           </div>
-          <span class="funcion-pct">{{ funcion.porcentaje }}%</span>
-          <span class="funcion-boletos">{{ funcion.boletos }}</span>
-          <span class="funcion-ingresos">${{ funcion.ingresos }}</span>
-        </div>
+
+          <!-- Filas de funciones de esa fecha -->
+          <div class="tabla-funciones__fila" *ngFor="let funcion of grupo.funciones">
+            <span class="funcion-nombre">Sala {{ funcion.sala }} · {{ funcion.hora }} · {{ funcion.tipo }}</span>
+            <div class="barra-ocupacion">
+              <div
+                class="barra-ocupacion__relleno"
+                [class.barra-ocupacion--alta]="funcion.porcentaje > 70"
+                [class.barra-ocupacion--media]="funcion.porcentaje > 45 && funcion.porcentaje <= 70"
+                [class.barra-ocupacion--baja]="funcion.porcentaje <= 45"
+                [style.width.%]="funcion.porcentaje"
+              ></div>
+            </div>
+            <span class="funcion-pct">{{ funcion.porcentaje }}%</span>
+            <span class="funcion-boletos">{{ funcion.boletos }}</span>
+            <span class="funcion-ingresos">${{ funcion.ingresos }}</span>
+          </div>
+
+        </ng-container>
 
         <!-- Fila TOTAL -->
         <div class="tabla-funciones__total">
@@ -69,7 +87,7 @@
 
   <!-- Estado vacío -->
   <div class="estado-vacio" *ngIf="datosPeliculas.length === 0">
-    <app-icono nombre="folder" [tamano]="48" class="estado-vacio__icono"></app-icono>
+    <i class="fa-solid fa-folder estado-vacio__icono" style="font-size:48px"></i>
     <p class="estado-vacio__texto">No hay datos de funciones disponibles.</p>
   </div>
 

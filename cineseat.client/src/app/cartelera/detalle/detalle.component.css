@@ -57,6 +57,18 @@
   gap: 8px;
 }
 
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border: 1px solid var(--gold-dim);
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+
 .detalle-info__titulo {
   font-size: 36px;
   line-height: 1.2;
@@ -96,56 +108,6 @@
   flex: 1;
   min-height: 0;
   padding-right: 4px;
-}
-
-.boton-funcion {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 14px 16px;
-  background: var(--surface-2);
-  border: 1px solid var(--surface-3);
-  border-radius: 3px;
-  cursor: pointer;
-  transition: border-color 0.25s, box-shadow 0.25s;
-  width: 100%;
-  text-align: left;
-}
-
-.boton-funcion:hover {
-  border-color: var(--gold);
-  box-shadow: var(--glow-md);
-}
-
-.boton-funcion--activo {
-  border-color: var(--gold);
-  background: rgba(201, 160, 55, 0.06);
-}
-
-.boton-funcion__hora {
-  font-family: var(--font-display);
-  font-size: 22px;
-  color: var(--gold);
-  line-height: 1;
-  margin-bottom: 4px;
-}
-
-.boton-funcion__sala {
-  font-size: 12px;
-  color: var(--cream-dim);
-}
-
-.boton-funcion__asientos {
-  font-size: 11px;
-  color: var(--cream-dim);
-  opacity: 0.7;
-}
-
-.boton-funcion__precio {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--gold);
-  margin-top: 6px;
 }
 
 .btn-reservar {

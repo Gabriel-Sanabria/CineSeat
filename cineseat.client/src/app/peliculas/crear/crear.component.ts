@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -7,6 +7,9 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './crear.component.css'
 })
 export class CrearComponent implements OnInit {
+  @ViewChild('listaFunciones') listaFunciones!: ElementRef;
+  @ViewChild('inputArchivo') inputArchivo!: ElementRef;
+
   constructor(private router: Router, private ruta: ActivatedRoute) { }
 
 
@@ -21,10 +24,13 @@ export class CrearComponent implements OnInit {
     clasificacion: '',
     director: '',
     sinopsis: '',
+    urlPortada: '',
     funciones: []
   };
 
   generos: string[] = ['Thriller', 'Sci-Fi', 'Drama', 'Terror', 'Romance', 'Acción', 'Comedia', 'Documental'];
+
+  salaOpciones: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   tiposSala: { valor: string; etiqueta: string }[] = [
     { valor: '2D', etiqueta: '2D' },
@@ -54,17 +60,35 @@ export class CrearComponent implements OnInit {
     this.router.navigate(['/peliculas']);
   }
 
-  // TODO: implementar
-  subirArchivo(): void { }
+  subirArchivo(): void {
+    this.inputArchivo.nativeElement.click();
+  }
+
+  alSeleccionarArchivo(event: Event): void {
+    const archivo = (event.target as HTMLInputElement).files?.[0];
+    if (archivo) {
+      this.pelicula.urlPortada = URL.createObjectURL(archivo);
+    }
+    // Limpiar el valor para permitir seleccionar el mismo archivo de nuevo
+    (event.target as HTMLInputElement).value = '';
+  }
 
   // TODO: implementar
   agregarFuncion(): void {
     this.pelicula.funciones.push({
       fecha: '',
       hora: '',
+      sala: 1,
       tipo: '2D',
       precio: 90
     });
+
+    setTimeout(() => {
+      if (this.listaFunciones) {
+        const el = this.listaFunciones.nativeElement;
+        el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+      }
+    }, 0);
   }
 
   // TODO: implementar

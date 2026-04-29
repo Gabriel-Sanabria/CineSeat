@@ -1,4 +1,4 @@
-<app-navbar activo="peliculas" [emailUsuario]="emailUsuario"></app-navbar>
+<app-header activo="peliculas" [emailUsuario]="emailUsuario"></app-header>
 
 <main class="pagina-peliculas">
 
@@ -9,7 +9,7 @@
       <p class="pagina-peliculas__subtitulo">Administra el catálogo de películas</p>
     </div>
     <button class="btn btn-gold btn-md" (click)="nuevaPelicula()" type="button">
-      <app-icono nombre="plus" [tamano]="14"></app-icono>
+      <i class="fa-solid fa-plus" style="font-size:14px"></i>
       Nueva película
     </button>
   </div>
@@ -17,7 +17,7 @@
   <!-- Barra de filtros -->
   <div class="barra-filtros">
     <div class="campo-busqueda">
-      <app-icono nombre="search" [tamano]="16" class="campo-busqueda__icono"></app-icono>
+      <i class="fa-solid fa-magnifying-glass campo-busqueda__icono" style="font-size:16px"></i>
       <input
         name="busqueda"
         type="text"
@@ -40,17 +40,17 @@
 
   <!-- Grid de películas -->
   <div class="grid-peliculas">
-    <app-movie-card
+    <app-tarjeta-pelicula
       *ngFor="let pelicula of peliculas"
       [pelicula]="pelicula"
       modo="editar"
       (clickAccion)="editarPelicula($event)"
-    ></app-movie-card>
+    ></app-tarjeta-pelicula>
   </div>
 
   <!-- Estado vacío -->
   <div class="estado-vacio" *ngIf="peliculas.length === 0">
-    <app-icono nombre="film" [tamano]="48" class="estado-vacio__icono"></app-icono>
+    <i class="fa-solid fa-film estado-vacio__icono" style="font-size:48px"></i>
     <p class="estado-vacio__texto">No hay películas en el catálogo.</p>
     <button class="btn btn-gold btn-md" (click)="nuevaPelicula()" type="button">
       Agregar primera película

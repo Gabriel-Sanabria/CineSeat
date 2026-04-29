@@ -1,4 +1,4 @@
-<app-navbar activo="cartelera" [emailUsuario]="emailUsuario"></app-navbar>
+<app-header activo="cartelera" [emailUsuario]="emailUsuario"></app-header>
 
 <div class="pagina-reserva" *ngIf="!reservaConfirmada">
 
@@ -164,7 +164,7 @@
 
       <!-- Nota de pago simulado -->
       <p class="nota-pago-simulado">
-        <app-icono nombre="lock" [tamano]="12"></app-icono>
+        <i class="fa-solid fa-lock" style="font-size:12px"></i>
         Pago simulado — no se realiza ningún cobro
       </p>
 

@@ -1,4 +1,4 @@
-<app-navbar activo="cartelera" [emailUsuario]="emailUsuario"></app-navbar>
+<app-header activo="cartelera" [emailUsuario]="emailUsuario"></app-header>
 
 <main class="pagina-cartelera">
 
@@ -11,37 +11,21 @@
   </div>
 
   <!-- Barra de filtros -->
-  <div class="barra-filtros">
-    <div class="campo-busqueda">
-      <app-icono nombre="search" [tamano]="16" class="campo-busqueda__icono"></app-icono>
-      <input
-        name="busqueda"
-        type="text"
-        class="campo-busqueda__input"
-        placeholder="Buscar película..."
-        [(ngModel)]="textoBusqueda"
-      >
-    </div>
-
-    <div class="chips-genero">
-      <button
-        *ngFor="let genero of generos"
-        class="chip-genero"
-        [class.chip-genero--activo]="generoSeleccionado === genero"
-        (click)="filtrarPorGenero(genero)"
-        type="button"
-      >{{ genero }}</button>
-    </div>
-  </div>
+  <app-buscador
+    [generos]="generos"
+    placeholder="Buscar película..."
+    (textoCambia)="textoBusqueda = $event"
+    (generoCambia)="filtrarPorGenero($event)"
+  ></app-buscador>
 
   <!-- Grid de películas -->
   <div class="grid-peliculas">
-    <app-movie-card
+    <app-tarjeta-pelicula
       *ngFor="let pelicula of peliculas"
       [pelicula]="pelicula"
       modo="ver"
       (clickAccion)="verDetalle($event)"
-    ></app-movie-card>
+    ></app-tarjeta-pelicula>
   </div>
 
 </main>

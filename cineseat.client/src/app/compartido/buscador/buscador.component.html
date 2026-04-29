@@ -1,0 +1,23 @@
+<div class="barra-filtros">
+  <div class="campo-busqueda">
+    <i class="fa-solid fa-magnifying-glass campo-busqueda__icono" style="font-size:16px"></i>
+    <input
+      name="busqueda"
+      type="text"
+      class="campo-busqueda__input"
+      [placeholder]="placeholder"
+      [(ngModel)]="texto"
+      (ngModelChange)="alEscribir()"
+    >
+  </div>
+
+  <div class="chips-genero">
+    <button
+      *ngFor="let genero of generos"
+      class="chip-genero"
+      [class.chip-genero--activo]="generoActivo === genero"
+      (click)="seleccionarGenero(genero)"
+      type="button"
+    >{{ genero }}</button>
+  </div>
+</div>

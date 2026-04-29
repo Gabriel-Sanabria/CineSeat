@@ -1,4 +1,4 @@
-<app-navbar activo="peliculas" [emailUsuario]="emailUsuario"></app-navbar>
+<app-header activo="peliculas" [emailUsuario]="emailUsuario"></app-header>
 
 <main class="pagina-crear">
 
@@ -14,11 +14,11 @@
         (click)="eliminarPelicula()"
         type="button"
       >
-        <app-icono nombre="trash" [tamano]="14"></app-icono>
+        <i class="fa-solid fa-trash" style="font-size:14px"></i>
         Eliminar
       </button>
       <button class="btn btn-gold btn-sm" (click)="guardar()" type="button">
-        <app-icono nombre="check" [tamano]="14"></app-icono>
+        <i class="fa-solid fa-check" style="font-size:14px"></i>
         Guardar
       </button>
     </div>
@@ -37,15 +37,22 @@
         <h3 class="card-form__titulo titulo-gold">Portada</h3>
 
         <div class="portada-preview">
-          <app-movie-poster
+          <app-portada-pelicula
             [titulo]="pelicula?.titulo || ''"
             [genero]="pelicula?.genero || ''"
             [ancho]="220"
             [alto]="330"
-          ></app-movie-poster>
+          ></app-portada-pelicula>
 
           <div class="zona-drop">
-            <app-icono nombre="upload" [tamano]="28" class="zona-drop__icono"></app-icono>
+            <input
+              type="file"
+              #inputArchivo
+              accept="image/*"
+              style="display:none"
+              (change)="alSeleccionarArchivo($event)"
+            >
+            <i class="fa-solid fa-upload zona-drop__icono" style="font-size:28px"></i>
             <p class="zona-drop__texto">Arrastrar imagen</p>
             <button class="btn btn-dark btn-sm" (click)="subirArchivo()" type="button">
               Subir archivo
@@ -170,68 +177,15 @@
         <h3 class="card-form__titulo titulo-gold">Funciones</h3>
 
         <!-- Lista de funciones -->
-        <div class="lista-funciones-crear" *ngIf="pelicula.funciones && pelicula.funciones.length > 0">
-          <div class="funcion-item" *ngFor="let funcion of pelicula.funciones; let i = index">
-
-            <div class="funcion-item__cabecera">
-              <span class="funcion-item__numero">Función {{ i + 1 }}</span>
-              <button class="btn-eliminar-funcion" (click)="eliminarFuncion(i)" type="button" title="Eliminar función">
-                <app-icono nombre="trash" [tamano]="14"></app-icono>
-              </button>
-            </div>
-
-            <!-- Fecha y Hora -->
-            <div class="campos-fila">
-              <div class="campo">
-                <label class="campo-label">Fecha</label>
-                <input
-                  [name]="'fecha_' + i"
-                  type="date"
-                  class="campo-input"
-                  [(ngModel)]="funcion.fecha"
-                >
-              </div>
-              <div class="campo">
-                <label class="campo-label">Hora</label>
-                <input
-                  [name]="'hora_' + i"
-                  type="time"
-                  class="campo-input"
-                  [(ngModel)]="funcion.hora"
-                >
-              </div>
-            </div>
-
-            <!-- Tipo de sala -->
-            <div class="campo">
-              <label class="campo-label">Tipo de sala</label>
-              <div class="selector-tipo-sala">
-                <button
-                  *ngFor="let tipo of tiposSala"
-                  class="btn-tipo-sala"
-                  [class.btn-tipo-sala--activo]="funcion.tipo === tipo.valor"
-                  (click)="funcion.tipo = tipo.valor"
-                  type="button"
-                >{{ tipo.etiqueta }}</button>
-              </div>
-            </div>
-
-            <!-- Precio -->
-            <div class="campo">
-              <label class="campo-label">Precio por boleto</label>
-              <div class="precio-funcion">
-                <span class="precio-funcion__simbolo">$</span>
-                <input
-                  [name]="'precio_' + i"
-                  type="number"
-                  class="campo-input"
-                  [(ngModel)]="funcion.precio"
-                  min="0"
-                >
-              </div>
-            </div>
-
-          </div>
+        <div class="lista-funciones-crear" #listaFunciones *ngIf="pelicula.funciones && pelicula.funciones.length > 0">
+          <app-funcion-editable
+            *ngFor="let funcion of pelicula.funciones; let i = index"
+            [funcion]="funcion"
+            [indice]="i"
+            [tiposSala]="tiposSala"
+            [salaOpciones]="salaOpciones"
+            (eliminar)="eliminarFuncion(i)"
+          ></app-funcion-editable>
         </div>
 
         <!-- Sin funciones -->
@@ -242,7 +196,7 @@
 
         <!-- Botón agregar función -->
         <button class="btn btn-dark btn-agregar-funcion" (click)="agregarFuncion()" type="button">
-          <app-icono nombre="plus" [tamano]="14"></app-icono>
+          <i class="fa-solid fa-plus" style="font-size:14px"></i>
           Agregar función
         </button>
 

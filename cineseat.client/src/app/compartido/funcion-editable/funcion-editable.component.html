@@ -1,0 +1,70 @@
+<div class="funcion-item">
+
+  <div class="funcion-item__cabecera">
+    <span class="funcion-item__numero">Función {{ indice + 1 }}</span>
+    <button class="btn-eliminar-funcion" (click)="eliminar.emit()" type="button" title="Eliminar función">
+      <i class="fa-solid fa-trash" style="font-size:14px"></i>
+    </button>
+  </div>
+
+  <div class="campos-fila">
+    <div class="campo">
+      <label class="campo-label">Fecha</label>
+      <input
+        [name]="'fecha_' + indice"
+        type="date"
+        class="campo-input"
+        [(ngModel)]="funcion.fecha"
+      >
+    </div>
+    <div class="campo">
+      <label class="campo-label">Hora</label>
+      <input
+        [name]="'hora_' + indice"
+        type="time"
+        class="campo-input"
+        [(ngModel)]="funcion.hora"
+      >
+    </div>
+  </div>
+
+  <div class="campo">
+    <label class="campo-label" [for]="'sala_' + indice">Sala</label>
+    <select
+      [id]="'sala_' + indice"
+      [name]="'sala_' + indice"
+      class="campo-select"
+      [(ngModel)]="funcion.sala"
+    >
+      <option *ngFor="let n of salaOpciones" [value]="n">Sala {{ n }}</option>
+    </select>
+  </div>
+
+  <div class="campo">
+    <label class="campo-label">Tipo de función</label>
+    <div class="selector-tipo-sala">
+      <button
+        *ngFor="let tipo of tiposSala"
+        class="btn-tipo-sala"
+        [class.btn-tipo-sala--activo]="funcion.tipo === tipo.valor"
+        (click)="funcion.tipo = tipo.valor"
+        type="button"
+      >{{ tipo.etiqueta }}</button>
+    </div>
+  </div>
+
+  <div class="campo">
+    <label class="campo-label">Precio por boleto</label>
+    <div class="precio-funcion">
+      <span class="precio-funcion__simbolo">$</span>
+      <input
+        [name]="'precio_' + indice"
+        type="number"
+        class="campo-input"
+        [(ngModel)]="funcion.precio"
+        min="0"
+      >
+    </div>
+  </div>
+
+</div>

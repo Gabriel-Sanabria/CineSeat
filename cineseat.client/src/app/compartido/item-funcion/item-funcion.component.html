@@ -1,0 +1,11 @@
+<button
+  class="boton-funcion"
+  [class.boton-funcion--activo]="activo"
+  (click)="seleccionar.emit()"
+  type="button"
+>
+  <span class="boton-funcion__hora">{{ funcion?.hora }}</span>
+  <span class="boton-funcion__sala">{{ funcion?.sala }} · {{ funcion?.tipo }}</span>
+  <span class="boton-funcion__asientos">{{ funcion?.asientosDisponibles }} disponibles</span>
+  <span class="boton-funcion__precio">${{ funcion?.precio }}</span>
+</button>

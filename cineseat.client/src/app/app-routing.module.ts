@@ -5,7 +5,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/cartelera', pathMatch: 'full' },
   {
     path: 'login',
-    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+    loadChildren: () => import('./autenticacion/autenticacion.module').then(m => m.AutenticacionModule)
   },
   {
     path: 'cartelera',
