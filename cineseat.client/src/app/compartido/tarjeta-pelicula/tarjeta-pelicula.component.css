@@ -1,20 +1,19 @@
 /* ── Tarjeta completa ── */
 .tarjeta-pelicula {
   position: relative;
-  width: 224px;
-  background: var(--surface-2);
-  border: 1px solid var(--gold-dim);
+  width: 100%;
+  background: var(--superficie-2);
+  border: 1px solid var(--dorado-tenue);
   border-radius: 3px;
   overflow: hidden;
   transition: box-shadow 0.25s, transform 0.2s, border-color 0.25s;
-  flex-shrink: 0;
 }
 
 .tarjeta-pelicula:hover {
-  border-color: var(--gold);
+  border-color: var(--dorado);
   transform: translateY(-6px);
   box-shadow:
-    0 0 0 1px var(--gold),
+    0 0 0 1px var(--dorado),
     0 0 24px rgba(201, 160, 55, 0.55),
     0 0 60px rgba(201, 160, 55, 0.25),
     0 12px 40px rgba(0, 0, 0, 0.5);
@@ -49,7 +48,7 @@
   flex-direction: column;
 }
 
-/* El poster ocupa el ancho completo del área de contenido (192px = 224 - 32) */
+/* El poster ocupa el ancho completo del área de contenido; la proporción 2:3 la gestiona portada-pelicula */
 .tarjeta-pelicula__contenido app-portada-pelicula {
   display: block;
 }
@@ -60,27 +59,27 @@
   flex-direction: column;
   gap: 6px;
   padding: 10px 8px 12px;
-  background: var(--surface-2);
+  background: var(--superficie-2);
 }
 
 .tarjeta-pelicula__titulo {
-  font-family: var(--font-display);
+  font-family: var(--fuente-titulo);
   font-size: 14px;
-  color: var(--cream);
+  color: var(--crema);
   line-height: 1.3;
   margin: 0;
 }
 
 .tarjeta-pelicula__meta {
   font-size: 11px;
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
   display: flex;
   gap: 5px;
   margin: 0;
 }
 
 .separador {
-  color: var(--gold-dim);
+  color: var(--dorado-tenue);
 }
 
 .tarjeta-pelicula__btn {

@@ -13,18 +13,21 @@
 
 .pagina-dashboard__subtitulo {
   font-size: 14px;
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
 }
 
 .lista-dashboard {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
 .card-dashboard {
-  background: var(--surface-1);
-  border: 1px solid var(--surface-3);
+  background: var(--superficie-1);
+  border: 1px solid var(--superficie-3);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -34,63 +37,84 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  border-bottom: 1px solid var(--surface-3);
+  border-bottom: 1px solid var(--superficie-3);
 }
 
 .card-dashboard__titulo {
-  font-family: var(--font-display);
+  font-family: var(--fuente-titulo);
   font-size: 16px;
-  color: var(--cream);
+  color: var(--crema);
   margin-bottom: 4px;
 }
 
 .card-dashboard__meta {
   font-size: 12px;
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
 }
 
 .card-dashboard__funciones {
-  color: var(--gold-dim);
+  color: var(--dorado-tenue);
 }
 
 .tabla-funciones {
+  width: 100%;
+  border-collapse: collapse;
   padding: 0 20px 16px;
 }
 
-.tabla-funciones__encabezado,
-.tabla-funciones__fila,
-.tabla-funciones__total {
-  display: grid;
-  grid-template-columns: 150px 1fr 40px 70px 80px;
-  gap: 12px;
-  align-items: center;
-  padding: 8px 0;
+.tabla-funciones th,
+.tabla-funciones td {
+  text-align: left;
+  vertical-align: middle;
+  padding: 8px 6px;
   font-size: 12px;
 }
 
-.tabla-funciones__encabezado {
-  color: var(--gold-dim);
+.tabla-funciones th:first-child,
+.tabla-funciones td:first-child {
+  width: 150px;
+  padding-left: 0;
+}
+
+.tabla-funciones th:nth-child(3),
+.tabla-funciones td:nth-child(3) {
+  width: 40px;
+}
+
+.tabla-funciones th:nth-child(4),
+.tabla-funciones td:nth-child(4) {
+  width: 70px;
+}
+
+.tabla-funciones th:nth-child(5),
+.tabla-funciones td:nth-child(5) {
+  width: 80px;
+  padding-right: 0;
+}
+
+.tabla-funciones__encabezado th {
+  color: var(--dorado-tenue);
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   font-size: 10px;
-  border-bottom: 1px solid var(--surface-3);
-  margin-bottom: 4px;
+  border-bottom: 1px solid var(--superficie-3);
+  padding-bottom: 8px;
 }
 
-.tabla-funciones__fila {
-  color: var(--cream);
+.tabla-funciones__fila td {
+  color: var(--crema);
   border-bottom: 1px solid rgba(255, 239, 213, 0.04);
 }
 
 .funcion-nombre {
   font-size: 12px;
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
 }
 
 .barra-ocupacion {
   height: 6px;
-  background: var(--surface-2);
+  background: var(--superficie-2);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -99,61 +123,65 @@
   height: 100%;
   border-radius: 3px;
   transition: width 0.3s;
+  width: var(--porcentaje);
 }
 
 .barra-ocupacion--alta {
-  background: var(--gold);
+  background: var(--dorado);
 }
 
 .barra-ocupacion--media {
-  background: #c07820;
+  background: var(--color-advertencia);
 }
 
 .barra-ocupacion--baja {
-  background: var(--surface-1);
+  background: var(--superficie-1);
 }
 
 .funcion-pct {
   font-size: 11px;
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
   text-align: right;
 }
 
 .funcion-boletos,
 .funcion-ingresos {
   font-size: 12px;
-  color: var(--cream);
+  color: var(--crema);
   text-align: right;
 }
 
-.tabla-funciones__fecha {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 150px 1fr 40px 70px 80px;
-  gap: 12px;
+.tabla-funciones__fecha td {
   padding: 6px 0 4px;
-  margin-top: 4px;
-  border-top: 1px solid var(--surface-3);
+  border-top: 1px solid var(--superficie-3);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.8px;
   text-transform: uppercase;
-  color: var(--gold-dim);
+  color: var(--dorado-tenue);
 }
 
-.tabla-funciones__total {
+.tabla-funciones__total td {
   background: rgba(240, 230, 208, 0.06);
-  border-radius: 3px;
   font-weight: 600;
-  color: var(--cream-dim);
-  margin-top: 4px;
-  padding: 10px 8px;
+  color: var(--crema-tenue);
   font-size: 11px;
   letter-spacing: 0.5px;
+  padding: 10px 6px;
+}
+
+.tabla-funciones__total td:first-child {
+  border-radius: 3px 0 0 3px;
+  padding-left: 8px;
+}
+
+.tabla-funciones__total td:last-child {
+  border-radius: 0 3px 3px 0;
+  padding-right: 8px;
 }
 
 .total-ingresos {
-  color: var(--gold);
+  color: var(--dorado);
   font-size: 13px;
 }
 
@@ -167,11 +195,29 @@
 }
 
 .estado-vacio__icono {
-  color: var(--gold-dim);
+  color: var(--dorado-tenue);
   opacity: 0.5;
 }
 
 .estado-vacio__texto {
   font-size: 14px;
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
+}
+
+@media (max-width: 1023px) {
+  .pagina-dashboard {
+    padding: 24px 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .lista-dashboard {
+    gap: 16px;
+  }
+
+  .tabla-funciones {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }

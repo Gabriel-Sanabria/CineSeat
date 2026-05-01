@@ -3,21 +3,21 @@
 <main class="pagina-peliculas">
 
   <!-- Encabezado -->
-  <div class="pagina-peliculas__header">
+  <header class="pagina-peliculas__header">
     <div>
       <h1 class="titulo-display titulo-peliculas">Películas</h1>
       <p class="pagina-peliculas__subtitulo">Administra el catálogo de películas</p>
     </div>
     <button class="btn btn-gold btn-md" (click)="nuevaPelicula()" type="button">
-      <i class="fa-solid fa-plus" style="font-size:14px"></i>
+      <i class="fa-solid fa-plus icono-md"></i>
       Nueva película
     </button>
-  </div>
+  </header>
 
   <!-- Barra de filtros -->
   <div class="barra-filtros">
     <div class="campo-busqueda">
-      <i class="fa-solid fa-magnifying-glass campo-busqueda__icono" style="font-size:16px"></i>
+      <i class="fa-solid fa-magnifying-glass campo-busqueda__icono icono-lg"></i>
       <input
         name="busqueda"
         type="text"
@@ -27,15 +27,16 @@
       >
     </div>
 
-    <div class="chips-genero">
-      <button
-        *ngFor="let genero of generos"
-        class="chip-genero"
-        [class.chip-genero--activo]="generoSeleccionado === genero"
-        (click)="filtrarPorGenero(genero)"
-        type="button"
-      >{{ genero }}</button>
-    </div>
+    <ul class="chips-genero">
+      <li *ngFor="let genero of generos">
+        <button
+          class="chip-genero"
+          [class.chip-genero--activo]="generoSeleccionado === genero"
+          (click)="filtrarPorGenero(genero)"
+          type="button"
+        >{{ genero }}</button>
+      </li>
+    </ul>
   </div>
 
   <!-- Grid de películas -->
@@ -50,7 +51,7 @@
 
   <!-- Estado vacío -->
   <div class="estado-vacio" *ngIf="peliculas.length === 0">
-    <i class="fa-solid fa-film estado-vacio__icono" style="font-size:48px"></i>
+    <i class="fa-solid fa-film estado-vacio__icono icono-3xl"></i>
     <p class="estado-vacio__texto">No hay películas en el catálogo.</p>
     <button class="btn btn-gold btn-md" (click)="nuevaPelicula()" type="button">
       Agregar primera película

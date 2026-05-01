@@ -3,8 +3,8 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 14px 16px;
-  background: var(--surface-2);
-  border: 1px solid var(--surface-3);
+  background: var(--superficie-2);
+  border: 1px solid var(--superficie-3);
   border-radius: 3px;
   cursor: pointer;
   transition: border-color 0.25s, box-shadow 0.25s;
@@ -13,37 +13,47 @@
 }
 
 .boton-funcion:hover {
-  border-color: var(--gold);
-  box-shadow: var(--glow-md);
+  border-color: var(--dorado);
+  box-shadow: var(--brillo-md);
+}
+
+.boton-funcion:focus-visible {
+  outline: 2px solid var(--dorado);
+  outline-offset: 2px;
+}
+.boton-funcion:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .boton-funcion--activo {
-  border-color: var(--gold);
+  border-color: var(--dorado);
   background: rgba(201, 160, 55, 0.06);
 }
 
 .boton-funcion__hora {
-  font-family: var(--font-display);
+  font-family: var(--fuente-titulo);
   font-size: 22px;
-  color: var(--gold);
+  color: var(--dorado);
   line-height: 1;
   margin-bottom: 4px;
 }
 
 .boton-funcion__sala {
   font-size: 12px;
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
 }
 
 .boton-funcion__asientos {
   font-size: 11px;
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
   opacity: 0.7;
 }
 
 .boton-funcion__precio {
   font-size: 14px;
   font-weight: 600;
-  color: var(--gold);
+  color: var(--dorado);
   margin-top: 6px;
 }

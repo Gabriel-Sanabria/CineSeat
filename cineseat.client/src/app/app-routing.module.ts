@@ -2,22 +2,22 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/cartelera', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
     path: 'login',
-    loadChildren: () => import('./autenticacion/autenticacion.module').then(m => m.AutenticacionModule)
+    loadChildren: () => import('./autenticacion/autenticacion.module').then(modulo => modulo.AutenticacionModule)
   },
   {
     path: 'cartelera',
-    loadChildren: () => import('./cartelera/cartelera.module').then(m => m.CarteleraModule)
+    loadChildren: () => import('./cartelera/cartelera.module').then(modulo => modulo.CarteleraModule)
   },
   {
     path: 'peliculas',
-    loadChildren: () => import('./peliculas/peliculas.module').then(m => m.PeliculasModule)
+    loadChildren: () => import('./peliculas/peliculas.module').then(modulo => modulo.PeliculasModule)
   },
   {
     path: 'dashboard',
-    loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
+    loadChildren: () => import('./dashboard/dashboard.module').then(modulo => modulo.DashboardModule)
   }
 ];
 

@@ -16,7 +16,7 @@
 
 .pagina-peliculas__subtitulo {
   font-size: 14px;
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
 }
 
 .barra-filtros {
@@ -38,45 +38,53 @@
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
   pointer-events: none;
 }
 
 .campo-busqueda__input {
   width: 100%;
-  background: var(--surface-3);
-  border: 1px solid var(--surface-3);
-  color: var(--cream);
+  background: var(--superficie-3);
+  border: 1px solid var(--superficie-3);
+  color: var(--crema);
   padding: 8px 12px 8px 36px;
   border-radius: 20px;
-  font-family: var(--font-body);
+  font-family: var(--fuente-cuerpo);
   font-size: 13px;
   outline: none;
   transition: border-color 0.2s;
 }
 
 .campo-busqueda__input:focus {
-  border-color: var(--gold-dim);
+  border-color: var(--dorado-tenue);
 }
 
 .campo-busqueda__input::placeholder {
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
   opacity: 0.5;
 }
 
 .chips-genero {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
 
+.chips-genero li {
+  padding: 0;
+  margin: 0;
+}
+
 .chip-genero {
   padding: 5px 14px;
   border-radius: 20px;
-  border: 1px solid var(--gold-dim);
+  border: 1px solid var(--dorado-tenue);
   background: transparent;
-  color: var(--cream-dim);
-  font-family: var(--font-body);
+  color: var(--crema-tenue);
+  font-family: var(--fuente-cuerpo);
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
@@ -84,20 +92,20 @@
 }
 
 .chip-genero:hover {
-  border-color: var(--gold);
-  color: var(--cream);
-  box-shadow: var(--glow-sm);
+  border-color: var(--dorado);
+  color: var(--crema);
+  box-shadow: var(--brillo-sm);
 }
 
 .chip-genero--activo {
-  background: var(--cream);
-  color: var(--bg);
-  border-color: var(--cream);
+  background: var(--crema);
+  color: var(--fondo);
+  border-color: var(--crema);
   font-weight: 600;
 }
 
 .chip-genero--activo:hover {
-  color: var(--bg);
+  color: var(--fondo);
 }
 
 .grid-peliculas {
@@ -120,11 +128,28 @@
 }
 
 .estado-vacio__icono {
-  color: var(--gold-dim);
+  color: var(--dorado-tenue);
   opacity: 0.5;
 }
 
 .estado-vacio__texto {
   font-size: 14px;
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
+}
+
+@media (max-width: 1023px) {
+  .pagina-peliculas {
+    padding: 24px 40px;
+  }
+
+  .campo-busqueda {
+    width: 100%;
+    max-width: 340px;
+  }
+}
+
+@media (max-width: 767px) {
+  .pagina-peliculas {
+    padding: 16px 36px;
+  }
 }

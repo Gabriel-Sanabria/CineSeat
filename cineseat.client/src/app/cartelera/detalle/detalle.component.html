@@ -1,6 +1,6 @@
 <app-header activo="cartelera" [emailUsuario]="emailUsuario"></app-header>
 
-<div class="pagina-detalle" (click)="deseleccionarFuncion()">
+<main class="pagina-detalle" (click)="deseleccionarFuncion()">
 
   <!-- Hero con info de la película -->
   <div class="detalle-hero">
@@ -47,14 +47,15 @@
           >
         </div>
 
-        <div class="lista-funciones">
-          <app-item-funcion
-            *ngFor="let funcion of funciones"
-            [funcion]="funcion"
-            [activo]="funcionSeleccionada?.id === funcion.id"
-            (seleccionar)="seleccionarFuncion(funcion)"
-          ></app-item-funcion>
-        </div>
+        <ul class="lista-funciones">
+          <li *ngFor="let funcion of funciones">
+            <app-item-funcion
+              [funcion]="funcion"
+              [activo]="funcionSeleccionada?.id === funcion.id"
+              (seleccionar)="seleccionarFuncion(funcion)"
+            ></app-item-funcion>
+          </li>
+        </ul>
 
         <button
           class="btn btn-gold btn-reservar"
@@ -62,12 +63,12 @@
           (click)="irAReserva()"
           type="button"
         >
-          <i class="fa-solid fa-couch" style="font-size:16px"></i>
+          <i class="fa-solid fa-couch icono-lg"></i>
           Reservar asientos
         </button>
       </div>
     </div>
   </div>
 
-</div>
+</main>
 

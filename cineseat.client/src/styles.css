@@ -1,19 +1,25 @@
 /* Variables de tema globales */
 :root {
-  --bg: #1e1c1a;
-  --surface-1: #272523;
-  --surface-2: #322f2c;
-  --surface-3: #3f3c38;
-  --gold: #c9a037;
-  --gold-light: #e2c76d;
-  --gold-dim: #8a7040;
-  --cream: papayawhip;
-  --cream-dim: #b8a882;
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
+  --fondo: #1e1c1a;
+  --superficie-1: #272523;
+  --superficie-2: #322f2c;
+  --superficie-3: #3f3c38;
+  --dorado: #c9a037;
+  --dorado-claro: #e2c76d;
+  --dorado-tenue: #8a7040;
+  --crema: papayawhip;
+  --crema-tenue: #b8a882;
+  --fuente-titulo: 'Playfair Display', Georgia, serif;
+  --fuente-cuerpo: 'DM Sans', system-ui, sans-serif;
+
   /* Resplandores dorados reutilizables */
-  --glow-sm: 0 0 0 1px var(--gold), 0 0 10px rgba(201,160,55,0.4), 0 0 22px rgba(201,160,55,0.15);
-  --glow-md: 0 0 0 1px var(--gold), 0 0 16px rgba(201,160,55,0.5), 0 0 36px rgba(201,160,55,0.2), 0 4px 16px rgba(0,0,0,0.4);
+  --brillo-sm: 0 0 0 1px var(--dorado), 0 0 10px rgba(201,160,55,0.4), 0 0 22px rgba(201,160,55,0.15);
+  --brillo-md: 0 0 0 1px var(--dorado), 0 0 16px rgba(201,160,55,0.5), 0 0 36px rgba(201,160,55,0.2), 0 4px 16px rgba(0,0,0,0.4);
+
+  /* Colores de estado */
+  --color-error: #e05555;
+  --color-texto-invertido: #0d0b09;
+  --color-advertencia: #c07820;
 }
 
 /* Reset y estilos base */
@@ -23,14 +29,32 @@
   padding: 0;
 }
 
+/* Elementos personalizados de Angular que actúan como contenedores de bloque */
+app-tarjeta-pelicula {
+  display: block;
+}
+
+/* Spacer para el header fijo — ocupa espacio en el flujo normal */
+app-header {
+  display: block;
+  height: 56px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 767px) {
+  app-header {
+    height: 96px;
+  }
+}
+
 html, body {
   height: 100%;
 }
 
 body {
-  font-family: var(--font-body);
-  background: var(--bg);
-  color: var(--cream);
+  font-family: var(--fuente-cuerpo);
+  background: var(--fondo);
+  color: var(--crema);
   min-height: 100vh;
   position: relative;
 }
@@ -58,16 +82,16 @@ body::before {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--surface-1);
+  background: var(--superficie-1);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--gold-dim);
+  background: var(--dorado-tenue);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--gold);
+  background: var(--dorado);
 }
 
 /* Estilos de botones globales */
@@ -77,7 +101,7 @@ body::before {
   gap: 6px;
   border: 1px solid transparent;
   border-radius: 3px;
-  font-family: var(--font-body);
+  font-family: var(--fuente-cuerpo);
   font-weight: 600;
   letter-spacing: 0.8px;
   text-transform: uppercase;
@@ -86,7 +110,7 @@ body::before {
 }
 
 .btn:hover {
-  box-shadow: var(--glow-sm);
+  box-shadow: var(--brillo-sm);
 }
 
 .btn-gold:hover {
@@ -95,42 +119,52 @@ body::before {
 }
 
 .btn-ghost:hover, .btn-dark:hover {
-  border-color: var(--gold);
+  border-color: var(--dorado);
 }
 
 .btn:active {
   transform: scale(0.98);
 }
 
+.btn:focus-visible {
+  outline: 2px solid var(--dorado);
+  outline-offset: 2px;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 /* Variantes de botón */
 .btn-gold {
-  background: var(--gold);
-  color: #0d0b09;
-  border-color: var(--gold);
+  background: var(--dorado);
+  color: var(--color-texto-invertido);
+  border-color: var(--dorado);
 }
 
 .btn-ghost {
   background: transparent;
-  color: var(--gold);
-  border-color: var(--gold);
+  color: var(--dorado);
+  border-color: var(--dorado);
 }
 
 .btn-danger {
   background: transparent;
-  color: #e05555;
-  border-color: #e05555;
+  color: var(--color-error);
+  border-color: var(--color-error);
 }
 
 .btn-dark {
-  background: var(--surface-3);
-  color: var(--cream);
-  border-color: var(--gold-dim);
+  background: var(--superficie-3);
+  color: var(--crema);
+  border-color: var(--dorado-tenue);
 }
 
 .btn-cream {
-  background: var(--cream);
-  color: var(--bg);
-  border-color: var(--cream);
+  background: var(--crema);
+  color: var(--fondo);
+  border-color: var(--crema);
   font-weight: 700;
 }
 
@@ -160,7 +194,7 @@ body::before {
   display: block;
   font-size: 11px;
   font-weight: 600;
-  color: var(--gold-dim);
+  color: var(--dorado-tenue);
   letter-spacing: 1px;
   text-transform: uppercase;
   margin-bottom: 6px;
@@ -175,12 +209,12 @@ body::before {
 .campo-select,
 .campo-textarea {
   width: 100%;
-  background: var(--surface-3);
-  border: 1px solid var(--surface-3);
-  color: var(--cream);
+  background: var(--superficie-3);
+  border: 1px solid var(--superficie-3);
+  color: var(--crema);
   padding: 10px 14px;
   border-radius: 3px;
-  font-family: var(--font-body);
+  font-family: var(--fuente-cuerpo);
   font-size: 14px;
   transition: border-color 0.2s;
   outline: none;
@@ -189,12 +223,12 @@ body::before {
 .campo-input:focus,
 .campo-select:focus,
 .campo-textarea:focus {
-  border-color: var(--gold-dim);
+  border-color: var(--dorado-tenue);
 }
 
 .campo-input::placeholder,
 .campo-textarea::placeholder {
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
   opacity: 0.5;
 }
 
@@ -208,17 +242,25 @@ body::before {
 }
 
 .campo-select option {
-  background: var(--surface-3);
-  color: var(--cream);
+  background: var(--superficie-3);
+  color: var(--crema);
 }
 
 /* Tipografía display */
 .titulo-display {
-  font-family: var(--font-display);
-  color: var(--cream);
+  font-family: var(--fuente-titulo);
+  color: var(--crema);
 }
 
 .titulo-gold {
-  font-family: var(--font-display);
-  color: var(--gold);
+  font-family: var(--fuente-titulo);
+  color: var(--dorado);
 }
+
+/* Tamaños de íconos */
+.icono-sm  { font-size: 12px; }
+.icono-md  { font-size: 14px; }
+.icono-lg  { font-size: 16px; }
+.icono-xl  { font-size: 22px; }
+.icono-2xl { font-size: 28px; }
+.icono-3xl { font-size: 48px; }

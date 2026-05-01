@@ -10,8 +10,6 @@
     <app-portada-pelicula
       [titulo]="pelicula?.titulo || ''"
       [genero]="pelicula?.genero || ''"
-      [ancho]="192"
-      [alto]="288"
     ></app-portada-pelicula>
 
     <div class="tarjeta-pelicula__info">
@@ -28,8 +26,8 @@
         [class.btn-cream]="modo === 'editar'"
         (click)="accionClick()"
       >
-        <i *ngIf="modo === 'ver'" class="fa-solid fa-ticket" style="font-size:14px"></i>
-        <i *ngIf="modo === 'editar'" class="fa-solid fa-pen-to-square" style="font-size:14px"></i>
+        <i *ngIf="modo === 'ver'" class="fa-solid fa-ticket icono-md"></i>
+        <i *ngIf="modo === 'editar'" class="fa-solid fa-pen-to-square icono-md"></i>
         <span *ngIf="modo === 'ver'">Ver funciones</span>
         <span *ngIf="modo === 'editar'">Editar</span>
       </button>

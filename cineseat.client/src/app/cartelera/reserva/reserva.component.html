@@ -1,6 +1,6 @@
 <app-header activo="cartelera" [emailUsuario]="emailUsuario"></app-header>
 
-<div class="pagina-reserva" *ngIf="!reservaConfirmada">
+<main class="pagina-reserva" *ngIf="!reservaConfirmada">
 
   <!-- Layout principal -->
   <div class="reserva-layout">
@@ -164,7 +164,7 @@
 
       <!-- Nota de pago simulado -->
       <p class="nota-pago-simulado">
-        <i class="fa-solid fa-lock" style="font-size:12px"></i>
+        <i class="fa-solid fa-lock icono-sm"></i>
         Pago simulado — no se realiza ningún cobro
       </p>
 
@@ -172,7 +172,7 @@
 
   </div>
 
-</div>
+</main>
 
 <!-- Vista de éxito (tras reserva confirmada) -->
 <div class="reserva-exito-overlay" *ngIf="reservaConfirmada">

@@ -2,10 +2,10 @@
 
 <main class="pagina-dashboard">
 
-  <div class="pagina-dashboard__header">
+  <header class="pagina-dashboard__header">
     <h1 class="titulo-display titulo-dashboard">Dashboard</h1>
     <p class="pagina-dashboard__subtitulo">Métricas de ocupación y recaudación</p>
-  </div>
+  </header>
 
   <!-- Barra de filtros -->
   <app-buscador
@@ -16,9 +16,9 @@
   ></app-buscador>
 
   <!-- Lista de cards por película -->
-  <div class="lista-dashboard">
+  <ul class="lista-dashboard">
 
-    <div class="card-dashboard" *ngFor="let item of datosPeliculas">
+    <li class="card-dashboard" *ngFor="let item of datosPeliculas">
 
       <!-- Encabezado de la card -->
       <div class="card-dashboard__header">
@@ -32,62 +32,68 @@
       </div>
 
       <!-- Tabla de funciones -->
-      <div class="tabla-funciones">
+      <table class="tabla-funciones">
 
-        <!-- Encabezados -->
-        <div class="tabla-funciones__encabezado">
-          <span>Función</span>
-          <span>Ocupación</span>
-          <span>%</span>
-          <span>Boletos</span>
-          <span>Ingresos</span>
-        </div>
+        <thead>
+          <tr class="tabla-funciones__encabezado">
+            <th>Función</th>
+            <th>Ocupación</th>
+            <th>%</th>
+            <th>Boletos</th>
+            <th>Ingresos</th>
+          </tr>
+        </thead>
 
-        <!-- Grupos por fecha -->
-        <ng-container *ngFor="let grupo of agruparPorFecha(item.funciones)">
+        <tbody>
+          <!-- Grupos por fecha -->
+          <ng-container *ngFor="let grupo of agruparPorFecha(item.funciones)">
 
-          <!-- Separador de fecha -->
-          <div class="tabla-funciones__fecha">
-            <span>{{ formatearFecha(grupo.fecha) }}</span>
-          </div>
+            <!-- Separador de fecha -->
+            <tr class="tabla-funciones__fecha">
+              <td colspan="5"><span>{{ formatearFecha(grupo.fecha) }}</span></td>
+            </tr>
 
-          <!-- Filas de funciones de esa fecha -->
-          <div class="tabla-funciones__fila" *ngFor="let funcion of grupo.funciones">
-            <span class="funcion-nombre">Sala {{ funcion.sala }} · {{ funcion.hora }} · {{ funcion.tipo }}</span>
-            <div class="barra-ocupacion">
-              <div
-                class="barra-ocupacion__relleno"
-                [class.barra-ocupacion--alta]="funcion.porcentaje > 70"
-                [class.barra-ocupacion--media]="funcion.porcentaje > 45 && funcion.porcentaje <= 70"
-                [class.barra-ocupacion--baja]="funcion.porcentaje <= 45"
-                [style.width.%]="funcion.porcentaje"
-              ></div>
-            </div>
-            <span class="funcion-pct">{{ funcion.porcentaje }}%</span>
-            <span class="funcion-boletos">{{ funcion.boletos }}</span>
-            <span class="funcion-ingresos">${{ funcion.ingresos }}</span>
-          </div>
+            <!-- Filas de funciones de esa fecha -->
+            <tr class="tabla-funciones__fila" *ngFor="let funcion of grupo.funciones">
+              <td class="funcion-nombre">Sala {{ funcion.sala }} · {{ funcion.hora }} · {{ funcion.tipo }}</td>
+              <td>
+                <div class="barra-ocupacion">
+                  <div
+                    class="barra-ocupacion__relleno"
+                    [class.barra-ocupacion--alta]="funcion.porcentaje > 70"
+                    [class.barra-ocupacion--media]="funcion.porcentaje > 45 && funcion.porcentaje <= 70"
+                    [class.barra-ocupacion--baja]="funcion.porcentaje <= 45"
+                    [style.--porcentaje]="funcion.porcentaje + '%'"
+                  ></div>
+                </div>
+              </td>
+              <td class="funcion-pct">{{ funcion.porcentaje }}%</td>
+              <td class="funcion-boletos">{{ funcion.boletos }}</td>
+              <td class="funcion-ingresos">${{ funcion.ingresos }}</td>
+            </tr>
 
-        </ng-container>
+          </ng-container>
+        </tbody>
 
-        <!-- Fila TOTAL -->
-        <div class="tabla-funciones__total">
-          <span>TOTAL</span>
-          <span></span>
-          <span></span>
-          <span class="funcion-boletos">{{ item.totalBoletos }}</span>
-          <span class="funcion-ingresos total-ingresos">${{ item.totalIngresos }}</span>
-        </div>
+        <tfoot>
+          <tr class="tabla-funciones__total">
+            <td>TOTAL</td>
+            <td></td>
+            <td></td>
+            <td class="funcion-boletos">{{ item.totalBoletos }}</td>
+            <td class="funcion-ingresos total-ingresos">${{ item.totalIngresos }}</td>
+          </tr>
+        </tfoot>
 
-      </div>
+      </table>
 
-    </div>
+    </li>
 
-  </div>
+  </ul>
 
   <!-- Estado vacío -->
   <div class="estado-vacio" *ngIf="datosPeliculas.length === 0">
-    <i class="fa-solid fa-folder estado-vacio__icono" style="font-size:48px"></i>
+    <i class="fa-solid fa-folder estado-vacio__icono icono-3xl"></i>
     <p class="estado-vacio__texto">No hay datos de funciones disponibles.</p>
   </div>
 

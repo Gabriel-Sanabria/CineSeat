@@ -16,7 +16,7 @@
 
 .pagina-cartelera__subtitulo {
   font-size: 14px;
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
 }
 
 /* Grid de películas */
@@ -28,4 +28,16 @@
 
 .grid-peliculas app-tarjeta-pelicula {
   width: 100%;
+}
+
+@media (max-width: 1023px) {
+  .pagina-cartelera {
+    padding: 24px 40px;
+  }
+}
+
+@media (max-width: 767px) {
+  .pagina-cartelera {
+    padding: 16px 36px;
+  }
 }

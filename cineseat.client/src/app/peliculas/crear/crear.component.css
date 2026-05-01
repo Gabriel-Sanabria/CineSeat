@@ -42,7 +42,7 @@
 
 .duracion-unidad {
   font-size: 13px;
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
   flex-shrink: 0;
 }
 
@@ -110,8 +110,8 @@
 }
 
 .card-form {
-  background: var(--surface-1);
-  border: 1px solid var(--gold-dim);
+  background: var(--superficie-1);
+  border: 1px solid var(--dorado-tenue);
   border-radius: 4px;
   padding: 24px;
   display: flex;
@@ -122,7 +122,7 @@
 .card-form__titulo {
   font-size: 16px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--surface-3);
+  border-bottom: 1px solid var(--superficie-3);
 }
 
 /* Fila generica — base flex para filas de campos */
@@ -158,9 +158,13 @@
   align-items: center;
 }
 
+input[type="file"] {
+  display: none;
+}
+
 .zona-drop {
   width: 100%;
-  border: 2px dashed var(--gold-dim);
+  border: 2px dashed var(--dorado-tenue);
   border-radius: 4px;
   padding: 10px 16px;
   display: flex;
@@ -171,18 +175,18 @@
 }
 
 .zona-drop__icono {
-  color: var(--gold-dim);
+  color: var(--dorado-tenue);
   opacity: 0.6;
 }
 
 .zona-drop__texto {
   font-size: 12px;
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
 }
 
 .zona-drop__hint {
   font-size: 10px;
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
   opacity: 0.5;
   letter-spacing: 0.3px;
 }
@@ -195,7 +199,7 @@
 
 .sin-funciones {
   font-size: 12px;
-  color: var(--cream-dim);
+  color: var(--crema-tenue);
   opacity: 0.6;
   text-align: center;
   padding: 12px 0;
@@ -208,4 +212,57 @@
   padding: 10px;
   font-size: 11px;
   margin-top: 4px;
+}
+
+@media (max-width: 1023px) {
+  .crear-layout {
+    flex-wrap: wrap;
+  }
+
+  .crear-columna-portada,
+  .crear-columna-funciones {
+    width: 100%;
+    flex-shrink: 1;
+  }
+
+  .crear-columna-portada .card-form,
+  .crear-columna-funciones .card-form {
+    height: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .pagina-crear {
+    padding: 16px 20px;
+  }
+
+  .crear-layout {
+    flex-direction: column;
+  }
+
+  .crear-columna-info {
+    width: 100%;
+  }
+
+  .crear-columna-funciones .card-form {
+    max-height: 420px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .crear-columna-funciones .lista-funciones-crear {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .campos-fila--genero-clasif {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .campo--clasificacion {
+    width: 100%;
+  }
 }

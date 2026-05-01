@@ -1,4 +1,5 @@
-<div class="pagina-login">
+<main class="pagina-login">
+
   <!-- Gradiente decorativo superior -->
   <div class="pagina-login__gradiente"></div>
 
@@ -10,7 +11,7 @@
 
     <!-- Encabezado -->
     <div class="card-login__header">
-      <i class="fa-solid fa-film card-login__icono" style="font-size:48px"></i>
+      <img src="/logo.svg" class="card-login__icono" alt="CineSeat">
       <h1 class="card-login__titulo">CineSeat</h1>
     </div>
 
@@ -31,13 +32,7 @@
     </div>
 
     <!-- Formulario de inicio de sesión -->
-    <form
-      *ngIf="tabActiva === 'login'"
-      class="card-login__form"
-      (ngSubmit)="iniciarSesion()"
-      #formLogin="ngForm"
-      novalidate
-    >
+    <form *ngIf="tabActiva === 'login'" class="card-login__form" (ngSubmit)="iniciarSesion()" #formLogin="ngForm" novalidate>
       <div class="campo">
         <label class="campo-label" for="correo-login">Correo electrónico</label>
         <input
@@ -76,13 +71,7 @@
     </form>
 
     <!-- Formulario de registro -->
-    <form
-      *ngIf="tabActiva === 'registro'"
-      class="card-login__form"
-      (ngSubmit)="registrar()"
-      #formRegistro="ngForm"
-      novalidate
-    >
+    <form *ngIf="tabActiva === 'registro'" class="card-login__form" (ngSubmit)="registrar()" #formRegistro="ngForm" novalidate>
       <div class="campo">
         <label class="campo-label" for="correo-registro">Correo electrónico</label>
         <input
@@ -121,4 +110,4 @@
     </form>
 
   </div>
-</div>
+</main>

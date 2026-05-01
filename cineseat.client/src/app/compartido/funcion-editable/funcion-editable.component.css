@@ -1,6 +1,6 @@
 .funcion-item {
-  background: var(--surface-2);
-  border: 1px solid var(--surface-3);
+  background: var(--superficie-2);
+  border: 1px solid var(--superficie-3);
   border-radius: 3px;
   padding: 10px 12px;
   display: flex;
@@ -44,13 +44,13 @@
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--gold-dim);
+  color: var(--dorado-tenue);
 }
 
 .btn-eliminar-funcion {
   background: transparent;
   border: none;
-  color: #e05555;
+  color: var(--color-error);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -71,11 +71,11 @@
 
 .btn-tipo-sala {
   padding: 7px 4px;
-  background: var(--surface-3);
-  border: 1px solid var(--surface-3);
-  color: var(--cream-dim);
+  background: var(--superficie-3);
+  border: 1px solid var(--superficie-3);
+  color: var(--crema-tenue);
   border-radius: 3px;
-  font-family: var(--font-body);
+  font-family: var(--fuente-cuerpo);
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
@@ -83,13 +83,22 @@
 }
 
 .btn-tipo-sala:hover {
-  border-color: var(--gold-dim);
-  color: var(--cream);
+  border-color: var(--dorado-tenue);
+  color: var(--crema);
+}
+
+.btn-tipo-sala:focus-visible {
+  outline: 2px solid var(--dorado);
+  outline-offset: 2px;
+}
+.btn-eliminar-funcion:focus-visible {
+  outline: 2px solid var(--color-error);
+  outline-offset: 2px;
 }
 
 .btn-tipo-sala--activo {
-  border-color: var(--gold);
-  color: var(--gold);
+  border-color: var(--dorado);
+  color: var(--dorado);
   background: rgba(201, 160, 55, 0.08);
 }
 
@@ -99,12 +108,12 @@
 }
 
 .precio-funcion__simbolo {
-  background: var(--surface-3);
-  border: 1px solid var(--surface-3);
+  background: var(--superficie-3);
+  border: 1px solid var(--superficie-3);
   border-right: none;
   padding: 10px 10px;
   border-radius: 3px 0 0 3px;
-  color: var(--gold-dim);
+  color: var(--dorado-tenue);
   font-size: 14px;
 }
 
