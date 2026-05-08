@@ -1,9 +1,11 @@
 namespace CineSeat.Server.DTOs {
 
-    public class UsuarioRespuestaDTO {
+    public class UsuarioSesionDTO {
 
         public int Id { get; set; }
 
         public string? Correo { get; set; }
+
+        public string? Token { get; set; }
     }
 }

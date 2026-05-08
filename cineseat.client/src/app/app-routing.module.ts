@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { autenticacionGuard } from './guards/autenticacion.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -9,15 +10,18 @@ const routes: Routes = [
   },
   {
     path: 'cartelera',
-    loadChildren: () => import('./cartelera/cartelera.module').then(modulo => modulo.CarteleraModule)
+    loadChildren: () => import('./cartelera/cartelera.module').then(modulo => modulo.CarteleraModule),
+    canActivate: [autenticacionGuard]
   },
   {
     path: 'peliculas',
-    loadChildren: () => import('./peliculas/peliculas.module').then(modulo => modulo.PeliculasModule)
+    loadChildren: () => import('./peliculas/peliculas.module').then(modulo => modulo.PeliculasModule),
+    canActivate: [autenticacionGuard]
   },
   {
     path: 'dashboard',
-    loadChildren: () => import('./dashboard/dashboard.module').then(modulo => modulo.DashboardModule)
+    loadChildren: () => import('./dashboard/dashboard.module').then(modulo => modulo.DashboardModule),
+    canActivate: [autenticacionGuard]
   }
 ];
 

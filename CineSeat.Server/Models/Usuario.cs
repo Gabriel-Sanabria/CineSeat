@@ -7,11 +7,11 @@ namespace CineSeat.Server.Models {
         [Key]
         public int Id { get; set; }
 
-        [MaxLength(100)]
-        public string? Correo { get; set; }
+        [Required, MaxLength(100)]
+        public string Correo { get; set; } = string.Empty;
 
         // Hash por bcrypt — siempre 60 caracteres
-        [MaxLength(60)]
-        public string? Contrasena { get; set; }
+        [Required, MaxLength(60)]
+        public string Contrasena { get; set; } = string.Empty;
     }
 }

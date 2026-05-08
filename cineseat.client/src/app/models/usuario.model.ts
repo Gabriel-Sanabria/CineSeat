@@ -1,4 +1,5 @@
-export interface UsuarioRespuesta {
+export interface UsuarioSesion {
+  token: string;
   id: number;
   correo: string;
 }

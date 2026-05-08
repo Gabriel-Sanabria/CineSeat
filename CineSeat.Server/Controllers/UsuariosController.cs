@@ -16,38 +16,45 @@ namespace CineSeat.Server.Controllers {
 
         // POST api/usuarios
         [HttpPost]
-        public async Task<ActionResult<UsuarioRespuestaDTO>> Crear([FromBody] UsuarioCrearDTO dto) {
-
-            // TODO: Llamar a servicioUsuarios.Crear(dto).
-            //       Retornar CreatedAtAction apuntando a un endpoint de detalle si se añade en el futuro,
-            //       o simplemente Ok(resultado) mientras no exista ese endpoint.
-            throw new NotImplementedException();
+        public async Task<ActionResult<UsuarioSesionDTO>> Crear([FromBody] UsuarioCrearDTO dto) {
+            try {
+				// Intentar crear el usuario llamando al metodo del servicio y retornarlo en una respuesta 200 OK.
+				UsuarioSesionDTO usuarioCreado = await servicioUsuarios.Crear(dto);
+                return Ok(usuarioCreado);
+            }
+            catch (InvalidOperationException ex) {
+				// Si ocurre un error de negocio, retornar una respuesta 400 Bad Request con el mensaje.
+				return BadRequest(new { mensaje = ex.Message });
+            }
+            catch (Exception) {
+				// Si un error desconocido ocurre, retornar una respuesta 500 Internal Server Error con un mensaje genérico.
+				return StatusCode(500, new { mensaje = "Error interno del servidor" });
+            }
         }
 
         // POST api/usuarios/validar
         [HttpPost("validar")]
-        public async Task<IActionResult> ValidarCredenciales([FromBody] UsuarioCrearDTO dto) {
-            // TODO: Llamar a servicioUsuarios.ValidarCredenciales(dto).
-            //       Si retorna null, retornar Unauthorized().
-            //       Si retorna un resultado válido, retornar Ok(resultado).
-            throw new NotImplementedException();
-        }
+        public async Task<ActionResult<UsuarioSesionDTO>> ValidarCredenciales([FromBody] UsuarioCrearDTO dto) {
+            try {
+				// Intentar validar las credenciales del usuario llamando al metodo del servicio.
+				UsuarioSesionDTO? usuarioValidado = await servicioUsuarios.ValidarCredenciales(dto);
 
-        // GET api/usuarios/correo-en-uso?correo=...
-        [HttpGet("correo-en-uso")]
-        public async Task<IActionResult> CorreoEnUso([FromQuery] string correo) {
-            // TODO: Llamar a servicioUsuarios.CorreoEnUso(correo).
-            //       Retornar Ok(resultado) con el bool que indique si el correo está en uso.
-            throw new NotImplementedException();
-        }
+				// Si el usuario no es encontrado, retornar una respuesta 401 Unauthorized con un mensaje.
+				if (usuarioValidado == null) {
+                    return Unauthorized(new { mensaje = "Credenciales inválidas" });
+                }
 
-        // DELETE api/usuarios/{id}
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Eliminar(int id) {
-            // TODO: Llamar a servicioUsuarios.Eliminar(id).
-            //       Si retorna false, retornar NotFound().
-            //       Si retorna true, retornar NoContent().
-            throw new NotImplementedException();
+				// Si el usuario es encontrado, retornar una respuesta 200 OK con el usuario validado.
+				return Ok(usuarioValidado);
+            }
+            catch (InvalidOperationException ex) {
+				// Si ocurre un error de negocio, retornar una respuesta 400 Bad Request con el mensaje.
+				return BadRequest(new { mensaje = ex.Message });
+            }
+            catch (Exception) {
+				// Si un error desconocido ocurre, retornar una respuesta 500 Internal Server Error con un mensaje genérico.
+				return StatusCode(500, new { mensaje = "Error interno del servidor" });
+            }
         }
     }
 }

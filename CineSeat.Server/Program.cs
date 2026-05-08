@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using CineSeat.Server.Data;
+using CineSeat.Server.Services;
 
 namespace CineSeat.Server {
 	public class Program {
@@ -7,8 +11,25 @@ namespace CineSeat.Server {
 
 			var builder = WebApplication.CreateBuilder(args);
 
-			// Add services to the container.
+			// Servicio de Entity Framework Core con SQL Server
 			builder.Services.AddDbContext<AppDBContext>(options => { options.UseSqlServer(builder.Configuration.GetConnectionString("CineSeat")); });
+
+			// Servicio de autenticación JWT Bearer
+			builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+				options.TokenValidationParameters = new TokenValidationParameters {
+					ValidateIssuerSigningKey = true,
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Llave"]!)),
+					ValidateIssuer = true,
+					ValidIssuer = builder.Configuration["Jwt:Emisor"],
+					ValidateAudience = true,
+					ValidAudience = builder.Configuration["Jwt:Audiencia"],
+					ValidateLifetime = true
+				};
+			});
+
+			// Servicios de la aplicación
+			builder.Services.AddScoped<ITokenServicio, TokenServicio>();
+			builder.Services.AddScoped<IUsuarioServicio, UsuarioServicio>();
 
 			builder.Services.AddControllers();
 			// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -26,8 +47,8 @@ namespace CineSeat.Server {
 
 			app.UseHttpsRedirection();
 
+			app.UseAuthentication();
 			app.UseAuthorization();
-
 
 			app.MapControllers();
 

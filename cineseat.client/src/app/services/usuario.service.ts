@@ -1,34 +1,49 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { UsuarioCrear, UsuarioRespuesta } from '../models/usuario.model';
+import { Observable, throwError } from 'rxjs';
+import { UsuarioCrear, UsuarioSesion } from '../models/usuario.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
 
-  private readonly urlBase = 'api/usuarios';
+  // URL base para las peticiones al backend relacionadas con usuarios
+  private readonly urlBase: string = 'api/usuarios';
 
-  constructor(private http: HttpClient) { }
+  // Formato para validar correos electrónicos (expresión regular)
+  private readonly emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  obtenerTodos(): Observable<UsuarioRespuesta[]> {
-    return this.http.get<UsuarioRespuesta[]>(this.urlBase);
+  // Inyección de dependencias del servicio
+  constructor(private httpClient: HttpClient) { }
+
+  crear(dto: UsuarioCrear): Observable<UsuarioSesion> {
+
+    // Validación de campos antes de enviar la solicitud al backend
+    const error = this.validarCampos(dto.correo, dto.contrasena);
+    if (error)
+      return throwError(() => ({ error: { mensaje: error } }));
+
+    // Realizar la solicitud POST al backend para crear un nuevo usuario y retornar un observable con la respuesta
+    return this.httpClient.post<UsuarioSesion>(this.urlBase, dto);
   }
 
-  obtenerPorId(id: number): Observable<UsuarioRespuesta> {
-    return this.http.get<UsuarioRespuesta>(`${this.urlBase}/${id}`);
+  validarCredenciales(correo: string, contrasena: string): Observable<UsuarioSesion> {
+
+    // Validación de campos antes de enviar la solicitud al backend
+    const error = this.validarCampos(correo, contrasena);
+    if (error)
+      return throwError(() => ({ error: { mensaje: error } }));
+
+    // Realizar la solicitud POST al backend para validar las credenciales y retornar un observable con la respuesta
+    return this.httpClient.post<UsuarioSesion>(`${this.urlBase}/validar`, { correo, contrasena });
   }
 
-  crear(dto: UsuarioCrear): Observable<UsuarioRespuesta> {
-    return this.http.post<UsuarioRespuesta>(this.urlBase, dto);
-  }
-
-  actualizar(id: number, dto: UsuarioCrear): Observable<UsuarioRespuesta> {
-    return this.http.put<UsuarioRespuesta>(`${this.urlBase}/${id}`, dto);
-  }
-
-  eliminar(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.urlBase}/${id}`);
+  // --------- MÉTODOS AUXILIARES ---------
+  private validarCampos(correo: string, contrasena: string): string | null {
+    if (!correo || !contrasena) return 'Por favor, completa todos los campos.';
+    if (!this.emailRegex.test(correo)) return 'El correo electrónico no tiene un formato válido.';
+    if (contrasena.length < 8) return 'La contraseña debe tener al menos 8 caracteres.';
+    return null;
   }
 }

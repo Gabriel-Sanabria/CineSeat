@@ -127,3 +127,43 @@
   font-size: 13px;
   margin-top: 4px;
 }
+
+/* Wrapper relativo para posicionar el botón ojo */
+.campo-contrasena {
+  position: relative;
+}
+
+/* Ocultar el botón ojo nativo del navegador */
+.campo-contrasena input::-ms-reveal,
+.campo-contrasena input::-ms-clear,
+.campo-contrasena input::-webkit-credentials-auto-fill-button {
+  display: none;
+}
+
+.btn-ojo {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--crema);
+  padding: 4px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.btn-ojo:hover {
+  color: var(--crema-tenue);
+}
+
+@keyframes girar {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.btn-spinner {
+  animation: girar 0.8s linear infinite;
+}

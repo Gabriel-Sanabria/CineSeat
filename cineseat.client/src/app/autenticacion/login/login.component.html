@@ -52,22 +52,35 @@
 
       <div class="campo">
         <label class="campo-label" for="contrasena-login">Contraseña</label>
-        <input
-          id="contrasena-login"
-          name="contrasenaLogin"
-          type="password"
-          class="campo-input"
-          placeholder="••••••••"
-          [(ngModel)]="contrasenaLogin"
-          required
-          #contrasenaLoginCtrl="ngModel"
-        >
+        <div class="campo-contrasena">
+          <input
+            id="contrasena-login"
+            name="contrasenaLogin"
+            [type]="mostrarContrasenaLogin ? 'text' : 'password'"
+            class="campo-input"
+            placeholder="••••••••"
+            [(ngModel)]="contrasenaLogin"
+            required
+            #contrasenaLoginCtrl="ngModel"
+          >
+          <button
+            type="button"
+            class="btn-ojo"
+            (click)="mostrarContrasenaLogin = !mostrarContrasenaLogin"
+            [attr.aria-label]="mostrarContrasenaLogin ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            <i class="fa-solid" [class.fa-eye]="!mostrarContrasenaLogin" [class.fa-eye-slash]="mostrarContrasenaLogin"></i>
+          </button>
+        </div>
         <span class="campo-error" *ngIf="contrasenaLoginCtrl.invalid && contrasenaLoginCtrl.touched">
           Contraseña requerida
         </span>
       </div>
 
-      <button type="submit" class="btn btn-gold btn-login">Entrar</button>
+      <button type="submit" class="btn btn-gold btn-login" [disabled]="cargando">
+        <i *ngIf="cargando" class="fa-solid fa-circle-notch btn-spinner"></i>
+        <span>{{ cargando ? 'Cargando...' : 'Entrar' }}</span>
+      </button>
     </form>
 
     <!-- Formulario de registro -->
@@ -91,22 +104,35 @@
 
       <div class="campo">
         <label class="campo-label" for="contrasena-registro">Contraseña</label>
-        <input
-          id="contrasena-registro"
-          name="contrasenaRegistro"
-          type="password"
-          class="campo-input"
-          placeholder="••••••••"
-          [(ngModel)]="contrasenaRegistro"
-          required
-          #contrasenaRegistroCtrl="ngModel"
-        >
+        <div class="campo-contrasena">
+          <input
+            id="contrasena-registro"
+            name="contrasenaRegistro"
+            [type]="mostrarContrasenaRegistro ? 'text' : 'password'"
+            class="campo-input"
+            placeholder="••••••••"
+            [(ngModel)]="contrasenaRegistro"
+            required
+            #contrasenaRegistroCtrl="ngModel"
+          >
+          <button
+            type="button"
+            class="btn-ojo"
+            (click)="mostrarContrasenaRegistro = !mostrarContrasenaRegistro"
+            [attr.aria-label]="mostrarContrasenaRegistro ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            <i class="fa-solid" [class.fa-eye]="!mostrarContrasenaRegistro" [class.fa-eye-slash]="mostrarContrasenaRegistro"></i>
+          </button>
+        </div>
         <span class="campo-error" *ngIf="contrasenaRegistroCtrl.invalid && contrasenaRegistroCtrl.touched">
           Contraseña requerida
         </span>
       </div>
 
-      <button type="submit" class="btn btn-gold btn-login">Crear cuenta</button>
+      <button type="submit" class="btn btn-gold btn-login" [disabled]="cargando">
+        <i *ngIf="cargando" class="fa-solid fa-circle-notch btn-spinner"></i>
+        <span>{{ cargando ? 'Cargando...' : 'Crear cuenta' }}</span>
+      </button>
     </form>
 
   </div>

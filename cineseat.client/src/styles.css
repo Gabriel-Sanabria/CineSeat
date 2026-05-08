@@ -1,3 +1,5 @@
+@import 'ngx-toastr/toastr';
+
 /* Variables de tema globales */
 :root {
   --fondo: #1e1c1a;

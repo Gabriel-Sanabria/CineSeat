@@ -10,12 +10,11 @@
 - **C#** — Lenguaje de programación del backend
 - **ASP.NET Core 10** — Framework Web API
 - **Entity Framework Core 10.0.7** — ORM code-first con SQL Server
-  - `Microsoft.EntityFrameworkCore` 10.0.7
-  - `Microsoft.EntityFrameworkCore.SqlServer` 10.0.7
-  - `Microsoft.EntityFrameworkCore.Tools` 10.0.7
 - **BCrypt.Net-Next 4.1.0** — Hash seguro de contraseñas
+- **Microsoft.AspNetCore.Authentication.JwtBearer 10.0.7** — Middleware de validación de tokens JWT en el pipeline de ASP.NET Core
 - **TypeScript** — Lenguaje de programación del frontend
 - **Angular 18** — Framework SPA con NgModules
+- **ngx-toastr 19.1.0** — Notificaciones toast (éxito, advertencia, error) en el cliente Angular
 - **SQL Server** — Base de datos relacional
 
 ---
