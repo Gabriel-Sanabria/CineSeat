@@ -13,6 +13,6 @@ export const autenticacionGuard: CanActivateFn = () => {
   if (usuarioService.haySesionActiva()) return true;
 
   // Si no se detecta sesión activa, se redirige al usuario a la página de login y se cancela la navegación
-  router.navigate(['/login']);
+  router.navigate(['/login'], { state: { sesionExpirada: true } });
   return false;
 };

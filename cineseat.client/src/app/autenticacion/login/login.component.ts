@@ -36,9 +36,15 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router, private toastr: ToastrService, private usuarioService: UsuarioService) { }
 
   ngOnInit(): void {
-    // Si ya existe una sesión activa, redirigir directamente a la cartelera
+    // Si al cargar el componente se detecta que ya existe una sesión activa, se redirige al usuario a la página de cartelera directamente.
     if (this.usuarioService.haySesionActiva()) {
       this.router.navigate(['/cartelera']);
+      return;
+    }
+
+    // Si se detecta que se llegó a la página de login por una sesión expirada, se muestra un mensaje de advertencia al usuario.
+    if (history.state?.sesionExpirada) {
+      this.toastr.warning('Tu sesión ha expirado.');
     }
   }
 

@@ -57,11 +57,16 @@ export class UsuarioService {
     return localStorage.getItem(this.llave) !== null || sessionStorage.getItem(this.llave) !== null;
   }
 
+  limpiarSesion(): void {
+    // Remover el indicador de sesión activa de ambos storages para asegurar que no quede rastro de la sesión iniciada
+    localStorage.removeItem(this.llave);
+    sessionStorage.removeItem(this.llave);
+  }
+
   // Llama al backend para eliminar la cookie y limpia el indicador de sesión de ambos storages
   cerrarSesion(): void {
     this.httpClient.post(`${this.urlBase}/cerrar-sesion`, {}).subscribe();
-    localStorage.removeItem(this.llave);
-    sessionStorage.removeItem(this.llave);
+    this.limpiarSesion();
   }
 
   // --------- MÉTODOS AUXILIARES ---------
