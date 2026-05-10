@@ -15,7 +15,7 @@ namespace CineSeat.Server.Services {
 			this.tokenServicio = tokenServicio;
 		}
 
-		public async Task<UsuarioSesionDTO> Crear(UsuarioCrearDTO dto) {
+		public async Task<UsuarioActualDTO> Crear(UsuarioCrearDTO dto) {
 
 			// Validar que el correo no esté en uso
 			bool correoEnUso = await CorreoEnUso(dto.Correo);
@@ -36,15 +36,17 @@ namespace CineSeat.Server.Services {
 			contextoBD.Usuarios.Add(nuevoUsuario);
 			await contextoBD.SaveChangesAsync();
 
-			// Retornar el DTO con la información del usuario creado y el token generado
-			return new UsuarioSesionDTO {
+			// Generar token JWT para que el nuevo usuario pueda iniciar sesión inmediatamente
+			tokenServicio.GenerarComoCookie(nuevoUsuario, dto.SesionMantenida);
+
+			// Retornar el DTO con la información del usuario creado
+			return new UsuarioActualDTO {
 				Id = nuevoUsuario.Id,
-				Correo = nuevoUsuario.Correo,
-				Token = tokenServicio.Generar(nuevoUsuario)
+				Correo = nuevoUsuario.Correo
 			};
 		}
 
-		public async Task<UsuarioSesionDTO?> ValidarCredenciales(UsuarioCrearDTO dto) {
+		public async Task<UsuarioActualDTO?> ValidarCredenciales(UsuarioCrearDTO dto) {
 
 			// Validar que exista un usuario con el correo especificado
 			if(!await CorreoEnUso(dto.Correo)) return null;
@@ -58,12 +60,11 @@ namespace CineSeat.Server.Services {
 				// Verificar la contraseña usando el método de BCrypt
 				if (!BCrypt.Net.BCrypt.Verify(dto.Contrasena, usuarioEncontrado.Contrasena)) return null;
 
-				// Generar el token JWT para el usuario autenticado
-				string token = tokenServicio.Generar(usuarioEncontrado);
+				// Si la verificación fue exitosa, generar el token JWT para el usuario autenticado como cookie del navegador
+				tokenServicio.GenerarComoCookie(usuarioEncontrado, dto.SesionMantenida);
 
-				// Retornar el DTO de sesión con el token y los datos básicos del usuario
-				return new UsuarioSesionDTO {
-					Token = token,
+				// Retornar el DTO con los datos básicos del usuario autenticado
+				return new UsuarioActualDTO {
 					Id = usuarioEncontrado.Id,
 					Correo = usuarioEncontrado.Correo
 				};
@@ -71,6 +72,11 @@ namespace CineSeat.Server.Services {
 
 			// Si no se encontró el usuario, retornar null
 			return null;
+		}
+
+		public void CerrarSesion() {
+			// Delegar la eliminación de la cookie al servicio de token
+			tokenServicio.EliminarCookie();
 		}
 
 		// --------- MÉTODOS AUXILIARES ---------

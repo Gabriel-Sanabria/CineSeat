@@ -167,3 +167,47 @@
 .btn-spinner {
   animation: girar 0.8s linear infinite;
 }
+
+/* Checkbox "Mantener sesión iniciada" */
+.campo-sesion-mantenida {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.campo-sesion-mantenida input[type="checkbox"] {
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background-color: #2e2e2e;
+  border: 1px solid #555;
+  border-radius: 3px;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.campo-sesion-mantenida input[type="checkbox"]:checked {
+  background-color: var(--dorado);
+  border-color: var(--dorado);
+}
+
+.campo-sesion-mantenida input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: 2px solid #1a1a1a;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+.campo-sesion-mantenida__etiqueta {
+  font-size: 13px;
+  color: var(--crema-tenue);
+  cursor: pointer;
+  user-select: none;
+}

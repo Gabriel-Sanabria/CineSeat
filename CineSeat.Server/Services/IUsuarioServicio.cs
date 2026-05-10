@@ -4,8 +4,10 @@ namespace CineSeat.Server.Services {
 
 	public interface IUsuarioServicio {
 
-		Task<UsuarioSesionDTO> Crear(UsuarioCrearDTO dto);
+		Task<UsuarioActualDTO> Crear(UsuarioCrearDTO dto);
 
-		Task<UsuarioSesionDTO?> ValidarCredenciales(UsuarioCrearDTO dto);
+		Task<UsuarioActualDTO?> ValidarCredenciales(UsuarioCrearDTO dto);
+
+		void CerrarSesion();
     }
 }

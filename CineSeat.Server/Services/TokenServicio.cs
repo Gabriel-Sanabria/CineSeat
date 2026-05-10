@@ -9,18 +9,20 @@ namespace CineSeat.Server.Services {
     public class TokenServicio : ITokenServicio {
 
         private readonly IConfiguration configuracion;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public TokenServicio(IConfiguration configuracion) {
+        public TokenServicio(IConfiguration configuracion, IHttpContextAccessor httpContextAccessor) {
             this.configuracion = configuracion;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
-        public string Generar(Usuario usuario) {
+        public void GenerarComoCookie(Usuario usuario, bool sesionMantenida = false) {
 
             // Leer configuración JWT
             string llave = configuracion["Jwt:Llave"]!;
             string emisor = configuracion["Jwt:Emisor"]!;
             string audiencia = configuracion["Jwt:Audiencia"]!;
-            float expiracionHoras = float.Parse(configuracion["Jwt:ExpiracionHoras"]!);
+            float expiracionHoras = sesionMantenida ? float.Parse(configuracion["Jwt:ExpiracionHorasExtendida"]!) : float.Parse(configuracion["Jwt:ExpiracionHoras"]!);
 
             // Definir los claims del token
             Claim[] claims = [
@@ -41,8 +43,24 @@ namespace CineSeat.Server.Services {
                 signingCredentials: credenciales
             );
 
-			// Retornar el token serializado como string
-			return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+            // Serializar el token a string
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+
+            // Configurar las opciones de la cookie HttpOnly
+            var opciones = new CookieOptions {
+                HttpOnly = true,
+                SameSite = SameSiteMode.Strict,
+                Path = "/"
+            };
+            if (sesionMantenida) opciones.Expires = DateTimeOffset.UtcNow.AddDays(7);
+
+            // Escribir el token como cookie HttpOnly para protegerlo
+            httpContextAccessor.HttpContext!.Response.Cookies.Append("cineseat_token", token, opciones);
+        }
+
+        public void EliminarCookie() {
+			// Eliminar la cookie del token en el navegador para cerrar la sesión del usuario
+			httpContextAccessor.HttpContext!.Response.Cookies.Delete("cineseat_token");
         }
     }
 }

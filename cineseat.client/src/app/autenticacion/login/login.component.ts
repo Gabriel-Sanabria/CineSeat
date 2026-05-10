@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { UsuarioSesion } from '../../models/usuario.model';
-import { SesionServicio } from '../../services/sesion.service';
+import { UsuarioActual } from '../../models/usuario.model';
 import { UsuarioService } from '../../services/usuario.service';
 
 type TabAutenticacion = 'login' | 'registro';
@@ -12,7 +11,7 @@ type TabAutenticacion = 'login' | 'registro';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   // Propiedad de tab
   tabActiva: TabAutenticacion = 'login';
@@ -20,6 +19,7 @@ export class LoginComponent {
   // Propiedades para login
   correoLogin: string = '';
   contrasenaLogin: string = '';
+  sesionMantenida: boolean = false;
 
   // Propiedades para registro
   correoRegistro: string = '';
@@ -33,7 +33,14 @@ export class LoginComponent {
   cargando: boolean = false;
 
   // Inyección de dependencias del componente
-  constructor(private router: Router, private toastr: ToastrService, private usuarioService: UsuarioService, private sesionServicio: SesionServicio) { }
+  constructor(private router: Router, private toastr: ToastrService, private usuarioService: UsuarioService) { }
+
+  ngOnInit(): void {
+    // Si ya existe una sesión activa, redirigir directamente a la cartelera
+    if (this.usuarioService.haySesionActiva()) {
+      this.router.navigate(['/cartelera']);
+    }
+  }
 
   cambiarTab(tab: TabAutenticacion): void {
     this.tabActiva = tab;
@@ -42,10 +49,10 @@ export class LoginComponent {
   iniciarSesion(): void {
     // Llamar al método del servicio para validar las credenciales del usuario
     this.cargando = true;
-    this.usuarioService.validarCredenciales(this.correoLogin, this.contrasenaLogin).subscribe({
-      next: (respuesta: UsuarioSesion) => {
-        // Si las credenciales son válidas, guardar el token, mostrar un mensaje de éxito y redirigir al usuario
-        this.sesionServicio.guardar(respuesta.token);
+    this.usuarioService.validarCredenciales(this.correoLogin, this.contrasenaLogin, this.sesionMantenida).subscribe({
+      next: (respuesta: UsuarioActual) => {
+        // Si las credenciales son válidas, iniciar la sesión, mostrar un mensaje de éxito y redirigir al usuario
+        this.usuarioService.guardarSesion(respuesta.id, this.sesionMantenida);
         this.cargando = false;
         this.toastr.success('Inicio de sesión exitoso.');
         this.router.navigate(['/cartelera']);
@@ -70,9 +77,9 @@ export class LoginComponent {
     // Llamar al método del servicio para crear un nuevo usuario
     this.cargando = true;
     this.usuarioService.crear({ correo: this.correoRegistro, contrasena: this.contrasenaRegistro }).subscribe({
-      next: (respuesta: UsuarioSesion) => {
-        // Si el registro es exitoso, guardar el token, mostrar un mensaje de éxito y redirigir al usuario a la página de cartelera
-        this.sesionServicio.guardar(respuesta.token);
+      next: (respuesta: UsuarioActual) => {
+        // Si el registro es exitoso, iniciar la sesión, mostrar un mensaje de éxito y redirigir al usuario a la página de cartelera
+        this.usuarioService.guardarSesion(respuesta.id);
         this.cargando = false;
         this.toastr.success('Usuario registrado exitosamente.');
         this.router.navigate(['/cartelera']);

@@ -4,6 +4,7 @@ namespace CineSeat.Server.Services {
 
     public interface ITokenServicio {
 
-        string Generar(Usuario usuario);
+        void GenerarComoCookie(Usuario usuario, bool sesionMantenida = false);
+        void EliminarCookie();
     }
 }

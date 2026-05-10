@@ -77,6 +77,11 @@
         </span>
       </div>
 
+      <div class="campo-sesion-mantenida">
+        <input type="checkbox" id="sesion-mantenida" name="sesionMantenida" [(ngModel)]="sesionMantenida">
+        <label class="campo-sesion-mantenida__etiqueta" for="sesion-mantenida">Mantener sesión iniciada</label>
+      </div>
+
       <button type="submit" class="btn btn-gold btn-login" [disabled]="cargando">
         <i *ngIf="cargando" class="fa-solid fa-circle-notch btn-spinner"></i>
         <span>{{ cargando ? 'Cargando...' : 'Entrar' }}</span>

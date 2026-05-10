@@ -1,6 +1,5 @@
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { AutenticacionInterceptor } from './interceptors/autenticacion.interceptor';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -19,9 +18,7 @@ import { AppComponent } from './app.component';
     AppRoutingModule,
     ToastrModule.forRoot({ timeOut: 1500, positionClass: 'toast-bottom-right' }),
   ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AutenticacionInterceptor, multi: true }
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

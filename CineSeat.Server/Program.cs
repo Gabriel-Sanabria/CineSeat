@@ -14,7 +14,7 @@ namespace CineSeat.Server {
 			// Servicio de Entity Framework Core con SQL Server
 			builder.Services.AddDbContext<AppDBContext>(options => { options.UseSqlServer(builder.Configuration.GetConnectionString("CineSeat")); });
 
-			// Servicio de autenticación JWT Bearer
+			// Servicio de autenticación JWT Bearer (lee el token desde la cookie HttpOnly)
 			builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
 				options.TokenValidationParameters = new TokenValidationParameters {
 					ValidateIssuerSigningKey = true,
@@ -25,7 +25,16 @@ namespace CineSeat.Server {
 					ValidAudience = builder.Configuration["Jwt:Audiencia"],
 					ValidateLifetime = true
 				};
+				options.Events = new JwtBearerEvents {
+					OnMessageReceived = context => {
+						context.Token = context.Request.Cookies["cineseat_token"];
+						return Task.CompletedTask;
+					}
+				};
 			});
+
+			// Acceso al contexto HTTP desde servicios
+			builder.Services.AddHttpContextAccessor();
 
 			// Servicios de la aplicación
 			builder.Services.AddScoped<ITokenServicio, TokenServicio>();

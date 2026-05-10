@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { SesionServicio } from '../../services/sesion.service';
+import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-header',
@@ -11,10 +11,10 @@ export class HeaderComponent {
   @Input() activo: string = '';
   @Input() emailUsuario: string = '';
 
-  constructor(private router: Router, private sesionServicio: SesionServicio) { }
+  constructor(private router: Router, private usuarioService: UsuarioService) { }
 
   cerrarSesion(): void {
-    this.sesionServicio.cerrar();
+    this.usuarioService.cerrarSesion();
     this.router.navigate(['/login']);
   }
 }

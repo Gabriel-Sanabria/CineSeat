@@ -1,5 +1,4 @@
-export interface UsuarioSesion {
-  token: string;
+export interface UsuarioActual {
   id: number;
   correo: string;
 }
