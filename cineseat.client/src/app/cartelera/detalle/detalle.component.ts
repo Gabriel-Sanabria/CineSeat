@@ -9,7 +9,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class DetalleComponent {
   constructor(private router: Router, private ruta: ActivatedRoute) { }
 
-  emailUsuario: string = '';
   fechaSeleccionada: string = new Date().toISOString().split('T')[0];
   funcionSeleccionada: any = null;
 

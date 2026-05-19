@@ -7,7 +7,6 @@ import { Component } from '@angular/core';
 })
 export class DashboardComponent {
 
-  emailUsuario: string = '';
   textoBusqueda: string = '';
   generoSeleccionado: string = 'Todas';
   generos: string[] = ['Todas', 'Thriller', 'Sci-Fi', 'Drama', 'Terror', 'Romance', 'Acción'];

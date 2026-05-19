@@ -3,8 +3,11 @@
   [style.--ancho.px]="ancho ?? null"
   [style.--alto.px]="alto ?? null"
 >
-  <div class="cartel-pelicula__fondo"></div>
-  <div class="cartel-pelicula__lineas"></div>
-  <span class="cartel-pelicula__genero">{{ genero }}</span>
-  <span class="cartel-pelicula__titulo">{{ titulo }}</span>
+  <img *ngIf="portada" class="cartel-pelicula__imagen" [src]="portada" [alt]="titulo">
+  <ng-container *ngIf="!portada">
+    <div class="cartel-pelicula__fondo"></div>
+    <div class="cartel-pelicula__lineas"></div>
+    <span class="cartel-pelicula__genero">{{ genero }}</span>
+    <span class="cartel-pelicula__titulo">{{ titulo }}</span>
+  </ng-container>
 </div>

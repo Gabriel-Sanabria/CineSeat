@@ -10,7 +10,6 @@ export class PeliculasComponent {
   constructor(private router: Router) { }
 
 
-  emailUsuario: string = '';
   textoBusqueda: string = '';
   generoSeleccionado: string = 'Todas';
 

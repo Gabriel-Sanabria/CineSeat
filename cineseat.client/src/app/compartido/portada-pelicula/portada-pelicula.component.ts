@@ -10,4 +10,5 @@ export class PortadaPeliculaComponent {
   @Input() genero: string = '';
   @Input() ancho?: number;
   @Input() alto?: number;
+  @Input() portada?: string;
 }

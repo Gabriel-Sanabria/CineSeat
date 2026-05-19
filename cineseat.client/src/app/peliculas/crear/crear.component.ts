@@ -7,13 +7,11 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './crear.component.css'
 })
 export class CrearComponent implements OnInit {
+
+  // Referencias a elementos del DOM para manipulación directa
   @ViewChild('listaFunciones') listaFunciones!: ElementRef;
   @ViewChild('inputArchivo') inputArchivo!: ElementRef;
 
-  constructor(private router: Router, private ruta: ActivatedRoute) { }
-
-
-  emailUsuario: string = '';
   modoEdicion: boolean = false;
 
   // Datos del formulario de la película
@@ -38,6 +36,9 @@ export class CrearComponent implements OnInit {
     { valor: 'IMAX', etiqueta: 'IMAX' },
     { valor: 'VIP', etiqueta: 'VIP' },
   ];
+
+  // Inyección de dependencias del router para navegación y acceso a parámetros de ruta
+  constructor(private router: Router, private ruta: ActivatedRoute) { }
 
   // TODO: implementar — cargar pelicula si modoEdicion
   ngOnInit(): void {

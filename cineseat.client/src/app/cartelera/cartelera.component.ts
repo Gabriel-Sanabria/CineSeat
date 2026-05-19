@@ -11,7 +11,6 @@ export class CarteleraComponent {
 
   textoBusqueda: string = '';
   generoSeleccionado: string = 'Todas';
-  emailUsuario: string = '';
 
   generos: string[] = ['Todas', 'Thriller', 'Sci-Fi', 'Drama', 'Terror', 'Romance', 'Acción'];
 

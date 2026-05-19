@@ -7,7 +7,6 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './reserva.component.css'
 })
 export class ReservaComponent {
-  emailUsuario: string = '';
   reservaConfirmada: boolean = false;
 
   // Datos de pago del formulario
