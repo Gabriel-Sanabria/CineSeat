@@ -102,6 +102,48 @@
   outline-offset: 2px;
 }
 
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: var(--superficie-1);
+  border: 1px solid var(--dorado-tenue);
+  border-radius: 4px;
+  padding: 32px;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.modal__mensaje {
+  font-size: 15px;
+  color: var(--crema);
+  text-align: center;
+}
+
+.modal__acciones {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.modal__acciones .btn {
+  flex: 1;
+  justify-content: center;
+  padding: 12px;
+  font-size: 13px;
+}
+
 @media (max-width: 767px) {
   .barra-navegacion {
     flex-wrap: wrap;

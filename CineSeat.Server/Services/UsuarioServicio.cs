@@ -24,7 +24,7 @@ namespace CineSeat.Server.Services {
 			}
 
 			// Hashear la contraseña usando BCrypt
-			string contrasenaHasheada = BCrypt.Net.BCrypt.HashPassword(dto.Contrasena);
+			string contrasenaHasheada = BCrypt.Net.BCrypt.HashPassword(dto.Contrasena, workFactor: 10);
 
 			// Crear una nueva instancia de usuario con los datos del DTO y la contraseña hasheada
 			Usuario nuevoUsuario = new Usuario {
@@ -48,30 +48,23 @@ namespace CineSeat.Server.Services {
 
 		public async Task<UsuarioActualDTO?> ValidarCredenciales(UsuarioCrearDTO dto) {
 
-			// Validar que exista un usuario con el correo especificado
-			if(!await CorreoEnUso(dto.Correo)) return null;
-
 			// Buscar el usuario por correo
 			Usuario? usuarioEncontrado = await contextoBD.Usuarios.FirstOrDefaultAsync(u => u.Correo.ToLower() == dto.Correo.ToLower());
 
-			// Si se encontró el usuario:
-			if (usuarioEncontrado != null) {
-
-				// Verificar la contraseña usando el método de BCrypt
-				if (!BCrypt.Net.BCrypt.Verify(dto.Contrasena, usuarioEncontrado.Contrasena)) return null;
-
-				// Si la verificación fue exitosa, generar el token JWT para el usuario autenticado como cookie del navegador
-				tokenServicio.GenerarComoCookie(usuarioEncontrado, dto.SesionMantenida);
-
-				// Retornar el DTO con los datos básicos del usuario autenticado
-				return new UsuarioActualDTO {
-					Id = usuarioEncontrado.Id,
-					Correo = usuarioEncontrado.Correo
-				};
-			}
-
 			// Si no se encontró el usuario, retornar null
-			return null;
+			if (usuarioEncontrado == null) return null;
+
+			// Verificar la contraseña usando el método de BCrypt
+			if (!BCrypt.Net.BCrypt.Verify(dto.Contrasena, usuarioEncontrado.Contrasena)) return null;
+
+			// Si la verificación fue exitosa, generar el token JWT para el usuario autenticado como cookie del navegador
+			tokenServicio.GenerarComoCookie(usuarioEncontrado, dto.SesionMantenida);
+
+			// Retornar el DTO con los datos básicos del usuario autenticado
+			return new UsuarioActualDTO {
+				Id = usuarioEncontrado.Id,
+				Correo = usuarioEncontrado.Correo
+			};
 		}
 
 		public void CerrarSesion() {

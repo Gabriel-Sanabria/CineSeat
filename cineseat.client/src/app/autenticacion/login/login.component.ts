@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { UsuarioActual } from '../../models/usuario.model';
 import { UsuarioService } from '../../services/usuario.service';
+import { TITULO_APP } from '../../app.component';
 
+// Definición de tabs disponibles del componente
 type TabAutenticacion = 'login' | 'registro';
 
 @Component({
@@ -12,6 +14,9 @@ type TabAutenticacion = 'login' | 'registro';
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
+
+  // Titulo de la aplicación a mostrar en el componente
+  titulo = TITULO_APP;
 
   // Propiedad de tab
   tabActiva: TabAutenticacion = 'login';
@@ -58,7 +63,7 @@ export class LoginComponent implements OnInit {
     this.usuarioService.validarCredenciales(this.correoLogin, this.contrasenaLogin, this.sesionMantenida).subscribe({
       next: (respuesta: UsuarioActual) => {
         // Si las credenciales son válidas, iniciar la sesión, mostrar un mensaje de éxito y redirigir al usuario
-        this.usuarioService.guardarSesion(respuesta.id, this.sesionMantenida);
+        this.usuarioService.guardarSesion(respuesta.id, respuesta.correo, this.sesionMantenida);
         this.cargando = false;
         this.toastr.success('Inicio de sesión exitoso.');
         this.router.navigate(['/cartelera']);
@@ -85,7 +90,7 @@ export class LoginComponent implements OnInit {
     this.usuarioService.crear({ correo: this.correoRegistro, contrasena: this.contrasenaRegistro }).subscribe({
       next: (respuesta: UsuarioActual) => {
         // Si el registro es exitoso, iniciar la sesión, mostrar un mensaje de éxito y redirigir al usuario a la página de cartelera
-        this.usuarioService.guardarSesion(respuesta.id);
+        this.usuarioService.guardarSesion(respuesta.id, respuesta.correo);
         this.cargando = false;
         this.toastr.success('Usuario registrado exitosamente.');
         this.router.navigate(['/cartelera']);

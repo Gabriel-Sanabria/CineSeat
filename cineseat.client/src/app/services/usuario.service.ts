@@ -42,15 +42,28 @@ export class UsuarioService {
     return this.httpClient.post<UsuarioActual>(`${this.urlBase}/validar`, { correo, contrasena, sesionMantenida });
   }
 
-  // Guarda el id en el en el sessionStorage o localStorage (si la sesión es mantenida) o como indicador de sesión activa.
-  guardarSesion(id: number, sesionMantenida: boolean = false): void {
-    const valor = id.toString();
+  // Guarda el id y correo del usuario en sessionStorage o localStorage (si la sesión es mantenida)
+  guardarSesion(id: number, correo: string, sesionMantenida: boolean = false): void {
+    const valor = JSON.stringify({ id, correo });
     if (sesionMantenida) {
       localStorage.setItem(this.llave, valor);
     } else {
       sessionStorage.setItem(this.llave, valor);
     }
   }
+
+  // Obtiene los datos de la sesión activa leyendo el JSON almacenado en el web storage
+  obtenerDatosSesion(): UsuarioActual | null {
+    const valor = localStorage.getItem(this.llave) || sessionStorage.getItem(this.llave);
+    if (!valor) return null;
+    try {
+      return JSON.parse(valor) as UsuarioActual;
+    }
+    catch {
+      return null;
+    }
+  }
+
 
   // Retorna true si existe algún indicador de sesión activa en cualquiera de los dos storages
   haySesionActiva(): boolean {

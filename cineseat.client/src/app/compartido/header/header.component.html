@@ -1,31 +1,36 @@
 <nav class="barra-navegacion">
   <a class="barra-navegacion__marca" routerLink="/cartelera">
-    <img src="/logo.svg" class="icono-logo" alt="CineSeat">
-    <span class="barra-navegacion__titulo">CineSeat</span>
+    <img src="/logo.svg" class="icono-logo" [attr.alt]="titulo">
+    <span class="barra-navegacion__titulo">{{ titulo }}</span>
   </a>
 
   <div class="barra-navegacion__tabs">
-    <a
-      routerLink="/cartelera"
-      class="tab-nav"
-      [class.tab-nav--activo]="activo === 'cartelera'"
-    >Cartelera</a>
-    <a
-      routerLink="/peliculas"
-      class="tab-nav"
-      [class.tab-nav--activo]="activo === 'peliculas'"
-    >Películas</a>
-    <a
-      routerLink="/dashboard"
-      class="tab-nav"
-      [class.tab-nav--activo]="activo === 'dashboard'"
-    >Dashboard</a>
+
+    <!-- Si la opción activa es 'cartelera' mostrarla como activa -->
+    <a routerLink="/cartelera" class="tab-nav" [class.tab-nav--activo]="activo === 'cartelera'">Cartelera</a>
+
+    <!-- Si la opción activa es 'peliculas' mostrarla como activa -->
+    <a routerLink="/peliculas" class="tab-nav" [class.tab-nav--activo]="activo === 'peliculas'">Películas</a>
+
+    <!-- Si la opción activa es 'dashboard' mostrarla como activa -->
+    <a routerLink="/dashboard" class="tab-nav" [class.tab-nav--activo]="activo === 'dashboard'">Dashboard</a>
   </div>
 
   <div class="barra-navegacion__usuario">
-    <span class="usuario-email">usuario&#64;cineseat.com</span>
-    <button class="btn-cerrar-sesion" (click)="cerrarSesion()" title="Cerrar sesión">
+    <h2 class="usuario-email">{{ emailUsuario }}</h2>
+    <button class="btn-cerrar-sesion" (click)="mostrarModal = true" title="Cerrar sesión">
       <i class="fa-solid fa-right-from-bracket icono-lg"></i>
     </button>
   </div>
 </nav>
+
+<!-- Modal de confirmación de cierre de sesión -->
+<div class="modal-backdrop" *ngIf="mostrarModal" (click)="mostrarModal = false">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <p class="modal__mensaje">¿Estás seguro de que deseas cerrar sesión?</p>
+    <div class="modal__acciones">
+      <button class="btn btn-gold" (click)="cerrarSesion()">Cerrar sesión</button>
+      <button class="btn btn-dark" (click)="mostrarModal = false">Cancelar</button>
+    </div>
+  </div>
+</div>
