@@ -26,7 +26,7 @@ export class CrearComponent implements OnInit {
     funciones: []
   };
 
-  generos: string[] = ['Thriller', 'Sci-Fi', 'Drama', 'Terror', 'Romance', 'Acción', 'Comedia', 'Documental'];
+  generos: string[] = ['Thriller', 'Sci-Fi', 'Drama', 'Terror', 'Romance', 'Acción', 'Comedia', 'Documental', 'Animación'];
 
   salaOpciones: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
