@@ -1,0 +1,1 @@
+- [Arquitectura backend CineSeat](project_arquitectura_cineseat.md) — Entidades, servicios y estructura de capas implementadas; registro DI pendiente en Program.cs

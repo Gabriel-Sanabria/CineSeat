@@ -1,0 +1,4 @@
+- [Estructura inicial del cliente Angular](project_estructura_inicial.md) — Todos los módulos/componentes scaffoldeados; UI implementada en sesión 2026-04-25; FormsModule ausente en DashboardModule.
+- [HTML semántico aplicado](project_html_semantico.md) — Estado post-refactor 2026-04-30: qué etiquetas se usaron, dónde y qué `<div>` quedan justificados.
+- [Variables CSS renombradas a español](project_variables_css_espanol.md) — Mapeo completo --bg→--fondo, --gold→--dorado, etc. Renombradas el 2026-04-30.
+- [Ubicación de servicios](feedback_ubicacion_servicios.md) — Los servicios van en `services/`, no en `core/`; la skill menciona core/ pero el proyecto usa services/.

@@ -1,0 +1,3 @@
+- [Bug EF Core Tools 10.0.7 — design assembly incorrecto](project_efcore_design_bug.md) — Tools 10.0.7 resuelve Design 8.0.0 por error en nuspec; agregar Design 10.0.7 explícito al proyecto.
+- [Migraciones EF Core aplicadas](project_migraciones.md) — Historial de migraciones generadas y aplicadas; `inicial` cubre la tabla Usuarios.
+- [Modelo de datos CineSeat](project_modelo_datos.md) — Entidades, relaciones, índices y decisiones de diseño del modelo completo (Pelicula, Funcion, Reserva, AsientoReservado, Pago).

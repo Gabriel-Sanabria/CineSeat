@@ -1,0 +1,1 @@
+- [Estructura carpeta de documentación](project_estructura_docs.md) — Carpeta docs/ creada en 2026-04-30; convenciones de nombres, archivos existentes y ruta de Pandoc portable.
