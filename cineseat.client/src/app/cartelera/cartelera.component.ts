@@ -12,8 +12,6 @@ export class CarteleraComponent {
   textoBusqueda: string = '';
   generoSeleccionado: string = 'Todas';
 
-  generos: string[] = ['Todas', 'Thriller', 'Sci-Fi', 'Drama', 'Terror', 'Romance', 'Acción'];
-
   // Datos de ejemplo para visualizar mientras se desarrolla la lógica:
   peliculas: any[] = [
     { id: 1, titulo: 'La Sombra del Tiempo', genero: 'Thriller', duracion: '2h 08m', calificacion: 8.6, clasificacion: 'R', director: 'Ana Reyes', sinopsis: 'Un detective retirado descubre que los crímenes del pasado nunca se olvidan cuando una serie de muertes misteriosas lo arrastra de regreso a su oscuro pasado.' },

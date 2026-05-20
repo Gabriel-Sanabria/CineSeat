@@ -1,5 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { GENEROS, SALAS, TIPOS_SALA, PRECIO_ENTRADA_DEFAULT } from '../../app.constants';
+import { Funcion, Pelicula } from '../../models/pelicula.model';
+import { PeliculaService } from '../../services/pelicula.service';
 
 @Component({
   selector: 'app-crear',
@@ -8,37 +11,33 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class CrearComponent implements OnInit {
 
+  // Propiedad para controlar la creación o edición de una película
+  modoEdicion: boolean = false;
+
   // Referencias a elementos del DOM para manipulación directa
   @ViewChild('listaFunciones') listaFunciones!: ElementRef;
   @ViewChild('inputArchivo') inputArchivo!: ElementRef;
 
-  modoEdicion: boolean = false;
+  // Propiedades para opciones de selección en el formulario (cargadas desde constantes)
+  generos: string[] = GENEROS;
+  salaOpciones: number[] = SALAS;
+  tiposSala: string[] = TIPOS_SALA;
 
-  // Datos del formulario de la película
-  pelicula: any = {
+  // Objeto de la pelicula a crear/editar (inicialización con valores por defecto)
+  pelicula: Pelicula = {
     titulo: '',
     genero: '',
-    duracion: '',
     clasificacion: '',
     director: '',
     sinopsis: '',
+    duracionHoras: 0,
+    duracionMinutos: 0,
     urlPortada: '',
     funciones: []
   };
 
-  generos: string[] = ['Thriller', 'Sci-Fi', 'Drama', 'Terror', 'Romance', 'Acción', 'Comedia', 'Documental', 'Animación'];
-
-  salaOpciones: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-  tiposSala: { valor: string; etiqueta: string }[] = [
-    { valor: '2D', etiqueta: '2D' },
-    { valor: '3D', etiqueta: '3D' },
-    { valor: 'IMAX', etiqueta: 'IMAX' },
-    { valor: 'VIP', etiqueta: 'VIP' },
-  ];
-
-  // Inyección de dependencias del router para navegación y acceso a parámetros de ruta
-  constructor(private router: Router, private ruta: ActivatedRoute) { }
+  // Inyección de dependencias del componente
+  constructor(private router: Router, private ruta: ActivatedRoute, private peliculaService: PeliculaService) { }
 
   // TODO: implementar — cargar pelicula si modoEdicion
   ngOnInit(): void {
@@ -76,14 +75,18 @@ export class CrearComponent implements OnInit {
 
   // TODO: implementar
   agregarFuncion(): void {
-    this.pelicula.funciones.push({
+
+    // Crear un nuevo objeto de función con valores por defecto y agregarlo a la lista de funciones de la película
+    const nuevaFuncion: Funcion = {
       fecha: '',
       hora: '',
-      sala: 1,
-      tipo: '2D',
-      precio: 90
-    });
+      sala: this.salaOpciones[0],
+      tipo: this.tiposSala[0],
+      precio: PRECIO_ENTRADA_DEFAULT
+    };
+    this.pelicula.funciones.push(nuevaFuncion);
 
+    // Hacer scroll automático hacia la última función agregada
     setTimeout(() => {
       if (this.listaFunciones) {
         const el = this.listaFunciones.nativeElement;

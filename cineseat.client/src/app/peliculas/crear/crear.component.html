@@ -25,7 +25,7 @@
   </header>
   <h2 class="crear-titulo titulo-display">
     <span *ngIf="!modoEdicion">Nueva Película</span>
-    <span *ngIf="modoEdicion">Editar {{ pelicula?.titulo }}</span>
+    <span *ngIf="modoEdicion">Editar {{ pelicula.titulo }}</span>
   </h2>
 
   <!-- Layout principal -->
@@ -38,8 +38,8 @@
 
         <div class="portada-preview">
           <app-portada-pelicula
-            [titulo]="pelicula?.titulo || ''"
-            [genero]="pelicula?.genero || ''"
+            [titulo]="pelicula.titulo"
+            [genero]="pelicula.genero"
             [ancho]="220"
             [alto]="330"
             [portada]="pelicula.urlPortada || undefined"

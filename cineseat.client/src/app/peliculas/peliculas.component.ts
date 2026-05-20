@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { GENEROS } from '../app.constants';
 
 @Component({
   selector: 'app-peliculas',
@@ -13,7 +14,7 @@ export class PeliculasComponent {
   textoBusqueda: string = '';
   generoSeleccionado: string = 'Todas';
 
-  generos: string[] = ['Todas', 'Thriller', 'Sci-Fi', 'Drama', 'Terror', 'Romance', 'Acción'];
+  generos: string[] = ['Todas', ...GENEROS];
 
   // Datos de ejemplo para visualizar mientras se desarrolla la lógica:
   peliculas: any[] = [

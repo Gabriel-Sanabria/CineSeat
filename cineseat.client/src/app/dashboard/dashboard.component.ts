@@ -9,7 +9,6 @@ export class DashboardComponent {
 
   textoBusqueda: string = '';
   generoSeleccionado: string = 'Todas';
-  generos: string[] = ['Todas', 'Thriller', 'Sci-Fi', 'Drama', 'Terror', 'Romance', 'Acción'];
 
   // Datos de ejemplo para visualizar mientras se desarrolla la lógica:
   datosPeliculas: any[] = [

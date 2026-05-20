@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
-import { TITULO_APP } from '../../app.component';
+import { TITULO_APP } from '../../app.constants';
 
 @Component({
   selector: 'app-header',

@@ -9,7 +9,7 @@ export class FuncionEditableComponent {
 
   @Input() funcion: any;
   @Input() indice: number = 0;
-  @Input() tiposSala: { valor: string; etiqueta: string }[] = [];
+  @Input() tiposSala: string[] = [];
   @Input() salaOpciones: number[] = [];
   @Output() eliminar = new EventEmitter<void>();
 

@@ -46,10 +46,10 @@
       <button
         *ngFor="let tipo of tiposSala"
         class="btn-tipo-sala"
-        [class.btn-tipo-sala--activo]="funcion.tipo === tipo.valor"
-        (click)="funcion.tipo = tipo.valor"
+        [class.btn-tipo-sala--activo]="funcion.tipo === tipo"
+        (click)="funcion.tipo = tipo"
         type="button"
-      >{{ tipo.etiqueta }}</button>
+      >{{ tipo }}</button>
     </div>
   </div>
 

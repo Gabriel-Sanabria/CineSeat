@@ -3,9 +3,8 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { UsuarioActual } from '../../models/usuario.model';
 import { UsuarioService } from '../../services/usuario.service';
-import { TITULO_APP } from '../../app.component';
+import { TITULO_APP } from '../../app.constants';
 
-// Definición de tabs disponibles del componente
 type TabAutenticacion = 'login' | 'registro';
 
 @Component({

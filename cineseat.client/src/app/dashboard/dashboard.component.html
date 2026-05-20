@@ -9,8 +9,6 @@
 
   <!-- Barra de filtros -->
   <app-buscador
-    [generos]="generos"
-    placeholder="Buscar película..."
     (textoCambia)="textoBusqueda = $event"
     (generoCambia)="filtrarPorGenero($event)"
   ></app-buscador>

@@ -1,23 +1,14 @@
 <div class="barra-filtros">
+
+  <!-- Barra de búsqueda -->
   <div class="campo-busqueda">
     <i class="fa-solid fa-magnifying-glass campo-busqueda__icono icono-lg"></i>
-    <input
-      name="busqueda"
-      type="text"
-      class="campo-busqueda__input"
-      [placeholder]="placeholder"
-      [(ngModel)]="texto"
-      (ngModelChange)="alEscribir()"
-    >
+    <input name="busqueda" type="text" class="campo-busqueda__input" placeholder="Buscar película..." [(ngModel)]="texto" (ngModelChange)="alEscribir()">
   </div>
 
+  <!-- Chips de géneros -->
   <div class="chips-genero">
-    <button
-      *ngFor="let genero of generos"
-      class="chip-genero"
-      [class.chip-genero--activo]="generoActivo === genero"
-      (click)="seleccionarGenero(genero)"
-      type="button"
-    >{{ genero }}</button>
+    <button *ngFor="let genero of generos" class="chip-genero" [class.chip-genero--activo]="generoActivo === genero"
+    (click)="seleccionarGenero(genero)" type="button">{{ genero }}</button>
   </div>
 </div>
