@@ -1,4 +1,5 @@
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,7 +21,8 @@ import { AppComponent } from './app.component';
     ToastrModule.forRoot({ timeOut: 1500, positionClass: 'toast-bottom-right' }),
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AutenticacionInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AutenticacionInterceptor, multi: true },
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

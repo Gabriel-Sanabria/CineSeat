@@ -56,7 +56,8 @@
       "Bash(Select-Object FullName)",
       "Bash(Get-ChildItem -Path \"E:\\\\Proyectos Visual Studio IDE\\\\CineSeat\\\\cineseat.client\\\\src\\\\app\" -Directory)",
       "Bash(Select-Object -ExpandProperty Name)",
-      "PowerShell(Get-ChildItem \"E:\\\\Proyectos Visual Studio IDE\\\\CineSeat\\\\CineSeat.Server\" -Directory | Where-Object {$_.Name -notmatch \"^\\(bin|obj\\)$\"} | Select-Object Name)"
+      "PowerShell(Get-ChildItem \"E:\\\\Proyectos Visual Studio IDE\\\\CineSeat\\\\CineSeat.Server\" -Directory | Where-Object {$_.Name -notmatch \"^\\(bin|obj\\)$\"} | Select-Object Name)",
+      "PowerShell(dotnet build *)"
     ]
   }
 }

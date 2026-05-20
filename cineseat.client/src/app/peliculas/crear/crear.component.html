@@ -17,9 +17,10 @@
         <i class="fa-solid fa-trash icono-md"></i>
         Eliminar
       </button>
-      <button class="btn btn-gold btn-sm" (click)="guardar()" type="button">
-        <i class="fa-solid fa-check icono-md"></i>
-        Guardar
+      <button class="btn btn-gold btn-sm" (click)="guardar()" type="button" [disabled]="cargando">
+        <i *ngIf="cargando" class="fa-solid fa-circle-notch btn-spinner"></i>
+        <i *ngIf="!cargando" class="fa-solid fa-check icono-md"></i>
+        {{ cargando ? 'Guardando...' : 'Guardar' }}
       </button>
     </div>
   </header>
@@ -45,7 +46,13 @@
             [portada]="pelicula.urlPortada || undefined"
           ></app-portada-pelicula>
 
-          <div class="zona-drop">
+          <div
+            class="zona-drop"
+            [class.zona-drop--activa]="arrastrando"
+            (dragover)="$event.preventDefault(); arrastrando = true"
+            (dragleave)="arrastrando = false"
+            (drop)="alSoltarArchivo($event)"
+          >
             <input
               type="file"
               #inputArchivo
@@ -54,7 +61,7 @@
             >
             <i class="fa-solid fa-upload zona-drop__icono icono-2xl"></i>
             <p class="zona-drop__texto">Arrastrar imagen</p>
-            <button class="btn btn-dark btn-sm" (click)="subirArchivo()" type="button">
+            <button class="btn btn-dark btn-sm" (click)="inputArchivo.click()" type="button">
               Subir archivo
             </button>
           </div>

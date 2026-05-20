@@ -1,3 +1,12 @@
+@keyframes girar {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.btn-spinner {
+  animation: girar 0.8s linear infinite;
+}
+
 .pagina-crear {
   padding: 28px 40px;
 }
@@ -172,6 +181,12 @@ input[type="file"] {
   align-items: center;
   gap: 12px;
   text-align: left;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.zona-drop--activa {
+  border-color: var(--gold);
+  background-color: rgba(212, 174, 74, 0.08);
 }
 
 .zona-drop__icono {

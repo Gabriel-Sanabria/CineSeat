@@ -1,8 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { GENEROS, SALAS, TIPOS_SALA, PRECIO_ENTRADA_DEFAULT } from '../../app.constants';
-import { Funcion, Pelicula } from '../../models/pelicula.model';
+import { Funcion } from '../../models/funcion.model';
+import { Pelicula } from '../../models/pelicula.model';
 import { PeliculaService } from '../../services/pelicula.service';
+import { FuncionService } from '../../services/funcion.service';
 
 @Component({
   selector: 'app-crear',
@@ -14,9 +17,14 @@ export class CrearComponent implements OnInit {
   // Propiedad para controlar la creación o edición de una película
   modoEdicion: boolean = false;
 
-  // Referencias a elementos del DOM para manipulación directa
+  // Propiedad para controlar el estado de carga durante el guardado
+  cargando: boolean = false;
+
+  // Referencia al elemento de la lista de funciones
   @ViewChild('listaFunciones') listaFunciones!: ElementRef;
-  @ViewChild('inputArchivo') inputArchivo!: ElementRef;
+
+  // Propiedad para controlar el estado de arrastre de archivos para la portada
+  arrastrando: boolean = false;
 
   // Propiedades para opciones de selección en el formulario (cargadas desde constantes)
   generos: string[] = GENEROS;
@@ -28,19 +36,20 @@ export class CrearComponent implements OnInit {
     titulo: '',
     genero: '',
     clasificacion: '',
-    director: '',
-    sinopsis: '',
     duracionHoras: 0,
     duracionMinutos: 0,
+    director: '',
+    sinopsis: '',
     urlPortada: '',
     funciones: []
   };
 
   // Inyección de dependencias del componente
-  constructor(private router: Router, private ruta: ActivatedRoute, private peliculaService: PeliculaService) { }
+  constructor(private router: Router, private ruta: ActivatedRoute, private toastr: ToastrService,
+  private peliculaService: PeliculaService, private funcionService: FuncionService) { }
 
-  // TODO: implementar — cargar pelicula si modoEdicion
   ngOnInit(): void {
+    // Detectar el modo edición si existe un parámetro 'id' en la ruta
     this.modoEdicion = !!this.ruta.snapshot.paramMap.get('id');
   }
 
@@ -48,32 +57,37 @@ export class CrearComponent implements OnInit {
     this.router.navigate(['/peliculas']);
   }
 
-  cancelar(): void {
-    this.router.navigate(['/peliculas']);
-  }
-
   guardar(): void {
-    this.router.navigate(['/peliculas']);
+    // Si se está en modo creación, llamar al método del servicio para crear una nueva película con los datos ingresados en el formulario
+    if (!this.modoEdicion) {
+      this.cargando = true;
+      this.peliculaService.crear(this.pelicula).subscribe({
+        next: (peliculaCreada) => {
+          // Si la creación es exitosa, mostrar un mensaje de éxito y redirigir a la página de la lista de películas
+          this.toastr.success('Película creada exitosamente.');
+          this.router.navigate(['/peliculas']);
+        },
+        error: (errorHttp) => {
+          // Si ocurre un error durante la creación, preparar un mensaje de advertencia
+          let advertencia = 'Ocurrió un error al crear la película.';
+
+          // Intentar extraer el mensaje de error devuelto por el servidor (error del model state o mensaje de error personalizado)
+          const cuerpo = errorHttp?.error;
+          if (cuerpo?.errors) advertencia = Object.values(cuerpo.errors).flat()[0] as string;
+          if (cuerpo?.mensaje) advertencia = cuerpo.mensaje;
+
+          // Mostrar el mensaje de advertencia al usuario
+          this.toastr.warning(advertencia);
+          this.cargando = false;
+        }
+      });
+    }
   }
 
   eliminarPelicula(): void {
     this.router.navigate(['/peliculas']);
   }
 
-  subirArchivo(): void {
-    this.inputArchivo.nativeElement.click();
-  }
-
-  alSeleccionarArchivo(event: Event): void {
-    const archivo = (event.target as HTMLInputElement).files?.[0];
-    if (archivo) {
-      this.pelicula.urlPortada = URL.createObjectURL(archivo);
-    }
-    // Limpiar el valor para permitir seleccionar el mismo archivo de nuevo
-    (event.target as HTMLInputElement).value = '';
-  }
-
-  // TODO: implementar
   agregarFuncion(): void {
 
     // Crear un nuevo objeto de función con valores por defecto y agregarlo a la lista de funciones de la película
@@ -95,8 +109,46 @@ export class CrearComponent implements OnInit {
     }, 0);
   }
 
-  // TODO: implementar
   eliminarFuncion(indice: number): void {
     this.pelicula.funciones.splice(indice, 1);
+  }
+
+  alSoltarArchivo(event: DragEvent): void {
+    // Evitar el comportamiento predeterminado del navegador al soltar un archivo (abrirlo) y actualizar la vista previa de la portada
+    event.preventDefault();
+    this.arrastrando = false;
+    const archivo = event.dataTransfer?.files[0];
+
+    // Leer el archivo como URL (para preview) y almacenar su contenido en base64 para enviarlo al servidor
+    if (archivo && archivo.type.startsWith('image/')) {
+      this.pelicula.urlPortada = URL.createObjectURL(archivo);
+      const reader = new FileReader();
+      reader.onload = () => {
+        const resultado = reader.result as string;
+        this.pelicula.portadaBase64 = resultado.split(',')[1];
+        this.pelicula.mimePortada = archivo.type;
+      };
+      reader.readAsDataURL(archivo);
+    }
+  }
+
+  alSeleccionarArchivo(event: Event): void {
+    // Obtener el archivo seleccionado por el usuario para actualizar la vista previa de la portada
+    const archivo = (event.target as HTMLInputElement).files?.[0];
+
+    // Leer el archivo como URL (para preview) y almacenar su contenido en base64 para enviarlo al servidor
+    if (archivo) {
+      this.pelicula.urlPortada = URL.createObjectURL(archivo);
+      const reader = new FileReader();
+      reader.onload = () => {
+        const resultado = reader.result as string;
+        this.pelicula.portadaBase64 = resultado.split(',')[1];
+        this.pelicula.mimePortada = archivo.type;
+      };
+      reader.readAsDataURL(archivo);
+    }
+
+    // Limpiar el valor para permitir seleccionar otros archivos
+    (event.target as HTMLInputElement).value = '';
   }
 }

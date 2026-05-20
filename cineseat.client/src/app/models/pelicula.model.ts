@@ -1,19 +1,15 @@
+import { Funcion } from './funcion.model';
+
 export interface Pelicula {
   titulo: string;
   genero: string;
   clasificacion: string;
-  director: string;
-  sinopsis: string;
   duracionHoras: number;
   duracionMinutos: number;
+  director: string;
+  sinopsis: string;
   urlPortada: string;
+  portadaBase64?: string;
+  mimePortada?: string;
   funciones: Funcion[];
-}
-
-export interface Funcion {
-  fecha: string;
-  hora: string;
-  sala: number;
-  tipo: string;
-  precio: number;
 }

@@ -8,41 +8,59 @@ type: project
 
 ### Entidades (Models/)
 - `Usuario` — Id (PK), Correo (Required, MaxLength 100), Contrasena (Required, MaxLength 60, hash BCrypt)
+- `Pelicula` — Id, Titulo (200), Genero (50), DuracionMinutos (int), Clasificacion (5), Director (100), Sinopsis (1000), Portada (byte[]?), MIMEPortada (string?), Funciones (ICollection<Funcion>)
+- `Funcion` — Id, PeliculaId (FK), Sala (string 50, formato "Sala X"), Fecha (DateOnly), Hora (TimeOnly), Tipo (string 10), Precio (decimal 8,2), Pelicula, Reservas (ICollection<Reserva>)
 
 ### DbContext
-- `AppDBContext` en `Data/AppDBContext.cs` — DbSet<Usuario> Usuarios
+- `AppDBContext` en `Data/AppDBContext.cs` — DbSet: Usuarios, Peliculas, Funciones, Reservas, AsientosReservados, Pagos
 
 ### DTOs (DTOs/)
-- `UsuarioCrearDTO` — Correo, Contrasena, SesionMantenida (con Data Annotations)
-- `UsuarioSesionDTO` — Id, Correo, Token? (contrato interno servicio→controller; token nunca sale al cliente)
-- `UsuarioInfoDTO` — Id, Correo (respuesta pública de API; sin token)
+- `UsuarioCrearDTO` — Correo, Contrasena, SesionMantenida
+- `UsuarioActualDTO` — Id, Correo (respuesta pública)
+- `PeliculaCrearDTO` — Titulo, Genero, Clasificacion, Director, Sinopsis, DuracionHoras, DuracionMinutos, Funciones (List<FuncionCrearDTO>)
+- `PeliculaDTO` — Id, Titulo, Genero, Clasificacion, Director, Sinopsis, DuracionHoras, DuracionMinutos, UrlPortada, Funciones (List<FuncionDTO>)
+- `FuncionCrearDTO` — Fecha (DateOnly), Hora (TimeOnly), Sala (int 1-10), Tipo, Precio, PeliculaId
+- `FuncionDTO` — Id, PeliculaId, Sala (int), Fecha, Hora, Tipo, Precio
 
 ### Servicios (Services/)
-- `ITokenServicio` / `TokenServicio` — genera JWT con claims Sub (id) y Email; lee config de Jwt:Llave/Emisor/Audiencia/ExpiracionHoras
-- `IUsuarioServicio` / `UsuarioServicio` — Crear retorna `UsuarioSesionDTO`; ValidarCredenciales retorna `UsuarioSesionDTO` con token JWT; inyecta ITokenServicio
+- `ITokenServicio` / `TokenServicio` — genera JWT con claims Sub (id) y Email
+- `IUsuarioServicio` / `UsuarioServicio` — Crear, ValidarCredenciales, CerrarSesion
+- `IPeliculaServicio` / `PeliculaServicio` — Crear, ObtenerTodas, ObtenerPorId, Editar, Eliminar; privado MapearADTO
+- `IFuncionServicio` / `FuncionServicio` — Crear, Editar, Eliminar; privado MapearADTO
+
+### Convención clave: campo Sala
+- En BD se guarda como string "Sala X" (ej. "Sala 3")
+- En DTO se expone/recibe como int (ej. 3)
+- Conversión: guardar → `$"Sala {dto.Sala}"`, leer → `int.Parse(f.Sala.Replace("Sala ", ""))`
 
 ### Controladores (Controllers/)
-- `UsuariosController`:
-  - POST api/usuarios — crea usuario, escribe cookie HttpOnly "cineseat_token", retorna `UsuarioInfoDTO`
-  - POST api/usuarios/validar — valida credenciales, escribe cookie HttpOnly "cineseat_token", retorna `UsuarioInfoDTO`
-  - POST api/usuarios/cerrar-sesion — elimina cookie "cineseat_token", retorna 200 OK
+- `UsuariosController` — POST /api/usuarios, POST /api/usuarios/validar, POST /api/usuarios/cerrar-sesion
+- `PeliculasController`:
+  - POST /api/peliculas — [Authorize], 201 Created
+  - GET /api/peliculas — público, 200
+  - GET /api/peliculas/{id} — público, 200 o 404
+  - GET /api/peliculas/{id}/portada — público, FileContentResult o 404; accede al DbContext directamente (projection, sin Include)
+  - PUT /api/peliculas/{id} — [Authorize], 200 o 404
+  - DELETE /api/peliculas/{id} — [Authorize], 204 o 404
+- `FuncionesController`:
+  - POST /api/funciones — [Authorize], 201 Created
+  - PUT /api/funciones/{id} — [Authorize], 200 o 404
+  - DELETE /api/funciones/{id} — [Authorize], 204 o 404
 
 ### Autenticación JWT (cookie HttpOnly)
-- El token se escribe como cookie HttpOnly con SameSite=Strict, Path=/
-- Si `SesionMantenida` es true, la cookie expira en 7 días; de lo contrario es de sesión
-- `OnMessageReceived` en JwtBearerEvents lee el token desde `Request.Cookies["cineseat_token"]`
-- El token nunca se expone en el body de respuesta
+- Cookie "cineseat_token", SameSite=Strict, Path=/
+- SesionMantenida=true → expira 7 días; false → sesión
+- OnMessageReceived lee token desde `Request.Cookies["cineseat_token"]`
 
-### Program.cs
-- Registrado: `AddDbContext<AppDBContext>` con connection string "CineSeat"
-- Registrado: `AddScoped<ITokenServicio, TokenServicio>()`
-- Registrado: `AddScoped<IUsuarioServicio, UsuarioServicio>()`
-- Registrado: `AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(...)` con validación completa y evento OnMessageReceived para leer desde cookie
+### Program.cs — Servicios registrados
+- `AddDbContext<AppDBContext>` con connection string "CineSeat"
+- `AddScoped<ITokenServicio, TokenServicio>()`
+- `AddScoped<IUsuarioServicio, UsuarioServicio>()`
+- `AddScoped<IPeliculaServicio, PeliculaServicio>()`
+- `AddScoped<IFuncionServicio, FuncionServicio>()`
+- `AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(...)`
 - Pipeline: `UseAuthentication()` antes de `UseAuthorization()`
 
-### Configuración (appsettings.Development.json)
-- Sección `Jwt`: Llave, Emisor ("CineSeat"), Audiencia ("CineSeat"), ExpiracionHoras (8)
+**Why:** Arquitectura de capas estricta para mantener controllers sin lógica y servicios testeables.
 
-**Why:** Autenticación JWT implementada para proteger endpoints futuros con [Authorize].
-
-**How to apply:** Al agregar endpoints protegidos, decorar con [Authorize]. Al agregar nuevas entidades, seguir el flujo: Entidad → DTOs → IServicio → Servicio → Controller → registro DI → migración EF Core.
+**How to apply:** Al agregar endpoints protegidos, decorar con [Authorize]. Flujo: Entidad → DTOs → IServicio → Servicio → Controller → registro DI → migración EF Core.

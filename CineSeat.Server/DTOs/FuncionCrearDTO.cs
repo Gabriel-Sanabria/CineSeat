@@ -1,0 +1,28 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace CineSeat.Server.DTOs {
+
+    public class FuncionCrearDTO {
+
+        [Required(ErrorMessage = "La fecha es obligatoria")]
+        public DateOnly Fecha { get; set; }
+
+        [Required(ErrorMessage = "La hora es obligatoria")]
+        public string Hora { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "La sala es obligatoria")]
+        [Range(1, 10, ErrorMessage = "La sala debe estar entre 1 y 10")]
+        public int Sala { get; set; }
+
+        [Required(ErrorMessage = "El tipo es obligatorio")]
+        [MaxLength(10, ErrorMessage = "El tipo no puede superar los 10 caracteres")]
+        public string Tipo { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "El precio es obligatorio")]
+        [Range(0, double.MaxValue, ErrorMessage = "El precio no puede ser negativo")]
+        public decimal Precio { get; set; }
+
+        // Solo se usa cuando se crea una función suelta (fuera de una película)
+        public int PeliculaId { get; set; }
+    }
+}
