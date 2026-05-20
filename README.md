@@ -58,8 +58,9 @@ CineSeat/
 │   ├── Controllers/               # Endpoints HTTP
 │   ├── Services/                  # Lógica de negocio (interfaces + implementaciones)
 │   ├── Models/                    # Entidades EF Core
-    ├── Data/                      # Contexto de base de datos y migraciones
+│   ├── Data/                      # Contexto de base de datos y migraciones
 │   ├── DTOs/                      # Contratos de la API (Request / Response)
+│   ├── Mappers/                   # Conversión de entidades a DTOs
 │   ├── Program.cs                 # Configuración y arranque
 │   └── appsettings.json           # Configuración general
 │
