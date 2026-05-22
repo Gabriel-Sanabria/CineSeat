@@ -1,33 +1,78 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { finalize, retry } from 'rxjs/operators';
+import { Pelicula } from '../models/pelicula.model';
+import { ToastrService } from 'ngx-toastr';
+import { PeliculaService } from '../services/pelicula.service';
 
 @Component({
   selector: 'app-cartelera',
   templateUrl: './cartelera.component.html',
   styleUrl: './cartelera.component.css'
 })
-export class CarteleraComponent {
-  constructor(private router: Router) { }
+export class CarteleraComponent implements OnInit {
 
+  // Propiedades para controlar el estado de búsqueda y filtrado
   textoBusqueda: string = '';
   generoSeleccionado: string = 'Todas';
 
-  // Datos de ejemplo para visualizar mientras se desarrolla la lógica:
-  peliculas: any[] = [
-    { id: 1, titulo: 'La Sombra del Tiempo', genero: 'Thriller', duracion: '2h 08m', calificacion: 8.6, clasificacion: 'R', director: 'Ana Reyes', sinopsis: 'Un detective retirado descubre que los crímenes del pasado nunca se olvidan cuando una serie de muertes misteriosas lo arrastra de regreso a su oscuro pasado.' },
-    { id: 2, titulo: 'Cosmos Eternal', genero: 'Sci-Fi', duracion: '2h 32m', calificacion: 9.1, clasificacion: 'PG-13', director: 'Marco Silva', sinopsis: 'Una misión interestelar revela que el universo guarda secretos que podrían redefinir la existencia humana y el concepto mismo del tiempo.' },
-    { id: 3, titulo: 'Río Sin Retorno', genero: 'Drama', duracion: '1h 55m', calificacion: 7.8, clasificacion: 'PG-13', director: 'Lucía Méndez', sinopsis: 'Dos hermanos separados por la guerra civil se reencuentran décadas después en las orillas del mismo río donde prometieron volver.' },
-    { id: 4, titulo: 'El Último Acto', genero: 'Terror', duracion: '1h 48m', calificacion: 7.2, clasificacion: 'R', director: 'Carlos Vega', sinopsis: 'Una compañía de teatro ensaya la misma obra fatal cada noche en un teatro abandonado, sin recordar que ya lo han hecho antes.' },
-    { id: 5, titulo: 'Noche Dorada', genero: 'Romance', duracion: '2h 01m', calificacion: 8.0, clasificacion: 'PG', director: 'Sofía Ruiz', sinopsis: 'En la ciudad más romántica del mundo, dos almas perdidas se encuentran durante una noche que ninguno olvidará jamás.' },
-    { id: 6, titulo: 'Horizonte Rojo', genero: 'Acción', duracion: '2h 20m', calificacion: 7.5, clasificacion: 'PG-13', director: 'Jesús Mora', sinopsis: 'Un ex-soldado debe salvar a su ciudad natal de una conspiración que amenaza con borrarla del mapa antes del amanecer.' },
-  ];
+  // Lista completa de películas obtenida del servidor
+  peliculas: Pelicula[] = [];
 
-  // TODO: implementar
-  filtrarPorGenero(genero: string): void {
-    this.generoSeleccionado = genero;
+  // Lista de películas filtradas según el género y texto de búsqueda activos
+  peliculasMostradas: Pelicula[] = [];
+
+  // Estado de carga mientras se espera la respuesta del servidor
+  cargando: boolean = true;
+
+  // Inyección de dependencias del componente
+  constructor(private router: Router, private toastr: ToastrService, private peliculaService: PeliculaService) { }
+
+  ngOnInit(): void {
+    // Cargar la lista completa de películas al inicializar el componente
+    this.peliculaService.obtenerTodas()
+      .pipe(retry({ count: 3, delay: 1000 }), finalize(() => this.cargando = false))
+      .subscribe({
+        next: (peliculas) => {
+          // Asignar la lista de películas obtenida del servidor a la propiedad 'peliculas'
+          this.peliculas = peliculas ?? [];
+
+          // Inicializar la lista de películas mostradas con todas las películas
+          this.aplicarFiltros(this.generoSeleccionado, this.textoBusqueda);
+        },
+        error: (errorHttp) => {
+          // Si ocurre un error durante la carga, preparar un mensaje de advertencia
+          let advertencia = 'Ocurrió un error al cargar la cartelera.';
+
+          // Intentar extraer el mensaje de error devuelto por el servidor (error del model state o mensaje de error personalizado)
+          const cuerpo = errorHttp?.error;
+          if (cuerpo?.errors) advertencia = Object.values(cuerpo.errors).flat()[0] as string;
+          if (cuerpo?.mensaje) advertencia = cuerpo.mensaje;
+
+          // Mostrar el mensaje de advertencia al usuario
+          this.toastr.warning(advertencia);
+        }
+      });
   }
 
-  verDetalle(pelicula: any): void {
+  aplicarFiltros(genero: string, texto: string): void {
+    // Actualizar las propiedades de búsqueda y género seleccionado con los valores proporcionados
+    this.generoSeleccionado = genero;
+    this.textoBusqueda = texto;
+
+    // Convertir el texto de búsqueda a minúsculas y eliminar espacios en blanco para una comparación más flexible
+    const textoBusqueda = texto.toLowerCase().trim();
+
+    // Filtrar la lista de películas según el género seleccionado y el texto de búsqueda en el título
+    this.peliculasMostradas = this.peliculas.filter(pelicula => {
+      const coincideGenero = genero === 'Todas' || pelicula.genero === genero;
+      const coincideTexto = !textoBusqueda || pelicula.titulo.toLowerCase().includes(textoBusqueda);
+      return coincideGenero && coincideTexto;
+    });
+  }
+
+  verDetalle(pelicula: Pelicula): void {
+    // Navegar a la página de detalle de la película pasando su id para cargar sus datos
     this.router.navigate(['/cartelera', pelicula.id]);
   }
 }

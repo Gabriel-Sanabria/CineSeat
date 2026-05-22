@@ -118,6 +118,19 @@
   width: 100%;
 }
 
+.tarjeta-esqueleto {
+  height: 320px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--superficie-2) 25%, var(--superficie-3) 50%, var(--superficie-2) 75%);
+  background-size: 200% 100%;
+  animation: esqueleto-shimmer 1.4s infinite;
+}
+
+@keyframes esqueleto-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 .estado-vacio {
   display: flex;
   flex-direction: column;

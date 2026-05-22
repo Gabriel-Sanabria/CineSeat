@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Pelicula } from '../../models/pelicula.model';
 
 @Component({
   selector: 'app-tarjeta-pelicula',
@@ -6,9 +7,9 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   styleUrl: './tarjeta-pelicula.component.css'
 })
 export class TarjetaPeliculaComponent {
-  @Input() pelicula: any = {};
+  @Input() pelicula!: Pelicula;
   @Input() modo: 'ver' | 'editar' = 'ver';
-  @Output() clickAccion = new EventEmitter<any>();
+  @Output() clickAccion = new EventEmitter<Pelicula>();
 
   // TODO: implementar
   accionClick(): void {

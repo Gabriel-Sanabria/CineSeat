@@ -1,1 +1,5 @@
+<!-- Header condicional según la ruta -->
+<app-header *ngIf="mostrarHeader" [activo]="opcionActiva"></app-header>
+
+<!-- Contenido principal de la ruta -->
 <router-outlet></router-outlet>

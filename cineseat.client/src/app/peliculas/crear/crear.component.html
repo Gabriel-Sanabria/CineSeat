@@ -1,5 +1,3 @@
-<app-header activo="peliculas"></app-header>
-
 <main class="pagina-crear">
 
   <!-- Barra superior -->
@@ -11,22 +9,24 @@
       <button
         *ngIf="modoEdicion"
         class="btn btn-danger btn-sm"
-        (click)="eliminarPelicula()"
+        (click)="mostrarModalEliminar = true"
         type="button"
+        [disabled]="cargandoEliminar || cargandoDatos"
       >
-        <i class="fa-solid fa-trash icono-md"></i>
-        Eliminar
+        <i *ngIf="cargandoEliminar" class="fa-solid fa-circle-notch btn-spinner"></i>
+        <i *ngIf="!cargandoEliminar" class="fa-solid fa-trash icono-md"></i>
+        {{ cargandoEliminar ? 'Eliminando...' : 'Eliminar' }}
       </button>
-      <button class="btn btn-gold btn-sm" (click)="guardar()" type="button" [disabled]="cargando">
-        <i *ngIf="cargando" class="fa-solid fa-circle-notch btn-spinner"></i>
-        <i *ngIf="!cargando" class="fa-solid fa-check icono-md"></i>
-        {{ cargando ? 'Guardando...' : 'Guardar' }}
+      <button class="btn btn-gold btn-sm" (click)="guardar()" type="button" [disabled]="cargandoGuardar || cargandoDatos || cargandoEliminar">
+        <i *ngIf="cargandoGuardar || cargandoDatos" class="fa-solid fa-circle-notch btn-spinner"></i>
+        <i *ngIf="!cargandoGuardar && !cargandoDatos" class="fa-solid fa-check icono-md"></i>
+        {{ cargandoDatos ? 'Cargando...' : cargandoGuardar ? 'Guardando...' : 'Guardar' }}
       </button>
     </div>
   </header>
   <h2 class="crear-titulo titulo-display">
     <span *ngIf="!modoEdicion">Nueva Película</span>
-    <span *ngIf="modoEdicion">Editar {{ pelicula.titulo }}</span>
+    <span *ngIf="modoEdicion">Editar: {{ pelicula.titulo }}</span>
   </h2>
 
   <!-- Layout principal -->
@@ -210,6 +210,21 @@
       </div>
     </div>
 
+  </div>
+
+
+  <!-- Modal de confirmación de eliminación -->
+  <div class="modal-backdrop" *ngIf="mostrarModalEliminar" (click)="mostrarModalEliminar = false">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <p class="modal__mensaje">¿Estás seguro de que deseas eliminar esta película?</p>
+      <div class="modal__acciones">
+        <button class="btn btn-danger" (click)="eliminarPelicula()" [disabled]="cargandoEliminar">
+          <i *ngIf="cargandoEliminar" class="fa-solid fa-circle-notch btn-spinner"></i>
+          {{ cargandoEliminar ? 'Eliminando...' : 'Eliminar' }}
+        </button>
+        <button class="btn btn-dark" (click)="mostrarModalEliminar = false" [disabled]="cargandoEliminar">Cancelar</button>
+      </div>
+    </div>
   </div>
 
 </main>

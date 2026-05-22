@@ -17,8 +17,13 @@ export class CrearComponent implements OnInit {
   // Propiedad para controlar la creación o edición de una película
   modoEdicion: boolean = false;
 
-  // Propiedad para controlar el estado de carga durante el guardado
-  cargando: boolean = false;
+  // Propiedad para controlar la visibilidad del modal de confirmación de eliminación
+  mostrarModalEliminar: boolean = false;
+
+  // Propiedades para controlar el estado de carga de cada operación
+  cargandoDatos: boolean = false;
+  cargandoGuardar: boolean = false;
+  cargandoEliminar: boolean = false;
 
   // Referencia al elemento de la lista de funciones
   @ViewChild('listaFunciones') listaFunciones!: ElementRef;
@@ -50,17 +55,44 @@ export class CrearComponent implements OnInit {
 
   ngOnInit(): void {
     // Detectar el modo edición si existe un parámetro 'id' en la ruta
-    this.modoEdicion = !!this.ruta.snapshot.paramMap.get('id');
+    const idPelicula = Number(this.ruta.snapshot.paramMap.get('id'));
+    this.modoEdicion = !isNaN(idPelicula) && idPelicula !== 0;
+
+    // Si se está en modo edición, cargar los datos de la película existente utilizando el ID proporcionado en la ruta
+    if (this.modoEdicion) {
+      this.cargandoDatos = true;
+      this.peliculaService.obtenerPorId(idPelicula).subscribe({
+        next: (pelicula) => {
+          this.pelicula = pelicula;
+          this.cargandoDatos = false;
+        },
+        error: (errorHttp) => {
+          // Si ocurre un error al cargar los datos de la película, preparar un mensaje de advertencia
+          let advertencia = 'Ocurrió un error al cargar los datos de la película.';
+
+          // Intentar extraer el mensaje de error devuelto por el servidor (error del model state o mensaje de error personalizado)
+          const cuerpo = errorHttp?.error;
+          if (cuerpo?.errors) advertencia = Object.values(cuerpo.errors).flat()[0] as string;
+          if (cuerpo?.mensaje) advertencia = cuerpo.mensaje;
+
+          // Mostrar el mensaje de advertencia al usuario y navegar de vuelta a la página de la lista de películas
+          this.cargandoDatos = false;
+          this.toastr.warning(advertencia);
+          this.router.navigate(['/peliculas']);
+        }
+      });
+    }
   }
 
   volver(): void {
+    // Navegar de vuelta a la página de la lista de películas (sin aplicar cambios)
     this.router.navigate(['/peliculas']);
   }
 
   guardar(): void {
     // Si se está en modo creación, llamar al método del servicio para crear una nueva película con los datos ingresados en el formulario
     if (!this.modoEdicion) {
-      this.cargando = true;
+      this.cargandoGuardar = true;
       this.peliculaService.crear(this.pelicula).subscribe({
         next: (peliculaCreada) => {
           // Si la creación es exitosa, mostrar un mensaje de éxito y redirigir a la página de la lista de películas
@@ -78,18 +110,61 @@ export class CrearComponent implements OnInit {
 
           // Mostrar el mensaje de advertencia al usuario
           this.toastr.warning(advertencia);
-          this.cargando = false;
+          this.cargandoGuardar = false;
+        }
+      });
+    }
+    // Si se está en modo edición, llamar al método del servicio para editar la película actual con los datos ingresados en el formulario
+    else {
+      this.cargandoGuardar = true;
+      this.peliculaService.editar(Number(this.ruta.snapshot.paramMap.get('id')), this.pelicula).subscribe({
+        next: (peliculaEditada) => {
+          // Si la edición es exitosa, mostrar un mensaje de éxito y redirigir a la página de la lista de películas
+          this.toastr.success('Película editada exitosamente.');
+          this.router.navigate(['/peliculas']);
+        },
+        error: (errorHttp) => {
+          // Si ocurre un error durante la edición, preparar un mensaje de advertencia
+          let advertencia = 'Ocurrió un error al editar la película.';
+
+          // Intentar extraer el mensaje de error devuelto por el servidor (error del model state o mensaje de error personalizado)
+          const cuerpo = errorHttp?.error;
+          if (cuerpo?.errors) advertencia = Object.values(cuerpo.errors).flat()[0] as string;
+          if (cuerpo?.mensaje) advertencia = cuerpo.mensaje;
+
+          // Mostrar el mensaje de advertencia al usuario
+          this.toastr.warning(advertencia);
+          this.cargandoGuardar = false;
         }
       });
     }
   }
 
   eliminarPelicula(): void {
-    this.router.navigate(['/peliculas']);
+    // Llamar al método del servicio para eliminar la película actual utilizando el ID proporcionado en la ruta
+    this.cargandoEliminar = true;
+    this.peliculaService.eliminar(Number(this.ruta.snapshot.paramMap.get('id'))).subscribe({
+      next: () => {
+        this.toastr.success('Película eliminada exitosamente.');
+        this.router.navigate(['/peliculas']);
+      },
+      error: (errorHttp) => {
+        // Si ocurre un error durante la eliminación, preparar un mensaje de advertencia
+        let advertencia = 'Ocurrió un error al eliminar la película.';
+
+        // Intentar extraer el mensaje de error devuelto por el servidor (error del model state o mensaje de error personalizado)
+        const cuerpo = errorHttp?.error;
+        if (cuerpo?.errors) advertencia = Object.values(cuerpo.errors).flat()[0] as string;
+        if (cuerpo?.mensaje) advertencia = cuerpo.mensaje;
+
+        // Mostrar el mensaje de advertencia al usuario
+        this.toastr.warning(advertencia);
+        this.cargandoEliminar = false;
+      }
+    });
   }
 
   agregarFuncion(): void {
-
     // Crear un nuevo objeto de función con valores por defecto y agregarlo a la lista de funciones de la película
     const nuevaFuncion: Funcion = {
       fecha: '',
@@ -110,6 +185,7 @@ export class CrearComponent implements OnInit {
   }
 
   eliminarFuncion(indice: number): void {
+    // Eliminar la función de la película utilizando el índice de la misma
     this.pelicula.funciones.splice(indice, 1);
   }
 

@@ -10,9 +10,9 @@ namespace CineSeat.Server.Services {
 
         Task<bool> Eliminar(int id);
 
-        bool FechaEsAnteriorAHoy(DateOnly fecha);
+        bool FechaEsAnteriorAHoy(string fecha);
 
-        bool HoraEsAnteriorAHora(DateOnly fecha, string hora);
+        bool HoraEsAnteriorAHora(string fecha, string hora);
 
         bool TipoEsValido(string tipo);
     }

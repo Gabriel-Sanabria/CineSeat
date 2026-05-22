@@ -1,6 +1,8 @@
 import { Funcion } from './funcion.model';
 
+// Modelo de datos para las películas
 export interface Pelicula {
+  id?: number;
   titulo: string;
   genero: string;
   clasificacion: string;

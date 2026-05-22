@@ -27,7 +27,7 @@ namespace CineSeat.Server.Services {
             Funcion nuevaFuncion = new Funcion {
                 PeliculaId = dto.PeliculaId,
                 Sala = $"Sala {dto.Sala}",
-                Fecha = dto.Fecha,
+                Fecha = DateOnly.Parse(dto.Fecha),
                 Hora = TimeOnly.Parse(dto.Hora),
                 Tipo = dto.Tipo,
                 Precio = dto.Precio
@@ -60,7 +60,7 @@ namespace CineSeat.Server.Services {
             // Actualizar las propiedades de la función con los valores del DTO
             funcion.PeliculaId = dto.PeliculaId;
             funcion.Sala = $"Sala {dto.Sala}";
-            funcion.Fecha = dto.Fecha;
+            funcion.Fecha = DateOnly.Parse(dto.Fecha);
             funcion.Hora = TimeOnly.Parse(dto.Hora);
             funcion.Tipo = dto.Tipo;
             funcion.Precio = dto.Precio;
@@ -85,12 +85,17 @@ namespace CineSeat.Server.Services {
         }
 
         // --------- MÉTODOS AUXILIARES ---------
-        public bool FechaEsAnteriorAHoy(DateOnly fecha) => fecha < DateOnly.FromDateTime(DateTime.UtcNow);
+        public bool FechaEsAnteriorAHoy(string fecha) {
+            if (!DateOnly.TryParse(fecha, out DateOnly fechaParseada)) return false;
+            return fechaParseada < DateOnly.FromDateTime(DateTime.Now);
+        }
 
-        public bool HoraEsAnteriorAHora(DateOnly fecha, string hora) {
+        public bool HoraEsAnteriorAHora(string fecha, string hora) {
+            if (!DateOnly.TryParse(fecha, out DateOnly fechaParseada)) return false;
+            if (!TimeOnly.TryParse(hora, out TimeOnly horaParseada)) return false;
             // Combinar la fecha y hora de la función en un solo objeto DateTime para compararlo con la fecha y hora actuales.
-            DateTime fechaHoraFuncion = fecha.ToDateTime(TimeOnly.Parse(hora));
-            return fechaHoraFuncion < DateTime.UtcNow;
+            DateTime fechaHoraFuncion = fechaParseada.ToDateTime(horaParseada);
+            return fechaHoraFuncion < DateTime.Now;
         }
 
         public bool TipoEsValido(string tipo) {

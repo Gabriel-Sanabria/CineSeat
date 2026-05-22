@@ -27,13 +27,14 @@ namespace CineSeat.Server.Services {
                 throw new InvalidOperationException("Debe incluir al menos una función.");
 
 			// Delegar la validación de cada función al servicio de funciones antes de tocar la base de datos
-			foreach (FuncionCrearDTO funcion in dto.Funciones) {
+			for (int i = 0; i < dto.Funciones.Count; i++) {
+                FuncionCrearDTO funcion = dto.Funciones[i];
                 if (servicioFunciones.FechaEsAnteriorAHoy(funcion.Fecha))
-                    throw new InvalidOperationException($"La fecha {funcion.Fecha} no puede ser anterior a la de hoy.");
+                    throw new InvalidOperationException($"Función {i + 1}: la fecha no puede ser anterior a hoy.");
                 if (servicioFunciones.HoraEsAnteriorAHora(funcion.Fecha, funcion.Hora))
-                    throw new InvalidOperationException($"La hora {funcion.Hora} no puede ser anterior a la de ahora.");
+                    throw new InvalidOperationException($"Función {i + 1}: la hora no puede ser anterior a la hora actual.");
                 if (!servicioFunciones.TipoEsValido(funcion.Tipo))
-                    throw new InvalidOperationException($"El tipo '{funcion.Tipo}' no es válido.");
+                    throw new InvalidOperationException($"Función {i + 1}: el tipo '{funcion.Tipo}' no es válido.");
             }
 
 			// Crear una transacción para crear la película y todas sus funciones en un solo movimiento de base de datos
@@ -52,7 +53,7 @@ namespace CineSeat.Server.Services {
 					// Las funciones se crean a partir de los DTOs de funciones, asignándoles la película recién creada
 					Funciones = dto.Funciones.Select(f => new Funcion {
                         Sala = $"Sala {f.Sala}",
-                        Fecha = f.Fecha,
+                        Fecha = DateOnly.Parse(f.Fecha),
                         Hora = TimeOnly.Parse(f.Hora),
                         Tipo = f.Tipo,
                         Precio = f.Precio
@@ -110,13 +111,17 @@ namespace CineSeat.Server.Services {
                 throw new InvalidOperationException("Debe incluir al menos una función.");
 
 			// Delegar la validación de cada función al servicio de funciones antes de tocar la base de datos
-			foreach (FuncionCrearDTO funcion in dto.Funciones) {
-                if (servicioFunciones.FechaEsAnteriorAHoy(funcion.Fecha))
-                    throw new InvalidOperationException($"La fecha {funcion.Fecha} no puede ser anterior a hoy.");
-                if (servicioFunciones.HoraEsAnteriorAHora(funcion.Fecha, funcion.Hora))
-                    throw new InvalidOperationException($"La hora {funcion.Hora} no puede ser anterior a ahora.");
+			for (int i = 0; i < dto.Funciones.Count; i++) {
+                FuncionCrearDTO funcion = dto.Funciones[i];
+                // Solo validar fecha/hora en funciones nuevas (las existentes ya pasaron validación al crearse)
+                if (funcion.Id == 0) {
+                    if (servicioFunciones.FechaEsAnteriorAHoy(funcion.Fecha))
+                        throw new InvalidOperationException($"Función {i + 1}: la fecha no puede ser anterior a hoy.");
+                    if (servicioFunciones.HoraEsAnteriorAHora(funcion.Fecha, funcion.Hora))
+                        throw new InvalidOperationException($"Función {i + 1}: la hora no puede ser anterior a la hora actual.");
+                }
                 if (!servicioFunciones.TipoEsValido(funcion.Tipo))
-                    throw new InvalidOperationException($"El tipo '{funcion.Tipo}' no es válido.");
+                    throw new InvalidOperationException($"Función {i + 1}: el tipo '{funcion.Tipo}' no es válido.");
             }
 
 			// Crear una transacción para actualizar la película y reemplazar todas sus funciones en un solo movimiento de base de datos
@@ -141,7 +146,7 @@ namespace CineSeat.Server.Services {
                 pelicula.Funciones = dto.Funciones.Select(f => new Funcion {
                     PeliculaId = id,
                     Sala = $"Sala {f.Sala}",
-                    Fecha = f.Fecha,
+                    Fecha = DateOnly.Parse(f.Fecha),
                     Hora = TimeOnly.Parse(f.Hora),
                     Tipo = f.Tipo,
                     Precio = f.Precio

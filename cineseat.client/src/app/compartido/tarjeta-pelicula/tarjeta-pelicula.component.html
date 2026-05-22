@@ -8,16 +8,17 @@
   <div class="tarjeta-pelicula__contenido">
 
     <app-portada-pelicula
-      [titulo]="pelicula?.titulo || ''"
-      [genero]="pelicula?.genero || ''"
+      [titulo]="pelicula.titulo"
+      [genero]="pelicula.genero"
+      [portada]="pelicula.urlPortada || undefined"
     ></app-portada-pelicula>
 
     <div class="tarjeta-pelicula__info">
-      <h3 class="tarjeta-pelicula__titulo">{{ pelicula?.titulo }}</h3>
+      <h3 class="tarjeta-pelicula__titulo">{{ pelicula.titulo }}</h3>
       <p class="tarjeta-pelicula__meta">
-        <span>{{ pelicula?.genero }}</span>
+        <span>{{ pelicula.genero }}</span>
         <span class="separador">·</span>
-        <span>{{ pelicula?.duracion }}</span>
+        <span>{{ pelicula.duracionHoras }}h {{ pelicula.duracionMinutos | number:'2.0-0' }}m</span>
       </p>
 
       <button

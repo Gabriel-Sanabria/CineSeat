@@ -38,22 +38,23 @@ export class PeliculaService {
 
   // GET /api/peliculas
   obtenerTodas(): Observable<Pelicula[]> {
-    return EMPTY;
+    // Realizar la solicitud GET al backend para obtener la lista completa de películas y retornar un observable con la respuesta
+    return this.http.get<Pelicula[]>(this.urlBase);
   }
 
   // GET /api/peliculas/:id
   obtenerPorId(id: number): Observable<Pelicula> {
-    return EMPTY;
+    return this.http.get<Pelicula>(`${this.urlBase}/${id}`);
   }
 
   // PUT /api/peliculas/:id
   editar(id: number, dto: Pelicula): Observable<Pelicula> {
-    return EMPTY;
+    return this.http.put<Pelicula>(`${this.urlBase}/${id}`, dto);
   }
 
   // DELETE /api/peliculas/:id
   eliminar(id: number): Observable<void> {
-    return EMPTY;
+    return this.http.delete<void>(`${this.urlBase}/${id}`);
   }
 
   // --------- MÉTODOS AUXILIARES ---------

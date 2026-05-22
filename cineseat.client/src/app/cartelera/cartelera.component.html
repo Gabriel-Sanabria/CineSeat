@@ -1,5 +1,3 @@
-<app-header activo="cartelera"></app-header>
-
 <main class="pagina-cartelera">
 
   <!-- Encabezado -->
@@ -11,19 +9,28 @@
   </header>
 
   <!-- Barra de filtros -->
-  <app-buscador
-    (textoCambia)="textoBusqueda = $event"
-    (generoCambia)="filtrarPorGenero($event)"
-  ></app-buscador>
+  <app-buscador (textoCambia)="aplicarFiltros(generoSeleccionado, $event)" (generoCambia)="aplicarFiltros($event, textoBusqueda)"></app-buscador>
 
-  <!-- Grid de películas -->
-  <div class="grid-peliculas">
-    <app-tarjeta-pelicula
-      *ngFor="let pelicula of peliculas"
-      [pelicula]="pelicula"
-      modo="ver"
-      (clickAccion)="verDetalle($event)"
-    ></app-tarjeta-pelicula>
+  <!-- Estado: cargando -->
+  <div class="grid-peliculas" *ngIf="cargando">
+    <div class="tarjeta-esqueleto" *ngFor="let i of [1,2,3,4,5,6]"></div>
+  </div>
+
+  <!-- Estado: con películas -->
+  <div class="grid-peliculas" *ngIf="!cargando && peliculasMostradas.length > 0">
+    <app-tarjeta-pelicula *ngFor="let pelicula of peliculasMostradas" [pelicula]="pelicula" modo="ver" (clickAccion)="verDetalle($event)"></app-tarjeta-pelicula>
+  </div>
+
+  <!-- Estado: sin resultados de filtro -->
+  <div class="estado-vacio" *ngIf="!cargando && peliculas.length > 0 && peliculasMostradas.length === 0">
+    <i class="fa-solid fa-magnifying-glass estado-vacio__icono icono-3xl"></i>
+    <p class="estado-vacio__texto">No hay películas que coincidan con la búsqueda.</p>
+  </div>
+
+  <!-- Estado: cartelera vacía -->
+  <div class="estado-vacio" *ngIf="!cargando && peliculas.length === 0">
+    <i class="fa-solid fa-film estado-vacio__icono icono-3xl"></i>
+    <p class="estado-vacio__texto">No hay películas en cartelera por el momento.</p>
   </div>
 
 </main>

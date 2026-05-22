@@ -1,5 +1,3 @@
-<app-header activo="peliculas"></app-header>
-
 <main class="pagina-peliculas">
 
   <!-- Encabezado -->
@@ -15,42 +13,26 @@
   </header>
 
   <!-- Barra de filtros -->
-  <div class="barra-filtros">
-    <div class="campo-busqueda">
-      <i class="fa-solid fa-magnifying-glass campo-busqueda__icono icono-lg"></i>
-      <input
-        name="busqueda"
-        type="text"
-        class="campo-busqueda__input"
-        placeholder="Buscar película..."
-        [(ngModel)]="textoBusqueda"
-      >
-    </div>
+  <app-buscador (textoCambia)="aplicarFiltros(generoSeleccionado, $event)" (generoCambia)="aplicarFiltros($event, textoBusqueda)"></app-buscador>
 
-    <ul class="chips-genero">
-      <li *ngFor="let genero of generos">
-        <button
-          class="chip-genero"
-          [class.chip-genero--activo]="generoSeleccionado === genero"
-          (click)="filtrarPorGenero(genero)"
-          type="button"
-        >{{ genero }}</button>
-      </li>
-    </ul>
+  <!-- Estado: cargando -->
+  <div class="grid-peliculas" *ngIf="cargando">
+    <div class="tarjeta-esqueleto" *ngFor="let i of [1,2,3,4,5,6]"></div>
   </div>
 
-  <!-- Grid de películas -->
-  <div class="grid-peliculas">
-    <app-tarjeta-pelicula
-      *ngFor="let pelicula of peliculas"
-      [pelicula]="pelicula"
-      modo="editar"
-      (clickAccion)="editarPelicula($event)"
-    ></app-tarjeta-pelicula>
+  <!-- Estado: con películas -->
+  <div class="grid-peliculas" *ngIf="!cargando && peliculasMostradas.length > 0">
+    <app-tarjeta-pelicula *ngFor="let pelicula of peliculasMostradas" [pelicula]="pelicula" modo="editar" (clickAccion)="editarPelicula($event)"></app-tarjeta-pelicula>
   </div>
 
-  <!-- Estado vacío -->
-  <div class="estado-vacio" *ngIf="peliculas.length === 0">
+  <!-- Estado: sin resultados de filtro -->
+  <div class="estado-vacio" *ngIf="!cargando && peliculas.length > 0 && peliculasMostradas.length === 0">
+    <i class="fa-solid fa-magnifying-glass estado-vacio__icono icono-3xl"></i>
+    <p class="estado-vacio__texto">No hay películas que coincidan con la búsqueda.</p>
+  </div>
+
+  <!-- Estado: catálogo vacío -->
+  <div class="estado-vacio" *ngIf="!cargando && peliculas.length === 0">
     <i class="fa-solid fa-film estado-vacio__icono icono-3xl"></i>
     <p class="estado-vacio__texto">No hay películas en el catálogo.</p>
     <button class="btn btn-gold btn-md" (click)="nuevaPelicula()" type="button">
