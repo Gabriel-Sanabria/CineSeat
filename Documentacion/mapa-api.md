@@ -1,9 +1,3 @@
----
-title: "Mapa de API — CineSeat Backend"
-date: "2026-05-22"
-author: "Equipo CineSeat"
----
-
 # Mapa de API — CineSeat Backend
 
 Este documento describe los endpoints disponibles en la API REST de CineSeat, los DTOs que utilizan y los códigos de respuesta esperados. Está dirigido a desarrolladores que integran o extienden el backend.
