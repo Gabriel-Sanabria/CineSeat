@@ -1,3 +1,7 @@
+# Mapa de Componentes
+
+```mermaid
+%%{init: {'flowchart': {'rankSpacing': 250, 'nodeSpacing': 40}}}%%
 graph TD
     App["AppComponent<br/>(app-root)"]
 
@@ -35,10 +39,11 @@ graph TD
         FuncionEditable["FuncionEditableComponent<br/>(app-funcion-editable)"]
     end
 
-    GaleriaPeliculas -.->|contexto: cartelera| Cartelera
-    GaleriaPeliculas -.->|contexto: peliculas| Peliculas
+    GaleriaPeliculas -.->|"contexto: cartelera"| Cartelera
+    GaleriaPeliculas -.->|"contexto: peliculas"| Peliculas
 
     classDef pagina fill:#c9a037,stroke:#8a7040,color:#0d0b09
     classDef modulo fill:#2d5a27,stroke:#4a8f42,color:#d4f0cf
     class Login,DetalleComponent,ReservaComponent,CrearComponent,DashboardComponent,GaleriaPeliculas pagina
     class Auth,Cartelera,Peliculas,Dashboard,Compartido modulo
+```
