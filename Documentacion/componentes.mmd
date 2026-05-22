@@ -1,0 +1,44 @@
+graph TD
+    App["AppComponent<br/>(app-root)"]
+
+    App --> Auth
+    App --> Cartelera
+    App --> Peliculas
+    App --> Dashboard
+    App --> Compartido
+
+    subgraph Auth["Autenticacion"]
+        Login["LoginComponent<br/>(app-login)"]
+    end
+
+    subgraph Cartelera["Cartelera"]
+        DetalleComponent["DetalleComponent<br/>(app-detalle)"]
+        ReservaComponent["ReservaComponent<br/>(app-reserva)"]
+        DetalleComponent --> ReservaComponent
+    end
+
+    subgraph Peliculas["Peliculas"]
+        CrearComponent["CrearComponent<br/>(app-crear)"]
+    end
+
+    subgraph Dashboard["Dashboard"]
+        DashboardComponent["DashboardComponent<br/>(app-dashboard)"]
+    end
+
+    subgraph Compartido["Compartido"]
+        Header["HeaderComponent<br/>(app-header)"]
+        Buscador["BuscadorComponent<br/>(app-buscador)"]
+        GaleriaPeliculas["GaleriaPeliculasComponent<br/>(app-galeria-peliculas)"]
+        TarjetaPelicula["TarjetaPeliculaComponent<br/>(app-tarjeta-pelicula)"]
+        PortadaPelicula["PortadaPeliculaComponent<br/>(app-portada-pelicula)"]
+        ItemFuncion["ItemFuncionComponent<br/>(app-item-funcion)"]
+        FuncionEditable["FuncionEditableComponent<br/>(app-funcion-editable)"]
+    end
+
+    GaleriaPeliculas -.->|contexto: cartelera| Cartelera
+    GaleriaPeliculas -.->|contexto: peliculas| Peliculas
+
+    classDef pagina fill:#c9a037,stroke:#8a7040,color:#0d0b09
+    classDef modulo fill:#2d5a27,stroke:#4a8f42,color:#d4f0cf
+    class Login,DetalleComponent,ReservaComponent,CrearComponent,DashboardComponent,GaleriaPeliculas pagina
+    class Auth,Cartelera,Peliculas,Dashboard,Compartido modulo

@@ -12,7 +12,7 @@ El middleware `JwtBearer` lee el token desde `Request.Cookies["cineseat_token"]`
 
 El único servicio de autenticación del frontend es `UsuarioService`, que tiene: `validarCredenciales()`, `crear()`, `guardarSesion(id, sesionMantenida)`, `haySesionActiva()`, `limpiarSesion()`, `cerrarSesion()`. `limpiarSesion()` es un método público que solo limpia ambos storages; `cerrarSesion()` llama a la API y delega en `limpiarSesion()`.
 
-`guardarSesion()` guarda el id en `localStorage` (sesión mantenida) o `sessionStorage` (sesión normal). `haySesionActiva()` comprueba ambos storages.
+`guardarSesion(id, correo, sesionMantenida)` serializa `{ id, correo }` como JSON bajo la clave `cineseat_sesion` y lo escribe en `localStorage` (sesión mantenida) o `sessionStorage` (sesión normal). `obtenerDatosSesion()` lee y deserializa ese JSON, retornando `UsuarioActual | null`. `haySesionActiva()` comprueba la existencia de la clave en ambos storages.
 
 Existe `AutenticacionInterceptor` en `interceptors/autenticacion.interceptor.ts`, registrado en `app.module.ts` con `multi: true`. Captura respuestas `401`, llama a `usuarioService.limpiarSesion()` y navega a `/login` con `{ state: { sesionExpirada: true } }`. Propaga siempre el error.
 
