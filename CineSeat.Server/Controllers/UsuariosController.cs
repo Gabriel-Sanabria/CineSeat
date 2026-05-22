@@ -16,10 +16,10 @@ namespace CineSeat.Server.Controllers {
 
         // POST api/usuarios
         [HttpPost]
-        public async Task<ActionResult<UsuarioActualDTO>> Crear([FromBody] UsuarioCrearDTO dto) {
+        public async Task<ActionResult<UsuarioDTO>> Crear([FromBody] UsuarioCrearDTO dto) {
             try {
                 // Intentar crear el usuario llamando al metodo del servicio.
-                UsuarioActualDTO resultado = await servicioUsuarios.Crear(dto);
+                UsuarioDTO resultado = await servicioUsuarios.Crear(dto);
                 return Ok(resultado);
             }
             catch (InvalidOperationException ex) {
@@ -34,10 +34,10 @@ namespace CineSeat.Server.Controllers {
 
         // POST api/usuarios/validar
         [HttpPost("validar")]
-        public async Task<ActionResult<UsuarioActualDTO>> ValidarCredenciales([FromBody] UsuarioCrearDTO dto) {
+        public async Task<ActionResult<UsuarioDTO>> ValidarCredenciales([FromBody] UsuarioCrearDTO dto) {
             try {
                 // Intentar validar las credenciales del usuario llamando al metodo del servicio.
-                UsuarioActualDTO? resultado = await servicioUsuarios.ValidarCredenciales(dto);
+                UsuarioDTO? resultado = await servicioUsuarios.ValidarCredenciales(dto);
 
                 // Si el usuario no es encontrado, retornar una respuesta 401 Unauthorized con un mensaje.
                 if (resultado == null) {

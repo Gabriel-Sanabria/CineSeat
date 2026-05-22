@@ -40,7 +40,6 @@ namespace CineSeat.Server {
 			builder.Services.AddScoped<ITokenServicio, TokenServicio>();
 			builder.Services.AddScoped<IUsuarioServicio, UsuarioServicio>();
 			builder.Services.AddScoped<IPeliculaServicio, PeliculaServicio>();
-			builder.Services.AddScoped<IFuncionServicio, FuncionServicio>();
 
 			builder.Services.AddControllers();
 			// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

@@ -8,6 +8,7 @@ import { TarjetaPeliculaComponent } from './tarjeta-pelicula/tarjeta-pelicula.co
 import { BuscadorComponent } from './buscador/buscador.component';
 import { ItemFuncionComponent } from './item-funcion/item-funcion.component';
 import { FuncionEditableComponent } from './funcion-editable/funcion-editable.component';
+import { GaleriaPeliculasComponent } from './galeria-peliculas/galeria-peliculas.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { FuncionEditableComponent } from './funcion-editable/funcion-editable.co
     TarjetaPeliculaComponent,
     BuscadorComponent,
     ItemFuncionComponent,
-    FuncionEditableComponent
+    FuncionEditableComponent,
+    GaleriaPeliculasComponent
   ],
   imports: [
     CommonModule,
@@ -29,7 +31,8 @@ import { FuncionEditableComponent } from './funcion-editable/funcion-editable.co
     TarjetaPeliculaComponent,
     BuscadorComponent,
     ItemFuncionComponent,
-    FuncionEditableComponent
+    FuncionEditableComponent,
+    GaleriaPeliculasComponent
   ]
 })
 export class CompartidoModule { }

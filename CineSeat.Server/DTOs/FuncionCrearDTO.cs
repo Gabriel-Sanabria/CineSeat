@@ -4,9 +4,6 @@ namespace CineSeat.Server.DTOs {
 
     public class FuncionCrearDTO {
 
-		// 0 = función nueva, > 0 = función existente (evitar revalidar fecha/hora en funciones existentes al editar una película)
-		public int Id { get; set; }
-
         [Required(ErrorMessage = "La fecha es obligatoria")]
         public string Fecha { get; set; } = string.Empty;
 
@@ -24,8 +21,5 @@ namespace CineSeat.Server.DTOs {
         [Required(ErrorMessage = "El precio es obligatorio")]
         [Range(0, double.MaxValue, ErrorMessage = "El precio no puede ser negativo")]
         public decimal Precio { get; set; }
-
-        // Solo se usa cuando se crea una función dentro de una película ya existente
-        public int PeliculaId { get; set; }
     }
 }

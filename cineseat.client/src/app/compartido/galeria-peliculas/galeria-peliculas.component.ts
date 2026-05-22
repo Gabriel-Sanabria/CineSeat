@@ -1,16 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { finalize, retry } from 'rxjs/operators';
-import { Pelicula } from '../models/pelicula.model';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { PeliculaService } from '../services/pelicula.service';
+import { finalize, retry } from 'rxjs/operators';
+import { Pelicula } from '../../models/pelicula.model';
+import { PeliculaService } from '../../services/pelicula.service';
+
+type ContextoGaleria = 'cartelera' | 'peliculas';
 
 @Component({
-  selector: 'app-cartelera',
-  templateUrl: './cartelera.component.html',
-  styleUrl: './cartelera.component.css'
+  selector: 'app-galeria-peliculas',
+  templateUrl: './galeria-peliculas.component.html',
+  styleUrl: './galeria-peliculas.component.css'
 })
-export class CarteleraComponent implements OnInit {
+export class GaleriaPeliculasComponent implements OnInit {
+
+  // Contexto en el que se muestra la galería: 'cartelera' para consulta de funciones, 'peliculas' para gestión del catálogo
+  contexto: ContextoGaleria = 'cartelera';
 
   // Propiedades para controlar el estado de búsqueda y filtrado
   textoBusqueda: string = '';
@@ -26,9 +31,12 @@ export class CarteleraComponent implements OnInit {
   cargando: boolean = true;
 
   // Inyección de dependencias del componente
-  constructor(private router: Router, private toastr: ToastrService, private peliculaService: PeliculaService) { }
+  constructor(private router: Router, private ruta: ActivatedRoute, private toastr: ToastrService, private peliculaService: PeliculaService) { }
 
   ngOnInit(): void {
+    // Leer el contexto desde la configuración de la ruta para configurar el título, botones y navegación
+    this.contexto = this.ruta.snapshot.data['contexto'] ?? 'cartelera';
+
     // Cargar la lista completa de películas al inicializar el componente
     this.peliculaService.obtenerTodas()
       .pipe(retry({ count: 3, delay: 1000 }), finalize(() => this.cargando = false))
@@ -41,8 +49,8 @@ export class CarteleraComponent implements OnInit {
           this.aplicarFiltros(this.generoSeleccionado, this.textoBusqueda);
         },
         error: (errorHttp) => {
-          // Si ocurre un error durante la carga, preparar un mensaje de advertencia
-          let advertencia = 'Ocurrió un error al cargar la cartelera.';
+          // Si ocurre un error durante la carga, preparar un mensaje de advertencia según el contexto
+          let advertencia = this.contexto === 'cartelera' ? 'Ocurrió un error al cargar la cartelera.' : 'Ocurrió un error al cargar las películas.';
 
           // Intentar extraer el mensaje de error devuelto por el servidor (error del model state o mensaje de error personalizado)
           const cuerpo = errorHttp?.error;
@@ -71,8 +79,17 @@ export class CarteleraComponent implements OnInit {
     });
   }
 
-  verDetalle(pelicula: Pelicula): void {
-    // Navegar a la página de detalle de la película pasando su id para cargar sus datos
-    this.router.navigate(['/cartelera', pelicula.id]);
+  alClickTarjeta(pelicula: Pelicula): void {
+    // Navegar según el contexto: ver detalle en cartelera o editar en gestión de películas
+    if (this.contexto === 'cartelera') {
+      this.router.navigate(['/cartelera', pelicula.id]);
+    } else {
+      this.router.navigate(['/peliculas/editar', pelicula.id]);
+    }
+  }
+
+  nuevaPelicula(): void {
+    // Navegar a la página de creación de película (solo disponible en el contexto 'peliculas')
+    this.router.navigate(['/peliculas/crear']);
   }
 }

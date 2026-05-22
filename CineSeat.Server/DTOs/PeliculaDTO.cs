@@ -18,7 +18,6 @@ namespace CineSeat.Server.DTOs {
 
         public int DuracionMinutos { get; set; }
 
-        // Ruta al endpoint de portada, vacío si la película no tiene imagen
         public string UrlPortada { get; set; } = string.Empty;
 
         public List<FuncionDTO> Funciones { get; set; } = [];

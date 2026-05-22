@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PeliculasComponent } from './peliculas.component';
+import { GaleriaPeliculasComponent } from '../compartido/galeria-peliculas/galeria-peliculas.component';
 import { CrearComponent } from './crear/crear.component';
 
 const routes: Routes = [
-  { path: '', component: PeliculasComponent },
+  { path: '', component: GaleriaPeliculasComponent, data: { contexto: 'peliculas' } },
   { path: 'crear', component: CrearComponent },
   { path: 'editar/:id', component: CrearComponent }
 ];

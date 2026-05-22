@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CarteleraComponent } from './cartelera.component';
+import { GaleriaPeliculasComponent } from '../compartido/galeria-peliculas/galeria-peliculas.component';
 import { DetalleComponent } from './detalle/detalle.component';
 import { ReservaComponent } from './reserva/reserva.component';
 
 const routes: Routes = [
-  { path: '', component: CarteleraComponent },
+  { path: '', component: GaleriaPeliculasComponent, data: { contexto: 'cartelera' } },
   { path: ':id', component: DetalleComponent },
   { path: ':id/reserva/:funcionId', component: ReservaComponent }
 ];

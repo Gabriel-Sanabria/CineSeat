@@ -1,0 +1,52 @@
+<main class="pagina-galeria">
+
+  <!-- Encabezado -->
+  <header class="pagina-galeria__header">
+    <div>
+      <h1 class="titulo-display titulo-galeria">
+        <span *ngIf="contexto === 'cartelera'">Cartelera</span>
+        <span *ngIf="contexto === 'peliculas'">Películas</span>
+      </h1>
+      <p class="pagina-galeria__subtitulo">
+        <span *ngIf="contexto === 'cartelera'">Selecciona una película para ver sus funciones</span>
+        <span *ngIf="contexto === 'peliculas'">Administra el catálogo de películas</span>
+      </p>
+    </div>
+    <button *ngIf="contexto === 'peliculas'" class="btn btn-gold btn-md" (click)="nuevaPelicula()" type="button">
+      <i class="fa-solid fa-plus icono-md"></i>
+      Nueva película
+    </button>
+  </header>
+
+  <!-- Barra de filtros -->
+  <app-buscador (textoCambia)="aplicarFiltros(generoSeleccionado, $event)" (generoCambia)="aplicarFiltros($event, textoBusqueda)"></app-buscador>
+
+  <!-- Estado: cargando -->
+  <div class="grid-peliculas" *ngIf="cargando">
+    <div class="tarjeta-esqueleto" *ngFor="let i of [1,2,3,4,5,6]"></div>
+  </div>
+
+  <!-- Estado: con películas -->
+  <div class="grid-peliculas" *ngIf="!cargando && peliculasMostradas.length > 0">
+    <app-tarjeta-pelicula *ngFor="let pelicula of peliculasMostradas" [pelicula]="pelicula" [modo]="contexto === 'cartelera' ? 'ver' : 'editar'" (clickAccion)="alClickTarjeta($event)"></app-tarjeta-pelicula>
+  </div>
+
+  <!-- Estado: sin resultados de filtro -->
+  <div class="estado-vacio" *ngIf="!cargando && peliculas.length > 0 && peliculasMostradas.length === 0">
+    <i class="fa-solid fa-magnifying-glass estado-vacio__icono icono-3xl"></i>
+    <p class="estado-vacio__texto">No hay películas que coincidan con la búsqueda.</p>
+  </div>
+
+  <!-- Estado: galería vacía -->
+  <div class="estado-vacio" *ngIf="!cargando && peliculas.length === 0">
+    <i class="fa-solid fa-film estado-vacio__icono icono-3xl"></i>
+    <p class="estado-vacio__texto">
+      <span *ngIf="contexto === 'cartelera'">No hay películas en cartelera por el momento.</span>
+      <span *ngIf="contexto === 'peliculas'">No hay películas en el catálogo.</span>
+    </p>
+    <button *ngIf="contexto === 'peliculas'" class="btn btn-gold btn-md" (click)="nuevaPelicula()" type="button">
+      Agregar primera película
+    </button>
+  </div>
+
+</main>

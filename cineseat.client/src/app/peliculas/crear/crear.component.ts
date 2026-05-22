@@ -5,7 +5,6 @@ import { GENEROS, SALAS, TIPOS_SALA, PRECIO_ENTRADA_DEFAULT } from '../../app.co
 import { Funcion } from '../../models/funcion.model';
 import { Pelicula } from '../../models/pelicula.model';
 import { PeliculaService } from '../../services/pelicula.service';
-import { FuncionService } from '../../services/funcion.service';
 
 @Component({
   selector: 'app-crear',
@@ -51,7 +50,7 @@ export class CrearComponent implements OnInit {
 
   // Inyección de dependencias del componente
   constructor(private router: Router, private ruta: ActivatedRoute, private toastr: ToastrService,
-  private peliculaService: PeliculaService, private funcionService: FuncionService) { }
+  private peliculaService: PeliculaService) { }
 
   ngOnInit(): void {
     // Detectar el modo edición si existe un parámetro 'id' en la ruta

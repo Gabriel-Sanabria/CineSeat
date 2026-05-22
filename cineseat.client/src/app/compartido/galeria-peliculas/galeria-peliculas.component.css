@@ -1,20 +1,20 @@
-.pagina-cartelera {
+.pagina-galeria {
   padding: 40px;
 }
 
-.pagina-cartelera__header {
+.pagina-galeria__header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 28px;
 }
 
-.titulo-cartelera {
+.titulo-galeria {
   font-size: 30px;
   margin-bottom: 6px;
 }
 
-.pagina-cartelera__subtitulo {
+.pagina-galeria__subtitulo {
   font-size: 14px;
   color: var(--crema-tenue);
 }
@@ -47,20 +47,29 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   padding: 48px 0;
-  color: var(--crema-tenue);
+  text-align: center;
+}
+
+.estado-vacio__icono {
+  color: var(--dorado-tenue);
   opacity: 0.5;
 }
 
+.estado-vacio__texto {
+  font-size: 14px;
+  color: var(--crema-tenue);
+}
+
 @media (max-width: 1023px) {
-  .pagina-cartelera {
+  .pagina-galeria {
     padding: 24px 40px;
   }
 }
 
 @media (max-width: 767px) {
-  .pagina-cartelera {
+  .pagina-galeria {
     padding: 16px 36px;
   }
 }

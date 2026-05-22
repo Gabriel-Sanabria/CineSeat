@@ -9,11 +9,9 @@ namespace CineSeat.Server.Services {
     public class PeliculaServicio : IPeliculaServicio {
 
         private readonly AppDBContext contextoBD;
-        private readonly IFuncionServicio servicioFunciones;
 
-        public PeliculaServicio(AppDBContext contextoBD, IFuncionServicio servicioFunciones) {
+        public PeliculaServicio(AppDBContext contextoBD) {
             this.contextoBD = contextoBD;
-            this.servicioFunciones = servicioFunciones;
         }
 
         public async Task<PeliculaDTO> Crear(PeliculaCrearDTO dto) {
@@ -26,15 +24,13 @@ namespace CineSeat.Server.Services {
 			if (FuncionesVacias(dto.Funciones))
                 throw new InvalidOperationException("Debe incluir al menos una función.");
 
-			// Delegar la validación de cada función al servicio de funciones antes de tocar la base de datos
+			// Validar cada función antes de tocar la base de datos
 			for (int i = 0; i < dto.Funciones.Count; i++) {
                 FuncionCrearDTO funcion = dto.Funciones[i];
-                if (servicioFunciones.FechaEsAnteriorAHoy(funcion.Fecha))
+                if (FechaEsAnteriorAHoy(funcion.Fecha))
                     throw new InvalidOperationException($"Función {i + 1}: la fecha no puede ser anterior a hoy.");
-                if (servicioFunciones.HoraEsAnteriorAHora(funcion.Fecha, funcion.Hora))
+                if (HoraEsAnteriorAHora(funcion.Fecha, funcion.Hora))
                     throw new InvalidOperationException($"Función {i + 1}: la hora no puede ser anterior a la hora actual.");
-                if (!servicioFunciones.TipoEsValido(funcion.Tipo))
-                    throw new InvalidOperationException($"Función {i + 1}: el tipo '{funcion.Tipo}' no es válido.");
             }
 
 			// Crear una transacción para crear la película y todas sus funciones en un solo movimiento de base de datos
@@ -71,15 +67,15 @@ namespace CineSeat.Server.Services {
 				return PeliculaMapper.MapearADTO(nuevaPelicula);
             }
             catch {
-				// Si ocurre algún error durante la transacción , revertir todos los cambios realizados en la base de datos para mantener consistencia de los datos, y relanzar la excepción
+				// Si ocurre algún error durante la transacción, revertir todos los cambios realizados en la base de datos para mantener consistencia de los datos, y relanzar la excepción
 				await transaccion.RollbackAsync();
                 throw;
             }
         }
 
         public async Task<List<PeliculaDTO>> ObtenerTodas() {
-			// Obtener todas las películas de la base de datos, incluyendo sus funciones, y mapearlas a DTOs antes de retornarlas
-			List<Pelicula> peliculas = await contextoBD.Peliculas.Include(p => p.Funciones).ToListAsync();
+			// Obtener todas las películas de la base de datos, incluyendo sus funciones, y mapearlas a DTOs antes de retornarlas alfabeticamente por título
+			List<Pelicula> peliculas = await contextoBD.Peliculas.Include(p => p.Funciones).OrderBy(p => p.Titulo).ToListAsync();
             return peliculas.Select(PeliculaMapper.MapearADTO).ToList();
         }
 
@@ -110,18 +106,13 @@ namespace CineSeat.Server.Services {
 			if (FuncionesVacias(dto.Funciones))
                 throw new InvalidOperationException("Debe incluir al menos una función.");
 
-			// Delegar la validación de cada función al servicio de funciones antes de tocar la base de datos
+			// Validar cada función antes de tocar la base de datos
 			for (int i = 0; i < dto.Funciones.Count; i++) {
                 FuncionCrearDTO funcion = dto.Funciones[i];
-                // Solo validar fecha/hora en funciones nuevas (las existentes ya pasaron validación al crearse)
-                if (funcion.Id == 0) {
-                    if (servicioFunciones.FechaEsAnteriorAHoy(funcion.Fecha))
-                        throw new InvalidOperationException($"Función {i + 1}: la fecha no puede ser anterior a hoy.");
-                    if (servicioFunciones.HoraEsAnteriorAHora(funcion.Fecha, funcion.Hora))
-                        throw new InvalidOperationException($"Función {i + 1}: la hora no puede ser anterior a la hora actual.");
-                }
-                if (!servicioFunciones.TipoEsValido(funcion.Tipo))
-                    throw new InvalidOperationException($"Función {i + 1}: el tipo '{funcion.Tipo}' no es válido.");
+                if (FechaEsAnteriorAHoy(funcion.Fecha))
+                    throw new InvalidOperationException($"Función {i + 1}: la fecha no puede ser anterior a hoy.");
+                if (HoraEsAnteriorAHora(funcion.Fecha, funcion.Hora))
+                    throw new InvalidOperationException($"Función {i + 1}: la hora no puede ser anterior a la hora actual.");
             }
 
 			// Crear una transacción para actualizar la película y reemplazar todas sus funciones en un solo movimiento de base de datos
@@ -176,7 +167,7 @@ namespace CineSeat.Server.Services {
 			// Si no se encuentra la película, retornar false
 			if (pelicula == null) return false;
 
-			// Eliminar la película del contexto y guardar los cambios en la base de datos; retornar true para indicar que la eliminación correcta
+			// Eliminar la película del contexto y guardar los cambios en la base de datos; retornar true para indicar que la eliminación fue correcta
 			contextoBD.Peliculas.Remove(pelicula);
             await contextoBD.SaveChangesAsync();
             return true;
@@ -198,5 +189,9 @@ namespace CineSeat.Server.Services {
         private static bool DuracionEsCero(int horas, int minutos) => horas == 0 && minutos == 0;
 
         private static bool FuncionesVacias(List<FuncionCrearDTO> funciones) => funciones.Count == 0;
-    }
+
+        private static bool FechaEsAnteriorAHoy(string fecha) => DateOnly.Parse(fecha) < DateOnly.FromDateTime(DateTime.Now);
+
+        private static bool HoraEsAnteriorAHora(string fecha, string hora) => DateOnly.Parse(fecha).ToDateTime(TimeOnly.Parse(hora)) < DateTime.Now;
+	}
 }

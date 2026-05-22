@@ -15,7 +15,7 @@ namespace CineSeat.Server.Services {
 			this.tokenServicio = tokenServicio;
 		}
 
-		public async Task<UsuarioActualDTO> Crear(UsuarioCrearDTO dto) {
+		public async Task<UsuarioDTO> Crear(UsuarioCrearDTO dto) {
 
 			// Validar que el correo no esté en uso
 			bool correoEnUso = await CorreoEnUso(dto.Correo);
@@ -40,13 +40,13 @@ namespace CineSeat.Server.Services {
 			tokenServicio.GenerarComoCookie(nuevoUsuario, dto.SesionMantenida);
 
 			// Retornar el DTO con la información del usuario creado
-			return new UsuarioActualDTO {
+			return new UsuarioDTO {
 				Id = nuevoUsuario.Id,
 				Correo = nuevoUsuario.Correo
 			};
 		}
 
-		public async Task<UsuarioActualDTO?> ValidarCredenciales(UsuarioCrearDTO dto) {
+		public async Task<UsuarioDTO?> ValidarCredenciales(UsuarioCrearDTO dto) {
 
 			// Buscar el usuario por correo
 			Usuario? usuarioEncontrado = await contextoBD.Usuarios.FirstOrDefaultAsync(u => u.Correo.ToLower() == dto.Correo.ToLower());
@@ -61,7 +61,7 @@ namespace CineSeat.Server.Services {
 			tokenServicio.GenerarComoCookie(usuarioEncontrado, dto.SesionMantenida);
 
 			// Retornar el DTO con los datos básicos del usuario autenticado
-			return new UsuarioActualDTO {
+			return new UsuarioDTO {
 				Id = usuarioEncontrado.Id,
 				Correo = usuarioEncontrado.Correo
 			};
