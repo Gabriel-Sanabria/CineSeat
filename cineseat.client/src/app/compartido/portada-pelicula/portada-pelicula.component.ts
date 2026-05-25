@@ -6,8 +6,8 @@ import { Component, Input } from '@angular/core';
   styleUrl: './portada-pelicula.component.css'
 })
 export class PortadaPeliculaComponent {
-  @Input() titulo: string = '';
-  @Input() genero: string = '';
+  @Input({ required: true }) titulo: string = '';
+  @Input({ required: true }) genero: string = '';
   @Input() ancho?: number;
   @Input() alto?: number;
   @Input() portada?: string;

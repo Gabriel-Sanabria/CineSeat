@@ -57,7 +57,7 @@ export class CrearComponent implements OnInit {
     const idPelicula = Number(this.ruta.snapshot.paramMap.get('id'));
     this.modoEdicion = !isNaN(idPelicula) && idPelicula !== 0;
 
-    // Si se está en modo edición, cargar los datos de la película existente utilizando el ID proporcionado en la ruta
+    // Si se está en modo edición, cargar los datos de la película existente utilizando el ID en el parámetro de la ruta
     if (this.modoEdicion) {
       this.cargandoDatos = true;
       this.peliculaService.obtenerPorId(idPelicula).subscribe({

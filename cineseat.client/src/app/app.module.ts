@@ -1,6 +1,9 @@
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { CommonModule, DatePipe } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
+import { NgModule, LOCALE_ID } from '@angular/core';
+import localeEs from '@angular/common/locales/es';
+
+registerLocaleData(localeEs);
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -25,6 +28,7 @@ import { CompartidoModule } from './compartido/compartido.module';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AutenticacionInterceptor, multi: true },
+    { provide: LOCALE_ID, useValue: 'es' },
     DatePipe
   ],
   bootstrap: [AppComponent]

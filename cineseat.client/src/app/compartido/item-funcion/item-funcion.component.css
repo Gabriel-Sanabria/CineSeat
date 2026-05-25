@@ -32,6 +32,15 @@
   background: rgba(201, 160, 55, 0.06);
 }
 
+.boton-funcion__fecha {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--crema-tenue);
+  margin-bottom: 4px;
+}
+
 .boton-funcion__hora {
   font-family: var(--fuente-titulo);
   font-size: 22px;
@@ -41,12 +50,12 @@
 }
 
 .boton-funcion__sala {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--crema-tenue);
 }
 
 .boton-funcion__asientos {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--crema-tenue);
   opacity: 0.7;
 }

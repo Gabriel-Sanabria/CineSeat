@@ -106,13 +106,16 @@ namespace CineSeat.Server.Services {
 			if (FuncionesVacias(dto.Funciones))
                 throw new InvalidOperationException("Debe incluir al menos una función.");
 
-			// Validar cada función antes de tocar la base de datos
+			// Delegar la validación de cada función antes de tocar la base de datos
 			for (int i = 0; i < dto.Funciones.Count; i++) {
                 FuncionCrearDTO funcion = dto.Funciones[i];
-                if (FechaEsAnteriorAHoy(funcion.Fecha))
-                    throw new InvalidOperationException($"Función {i + 1}: la fecha no puede ser anterior a hoy.");
-                if (HoraEsAnteriorAHora(funcion.Fecha, funcion.Hora))
-                    throw new InvalidOperationException($"Función {i + 1}: la hora no puede ser anterior a la hora actual.");
+                // Solo validar fecha/hora en funciones nuevas (las existentes ya fueron validadas al crearse)
+                if (funcion.Id == 0) {
+                    if (FechaEsAnteriorAHoy(funcion.Fecha))
+                        throw new InvalidOperationException($"Función {i + 1}: la fecha no puede ser anterior a hoy.");
+                    if (HoraEsAnteriorAHora(funcion.Fecha, funcion.Hora))
+                        throw new InvalidOperationException($"Función {i + 1}: la hora no puede ser anterior a la hora actual.");
+                }
             }
 
 			// Crear una transacción para actualizar la película y reemplazar todas sus funciones en un solo movimiento de base de datos

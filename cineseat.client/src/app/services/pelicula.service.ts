@@ -33,7 +33,7 @@ export class PeliculaService {
     for (const funcion of dto.funciones) {
       const errorFuncion = this.validarCamposFuncion(funcion);
       if (errorFuncion) {
-        return throwError(() => ({ error: { mensaje: `Error en función ${dto.funciones.indexOf(funcion) + 1}: ${errorFuncion}` } }));
+        return throwError(() => ({ error: { mensaje: `Función ${dto.funciones.indexOf(funcion) + 1}: ${errorFuncion}` } }));
       }
     }
 
@@ -52,11 +52,22 @@ export class PeliculaService {
 
   // GET /api/peliculas/:id
   obtenerPorId(id: number): Observable<Pelicula> {
+    // Realizar la solicitud GET al backend para obtener los datos de una película por su ID
     return this.http.get<Pelicula>(`${this.urlBase}/${id}`);
   }
 
   // PUT /api/peliculas/:id
   editar(id: number, dto: Pelicula): Observable<Pelicula> {
+    // Validar solo las funciones nuevas (sin id) antes de enviar la solicitud al backend
+    for (const funcion of dto.funciones) {
+      if (!funcion.id) {
+        const errorFuncion = this.validarCamposFuncion(funcion);
+        if (errorFuncion) {
+          return throwError(() => ({ error: { mensaje: `Función ${dto.funciones.indexOf(funcion) + 1}: ${errorFuncion}` } }));
+        }
+      }
+    }
+
     // Realizar la solicitud PUT al backend para editar una película e invalidar el caché ante una respuesta exitosa
     return this.http.put<Pelicula>(`${this.urlBase}/${id}`, dto).pipe(tap(() => this.invalidarCache()));
   }
@@ -84,10 +95,15 @@ export class PeliculaService {
 
   private validarCamposFuncion(funcion: Funcion): string | null {
     if (!funcion.fecha || !funcion.hora || !funcion.sala || !funcion.tipo) return 'Por favor, completa todos los campos.';
-    const fechaHoy = this.datePipe.transform(new Date(), 'yyyy-MM-dd')!;
-    const horaActual = this.datePipe.transform(new Date(), 'HH:mm')!;
-    if (funcion.fecha < fechaHoy) return 'La fecha no puede ser anterior a hoy.';
-    if (funcion.fecha === fechaHoy && funcion.hora < horaActual) return 'La hora no puede ser anterior a la hora actual.';
+
+    // Solo validar fecha/hora en funciones nuevas (las existentes ya fueron validadas al crearse)
+    if (!funcion.id) {
+      const fechaHoy = this.datePipe.transform(new Date(), 'yyyy-MM-dd')!;
+      const horaActual = this.datePipe.transform(new Date(), 'HH:mm')!;
+      if (funcion.fecha < fechaHoy) return 'La fecha no puede ser anterior a hoy.';
+      if (funcion.fecha === fechaHoy && funcion.hora < horaActual) return 'La hora no puede ser anterior a la hora actual.';
+    }
+
     if (funcion.precio < 0) return 'El precio no puede ser negativo.';
     return null;
   }

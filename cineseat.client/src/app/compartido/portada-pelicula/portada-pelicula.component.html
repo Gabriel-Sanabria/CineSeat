@@ -1,13 +1,14 @@
-<div
-  class="cartel-pelicula"
-  [style.--ancho.px]="ancho ?? null"
-  [style.--alto.px]="alto ?? null"
->
+<!-- Definición de la estructura del cartel de la película -->
+<div class="cartel-pelicula" [style.--ancho.px]="ancho ?? null" [style.--alto.px]="alto ?? null">
+
+  <!-- Imagen de la película -->
   <img *ngIf="portada" class="cartel-pelicula__imagen" [src]="portada" [alt]="titulo">
+
+  <!-- Placeholder para cuando no hay imagen (fondo con líneas, título y género) -->
   <ng-container *ngIf="!portada">
     <div class="cartel-pelicula__fondo"></div>
     <div class="cartel-pelicula__lineas"></div>
-    <span class="cartel-pelicula__genero">{{ genero }}</span>
     <span class="cartel-pelicula__titulo">{{ titulo }}</span>
+    <span class="cartel-pelicula__genero">{{ genero }}</span>
   </ng-container>
 </div>

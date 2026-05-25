@@ -1,53 +1,89 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { Funcion } from '../../models/funcion.model';
+import { Pelicula } from '../../models/pelicula.model';
+import { PeliculaService } from '../../services/pelicula.service';
 
 @Component({
   selector: 'app-detalle',
   templateUrl: './detalle.component.html',
   styleUrl: './detalle.component.css'
 })
-export class DetalleComponent {
-  constructor(private router: Router, private ruta: ActivatedRoute) { }
+export class DetalleComponent implements OnInit {
 
-  fechaSeleccionada: string = new Date().toISOString().split('T')[0];
-  funcionSeleccionada: any = null;
-
-  // Datos de ejemplo para visualizar mientras se desarrolla la lógica:
-  pelicula: any = {
-    id: 1,
-    titulo: 'La Sombra del Tiempo',
-    genero: 'Thriller',
-    duracion: '2h 08m',
-    calificacion: 8.6,
-    clasificacion: 'R',
-    director: 'Ana Reyes',
-    sinopsis: 'Un detective retirado descubre que los crímenes del pasado nunca se olvidan cuando una serie de muertes misteriosas lo arrastra de regreso a su oscuro pasado. Una historia de redención y suspenso que mantiene al espectador al borde de la butaca.',
+  // Objeto de la pelicula a mostrar (inicialización con valores por defecto)
+  pelicula: Pelicula = {
+    titulo: '',
+    genero: '',
+    clasificacion: '',
+    duracionHoras: 0,
+    duracionMinutos: 0,
+    director: '',
+    sinopsis: '',
+    urlPortada: '',
+    funciones: []
   };
 
-  funciones: any[] = [
-    { id: 1, hora: '14:30', sala: 'Sala 1', tipo: '2D', asientosDisponibles: 42, precio: 90 },
-    { id: 2, hora: '17:00', sala: 'Sala 2', tipo: '3D', asientosDisponibles: 28, precio: 120 },
-    { id: 3, hora: '19:30', sala: 'Sala 3', tipo: '2D', asientosDisponibles: 15, precio: 90 },
-    { id: 4, hora: '21:45', sala: 'Sala VIP', tipo: 'IMAX', asientosDisponibles: 8, precio: 160 },
-  ];
+  // Estado de carga mientras se espera la respuesta del servidor
+  cargando: boolean = true;
 
-  estrellas: number[] = [1, 2, 3, 4, 5];
+  // Propiedades de control de estado de funciones
+  fechaSeleccionada: string = '';
+  funcionesFiltradas: Funcion[] = [];
+  funcionSeleccionada: Funcion | null = null;
+
+  // Inyección de dependencias del componente
+  constructor(private router: Router, private ruta: ActivatedRoute, private toastr: ToastrService, private peliculaService: PeliculaService) { }
+
+  ngOnInit(): void {
+    // Cargar los datos de la película utilizando el ID proporcionado en el parámetro de la ruta
+    const idPelicula = Number(this.ruta.snapshot.paramMap.get('id'));
+    if (!isNaN(idPelicula) && idPelicula !== 0) {
+      this.peliculaService.obtenerPorId(idPelicula).subscribe({
+        next: (pelicula) => {
+          this.pelicula = pelicula;
+          this.filtrarFunciones(this.fechaSeleccionada);
+          this.cargando = false;
+        },
+        error: (errorHttp) => {
+          // Si ocurre un error al cargar los datos de la película, preparar un mensaje de advertencia
+          let advertencia = 'Ocurrió un error al cargar los datos de la película.';
+
+          // Intentar extraer el mensaje de error devuelto por el servidor (error del model state o mensaje de error personalizado)
+          const cuerpo = errorHttp?.error;
+          if (cuerpo?.errors) advertencia = Object.values(cuerpo.errors).flat()[0] as string;
+          if (cuerpo?.mensaje) advertencia = cuerpo.mensaje;
+
+          // Mostrar el mensaje de advertencia al usuario y navegar de vuelta a la página de la cartelera
+          this.toastr.warning(advertencia);
+          this.router.navigate(['/cartelera']);
+        }
+      });
+    }
+    else {
+      // Si no se proporciona un ID válido, navegar de vuelta a la cartelera
+      this.toastr.warning('No se encontró la película. Redirigiendo a la cartelera.', 'Película no encontrada');
+      this.router.navigate(['/cartelera']);
+    }
+  }
 
   volver(): void {
+    // Navegar de vuelta a la página de la cartelera
     this.router.navigate(['/cartelera']);
   }
 
-  seleccionarFuncion(funcion: any): void {
-    this.funcionSeleccionada = funcion;
-  }
-
-  deseleccionarFuncion(): void {
-    this.funcionSeleccionada = null;
-  }
-
   irAReserva(): void {
-    const idPelicula = this.ruta.snapshot.paramMap.get('id') ?? this.pelicula.id;
-    const idFuncion = this.funcionSeleccionada?.id ?? this.funciones[0].id;
-    this.router.navigate(['/cartelera', idPelicula, 'reserva', idFuncion]);
+    // Navegar a la página de reserva para la función seleccionada de la película actual
+    this.router.navigate(['/cartelera', this.pelicula.id, 'reserva', this.funcionSeleccionada?.id]);
+  }
+
+  filtrarFunciones(fecha: string): void {
+    // Actualizar la fecha seleccionada y deseleccionar la función activa al cambiar el filtro
+    this.fechaSeleccionada = fecha;
+    this.funcionSeleccionada = null;
+
+    // Mostrar todas las funciones si no hay fecha seleccionada, o solo las del día indicado
+    this.funcionesFiltradas = !fecha ? this.pelicula.funciones : this.pelicula.funciones.filter(f => f.fecha === fecha);
   }
 }

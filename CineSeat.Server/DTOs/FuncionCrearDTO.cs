@@ -4,6 +4,8 @@ namespace CineSeat.Server.DTOs {
 
     public class FuncionCrearDTO {
 
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "La fecha es obligatoria")]
         public string Fecha { get; set; } = string.Empty;
 

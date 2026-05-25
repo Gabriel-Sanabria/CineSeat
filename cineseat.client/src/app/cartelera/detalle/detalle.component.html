@@ -1,4 +1,4 @@
-<main class="pagina-detalle" (click)="deseleccionarFuncion()">
+<main class="pagina-detalle" (click)="funcionSeleccionada = null">
 
   <!-- Hero con info de la película -->
   <div class="detalle-hero">
@@ -9,26 +9,37 @@
     <div class="detalle-hero__contenido">
       <!-- Poster -->
       <div class="poster-detalle">
-        <app-portada-pelicula
-          [titulo]="pelicula?.titulo || ''"
-          [genero]="pelicula?.genero || ''"
-        ></app-portada-pelicula>
+        <app-portada-pelicula [titulo]="pelicula.titulo || ''" [genero]="pelicula.genero || ''" [portada]="pelicula.urlPortada || ''"></app-portada-pelicula>
       </div>
 
       <!-- Info -->
       <div class="detalle-info">
-        <div class="detalle-info__badges">
-          <span class="badge">{{ pelicula?.genero }}</span>
-          <span class="badge">{{ pelicula?.clasificacion }}</span>
-        </div>
 
-        <h1 class="detalle-info__titulo titulo-display">{{ pelicula?.titulo }}</h1>
+        <!-- Estado: cargando -->
+        <ng-container *ngIf="cargando">
+          <div class="detalle-info__badges">
+            <span class="esqueleto esqueleto--badge"></span>
+            <span class="esqueleto esqueleto--badge"></span>
+          </div>
+          <div class="esqueleto esqueleto--titulo"></div>
+          <div class="esqueleto esqueleto--meta"></div>
+          <div class="esqueleto esqueleto--sinopsis"></div>
+          <div class="esqueleto esqueleto--sinopsis esqueleto--sinopsis-corta"></div>
+        </ng-container>
 
-        <p class="detalle-info__meta">
-          {{ pelicula?.duracion }} · Dir. {{ pelicula?.director }}
-        </p>
+        <!-- Estado: cargado -->
+        <ng-container *ngIf="!cargando">
+          <div class="detalle-info__badges">
+            <span class="badge">{{ pelicula.genero }}</span>
+            <span class="badge">{{ pelicula.clasificacion }}</span>
+          </div>
+          <h1 class="detalle-info__titulo titulo-display">{{ pelicula.titulo }}</h1>
+          <p class="detalle-info__meta">
+            {{ pelicula.duracionHoras }}h {{ pelicula.duracionMinutos }}min · Dir. {{ pelicula.director }}
+          </p>
+          <p class="detalle-info__sinopsis">{{ pelicula.sinopsis }}</p>
+        </ng-container>
 
-        <p class="detalle-info__sinopsis">{{ pelicula?.sinopsis }}</p>
       </div>
 
       <!-- Panel de funciones -->
@@ -37,30 +48,26 @@
 
         <div class="campo">
           <label class="campo-label">Fecha</label>
-          <input
-            name="fechaSeleccionada"
-            type="date"
-            class="campo-input"
-            [(ngModel)]="fechaSeleccionada"
-          >
+          <div class="campo-fecha">
+            <input name="fechaSeleccionada" type="date" class="campo-input"
+              [ngModel]="fechaSeleccionada"
+              (ngModelChange)="filtrarFunciones($event)">
+            <button *ngIf="fechaSeleccionada" class="btn-limpiar-fecha" (click)="filtrarFunciones('')" type="button" title="Limpiar fecha">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
         </div>
 
         <ul class="lista-funciones">
-          <li *ngFor="let funcion of funciones">
-            <app-item-funcion
-              [funcion]="funcion"
-              [activo]="funcionSeleccionada?.id === funcion.id"
-              (seleccionar)="seleccionarFuncion(funcion)"
-            ></app-item-funcion>
+          <li *ngFor="let funcion of funcionesFiltradas">
+            <app-item-funcion [funcion]="funcion" [activo]="funcionSeleccionada?.id === funcion.id" (seleccionar)="funcionSeleccionada = funcion"></app-item-funcion>
+          </li>
+          <li class="sin-funciones" *ngIf="funcionesFiltradas.length === 0">
+            No hay funciones para esta fecha.
           </li>
         </ul>
 
-        <button
-          class="btn btn-gold btn-reservar"
-          [disabled]="!funcionSeleccionada"
-          (click)="irAReserva()"
-          type="button"
-        >
+        <button class="btn btn-gold btn-reservar" [disabled]="!funcionSeleccionada" (click)="irAReserva()" type="button">
           <i class="fa-solid fa-couch icono-lg"></i>
           Reservar asientos
         </button>
