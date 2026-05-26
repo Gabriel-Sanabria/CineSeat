@@ -65,6 +65,16 @@
   margin: 0 auto;
 }
 
+/* Aparición suave de la grilla una vez cargados los asientos */
+.grilla-asientos--aparece {
+  animation: aparecer-grilla 0.4s ease;
+}
+
+@keyframes aparecer-grilla {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .grilla-asientos__fila {
   display: flex;
   align-items: center;
@@ -118,10 +128,22 @@
 }
 
 .asiento--ocupado {
-  background: var(--superficie-3);
-  border-color: var(--superficie-3);
-  opacity: 0.35;
+  background: papayawhip;
+  border-color: papayawhip;
   cursor: not-allowed;
+}
+
+.asiento--esqueleto {
+  border-color: transparent;
+  background: linear-gradient(90deg, var(--superficie-2) 25%, var(--superficie-3) 50%, var(--superficie-2) 75%);
+  background-size: 200% 100%;
+  animation: esqueleto-shimmer 1.4s infinite;
+  cursor: default;
+}
+
+@keyframes esqueleto-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .asiento--elegido {
@@ -167,9 +189,8 @@
 }
 
 .muestra-asiento--ocupado {
-  background: var(--superficie-3);
-  border-color: var(--superficie-3);
-  opacity: 0.35;
+  background: papayawhip;
+  border-color: papayawhip;
 }
 
 /* ── Columna derecha: panel de pago ── */
@@ -191,12 +212,12 @@
 }
 
 .panel-pago__titulo {
-  font-size: 18px;
+  font-size: 21px;
   margin-bottom: 4px;
 }
 
 .panel-pago__funcion {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--crema-tenue);
 }
 
@@ -210,7 +231,7 @@
 .resumen-fila {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 15px;
   color: var(--crema-tenue);
 }
 
@@ -223,7 +244,7 @@
 
 .resumen-total {
   font-family: var(--fuente-titulo);
-  font-size: 18px;
+  font-size: 21px;
   color: var(--dorado);
 }
 
@@ -251,7 +272,7 @@
 }
 
 .sin-asientos {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--crema-tenue);
   text-align: center;
   opacity: 0.6;

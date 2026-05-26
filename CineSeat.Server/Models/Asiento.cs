@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CineSeat.Server.Models {
 
-    public class AsientoReservado {
+    public class Asiento {
 
         [Required]
         public int ReservaId { get; set; }

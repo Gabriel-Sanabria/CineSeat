@@ -15,5 +15,7 @@ namespace CineSeat.Server.DTOs {
         public string Tipo { get; set; } = string.Empty;
 
         public decimal Precio { get; set; }
+
+        public int AsientosDisponibles { get; set; }
     }
 }

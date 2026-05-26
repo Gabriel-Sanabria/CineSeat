@@ -7,8 +7,8 @@
     <div class="reserva-asientos">
 
       <!-- Encabezado con botón volver -->
-      <button class="btn btn-ghost btn-sm btn-volver" (click)="volver()" type="button">
-        ← {{ pelicula?.titulo }} · {{ funcion?.hora }} {{ funcion?.sala }}
+      <button class="btn btn-ghost btn-sm btn-volver" (click)="volverADetalle()" type="button">
+        ← {{ pelicula.titulo }} · {{ funcionActual.hora | slice:0:5 }} Sala {{ funcionActual.sala }}
       </button>
 
       <h2 class="reserva-titulo titulo-display">Selecciona tus asientos</h2>
@@ -19,8 +19,17 @@
         <span class="pantalla-cine__label">PANTALLA</span>
       </div>
 
+      <!-- Esqueleto de carga mientras se obtienen los asientos ocupados -->
+      <div class="grilla-asientos" *ngIf="cargandoAsientos">
+        <div class="grilla-asientos__fila" *ngFor="let fila of filas">
+          <span class="grilla-asientos__etiqueta-fila"></span>
+          <span class="asiento asiento--esqueleto" *ngFor="let col of columnas"></span>
+          <span class="grilla-asientos__etiqueta-fila"></span>
+        </div>
+      </div>
+
       <!-- Grid de asientos -->
-      <div class="grilla-asientos">
+      <div class="grilla-asientos grilla-asientos--aparece" *ngIf="!cargandoAsientos">
         <!-- Fila de números de columna -->
         <div class="grilla-asientos__fila grilla-asientos__fila--numeros">
           <span class="grilla-asientos__etiqueta-fila"></span>
@@ -70,7 +79,7 @@
       <!-- Encabezado del panel -->
       <div class="panel-pago__header">
         <h3 class="panel-pago__titulo titulo-gold">Resumen</h3>
-        <p class="panel-pago__funcion">{{ funcion?.hora }} · {{ funcion?.sala }} · {{ funcion?.tipo }}</p>
+        <p class="panel-pago__funcion">{{ funcionActual.hora | slice:0:5 }} · Sala {{ funcionActual.sala }} · {{ funcionActual.tipo }}</p>
       </div>
 
       <!-- Resumen de costos -->
@@ -113,6 +122,8 @@
             [(ngModel)]="numeroTarjeta"
             maxlength="19"
             required
+            (keypress)="soloDigitos($event)"
+            (input)="formatearNumeroTarjeta($event)"
             #numTarjetaCtrl="ngModel"
           >
           <span class="campo-error" *ngIf="numTarjetaCtrl.invalid && numTarjetaCtrl.touched">
@@ -132,6 +143,8 @@
               [(ngModel)]="vencimientoTarjeta"
               maxlength="5"
               required
+              (keypress)="teclaVencimiento($event)"
+              (keydown)="borrarVencimiento($event)"
               #vencimientoCtrl="ngModel"
             >
           </div>
@@ -146,6 +159,7 @@
               [(ngModel)]="cvvTarjeta"
               maxlength="3"
               required
+              (keypress)="soloDigitos($event)"
               #cvvCtrl="ngModel"
             >
           </div>
@@ -154,7 +168,7 @@
         <button
           type="submit"
           class="btn btn-gold btn-pagar"
-          [disabled]="asientosSeleccionados.length === 0"
+          [disabled]="asientosSeleccionados.length === 0 || formPago.invalid"
         >
           Pagar ${{ total }}
         </button>
@@ -188,15 +202,15 @@
       <p class="boleto__sello">&#10086; CINESEAT &#10086;</p>
       <div class="boleto__cabecera-divisor"></div>
       <div class="boleto__badges">
-        <span class="boleto__badge" *ngIf="pelicula?.genero">{{ pelicula?.genero }}</span>
-        <span class="boleto__badge boleto__badge--clasificacion" *ngIf="pelicula?.clasificacion">{{ pelicula?.clasificacion }}</span>
+        <span class="boleto__badge" *ngIf="pelicula.genero">{{ pelicula.genero }}</span>
+        <span class="boleto__badge boleto__badge--clasificacion" *ngIf="pelicula.clasificacion">{{ pelicula.clasificacion }}</span>
       </div>
     </div>
 
     <!-- Zona 2: título de la película -->
     <div class="boleto__pelicula">
-      <h2 class="boleto__titulo titulo-display">{{ pelicula?.titulo }}</h2>
-      <p class="boleto__subtitulo">{{ funcion?.tipo }}</p>
+      <h2 class="boleto__titulo titulo-display">{{ pelicula.titulo }}</h2>
+      <p class="boleto__subtitulo">{{ funcionActual.tipo }}</p>
     </div>
 
     <!-- Separador punteado con semicírculos (entre película y datos) -->
@@ -210,15 +224,15 @@
     <div class="boleto__datos">
       <div class="boleto__fila-dato">
         <span class="boleto__etiqueta">SALA</span>
-        <span class="boleto__valor">{{ funcion?.sala }}</span>
+        <span class="boleto__valor">Sala {{ funcionActual.sala }}</span>
       </div>
       <div class="boleto__fila-dato">
         <span class="boleto__etiqueta">HORA</span>
-        <span class="boleto__valor">{{ funcion?.hora }}</span>
+        <span class="boleto__valor">{{ funcionActual.hora | slice:0:5 }}</span>
       </div>
       <div class="boleto__fila-dato">
         <span class="boleto__etiqueta">FORMATO</span>
-        <span class="boleto__valor">{{ funcion?.tipo }}</span>
+        <span class="boleto__valor">{{ funcionActual.tipo }}</span>
       </div>
       <div class="boleto__fila-dato boleto__fila-dato--asientos">
         <span class="boleto__etiqueta">ASIENTOS</span>

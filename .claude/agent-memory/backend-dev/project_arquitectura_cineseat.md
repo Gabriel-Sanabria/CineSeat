@@ -21,12 +21,16 @@ type: project
 - `PeliculaDTO` — Id, Titulo, Genero, Clasificacion, Director, Sinopsis, DuracionHoras, DuracionMinutos, UrlPortada, Funciones (List<FuncionDTO>)
 - `FuncionCrearDTO` — Fecha (DateOnly), Hora (TimeOnly), Sala (int 1-10), Tipo, Precio, PeliculaId
 - `FuncionDTO` — Id, PeliculaId, Sala (int), Fecha, Hora, Tipo, Precio
+- `ReservaCrearDTO` — FuncionId, UsuarioId, Asientos (List<string>), Subtotal, CargoServicio, Total
+- `ReservaDTO` — Id, FuncionId, UsuarioId, FechaCreacion, AsientosReservados (List<string>), Pago (PagoDTO)
+- `PagoDTO` — Id, Subtotal, CargoServicio, Total, Fecha
 
 ### Servicios (Services/)
 - `ITokenServicio` / `TokenServicio` — genera JWT con claims Sub (id) y Email
 - `IUsuarioServicio` / `UsuarioServicio` — Crear, ValidarCredenciales, CerrarSesion
 - `IPeliculaServicio` / `PeliculaServicio` — Crear, ObtenerTodas, ObtenerPorId, Editar, Eliminar; privado MapearADTO
 - `IFuncionServicio` / `FuncionServicio` — Crear, Editar, Eliminar; privado MapearADTO
+- `IReservaServicio` / `ReservaServicio` — ObtenerAsientosOcupados(funcionId), Crear; valida existencia de Funcion/Usuario y conflictos de asiento antes de persistir
 
 ### Convención clave: campo Sala
 - En BD se guarda como string "Sala X" (ej. "Sala 3")
@@ -46,6 +50,9 @@ type: project
   - POST /api/funciones — [Authorize], 201 Created
   - PUT /api/funciones/{id} — [Authorize], 200 o 404
   - DELETE /api/funciones/{id} — [Authorize], 204 o 404
+- `ReservasController` (ruta base: `api/reservas`):
+  - GET /api/reservas/funcion/{funcionId}/asientos-ocupados — público, retorna string[]
+  - POST /api/reservas — público, 200 con ReservaDTO o 400 con { mensaje }
 
 ### Autenticación JWT (cookie HttpOnly)
 - Cookie "cineseat_token", SameSite=Strict, Path=/
@@ -58,6 +65,7 @@ type: project
 - `AddScoped<IUsuarioServicio, UsuarioServicio>()`
 - `AddScoped<IPeliculaServicio, PeliculaServicio>()`
 - `AddScoped<IFuncionServicio, FuncionServicio>()`
+- `AddScoped<IReservaServicio, ReservaServicio>()`
 - `AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(...)`
 - Pipeline: `UseAuthentication()` antes de `UseAuthorization()`
 

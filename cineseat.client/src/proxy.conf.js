@@ -8,7 +8,8 @@ const PROXY_CONFIG = [
     context: [
       '/api/usuarios',
       '/api/peliculas',
-      '/api/funciones'
+      '/api/funciones',
+      '/api/reservas'
     ],
     target,
     secure: false

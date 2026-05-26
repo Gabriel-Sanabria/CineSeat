@@ -20,7 +20,7 @@ namespace CineSeat.Server.Models {
 
         public Funcion Funcion { get; set; } = null!;
 
-        public ICollection<AsientoReservado> AsientosReservados { get; set; } = [];
+        public ICollection<Asiento> Asientos { get; set; } = [];
 
         public Pago? Pago { get; set; }
     }

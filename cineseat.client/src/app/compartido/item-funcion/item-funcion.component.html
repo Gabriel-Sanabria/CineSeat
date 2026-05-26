@@ -4,9 +4,14 @@
   (click)="seleccionar.emit()"
   type="button"
 >
-  <span class="boton-funcion__fecha">{{ funcion?.fecha | date:'dd MMM yyyy':'UTC' }}</span>
-  <span class="boton-funcion__hora">{{ funcion?.hora | slice:0:5 }}</span>
-  <span class="boton-funcion__sala">Sala {{ funcion?.sala }} · {{ funcion?.tipo }}</span>
-  <span class="boton-funcion__asientos">{{ funcion?.asientosDisponibles }} disponibles</span>
-  <span class="boton-funcion__precio">${{ funcion?.precio }}</span>
+  <span class="boton-funcion__info">
+    <span class="boton-funcion__fecha">{{ funcion?.fecha | date:'dd MMM yyyy':'UTC' }}</span>
+    <span class="boton-funcion__hora">{{ funcion?.hora | slice:0:5 }}</span>
+    <span class="boton-funcion__sala">Sala {{ funcion?.sala }} · {{ funcion?.tipo }}</span>
+    <span class="boton-funcion__precio">${{ funcion?.precio }}</span>
+  </span>
+  <span class="boton-funcion__asientos">
+    <i class="fa-solid fa-couch icono-sm" aria-hidden="true"></i>
+    {{ funcion?.asientosDisponibles }} disponibles
+  </span>
 </button>

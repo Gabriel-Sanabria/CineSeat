@@ -6,4 +6,7 @@ export interface Funcion {
   sala: number;
   tipo: string;
   precio: number;
+
+  // Opcional: solo existe en respuestas del API, no al crear/editar funciones
+  asientosDisponibles?: number;
 }

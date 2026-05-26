@@ -8,7 +8,7 @@ namespace CineSeat.Server.Data {
 		public DbSet<Pelicula> Peliculas { get; set; }
 		public DbSet<Funcion> Funciones { get; set; }
 		public DbSet<Reserva> Reservas { get; set; }
-		public DbSet<AsientoReservado> AsientosReservados { get; set; }
+		public DbSet<Asiento> Asientos { get; set; }
 		public DbSet<Pago> Pagos { get; set; }
 
 		public AppDBContext(DbContextOptions<AppDBContext> options) : base(options) { }
@@ -18,8 +18,8 @@ namespace CineSeat.Server.Data {
 			// Ejecutar la configuración de las entidades utilizando Fluent API
 			base.OnModelCreating(modelBuilder);
 
-			// PK compuesta de AsientoReservado
-			modelBuilder.Entity<AsientoReservado>().HasKey(a => new { a.ReservaId, a.CodigoAsiento });
+			// PK compuesta de Asiento
+			modelBuilder.Entity<Asiento>().HasKey(a => new { a.ReservaId, a.CodigoAsiento });
 
 			// Relación 1-a-1 entre Reserva y Pago
 			modelBuilder.Entity<Pago>().HasOne(p => p.Reserva).WithOne(r => r.Pago).HasForeignKey<Pago>(p => p.ReservaId);

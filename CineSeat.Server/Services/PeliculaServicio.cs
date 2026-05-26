@@ -74,14 +74,18 @@ namespace CineSeat.Server.Services {
         }
 
         public async Task<List<PeliculaDTO>> ObtenerTodas() {
-			// Obtener todas las películas de la base de datos, incluyendo sus funciones, y mapearlas a DTOs antes de retornarlas alfabeticamente por título
-			List<Pelicula> peliculas = await contextoBD.Peliculas.Include(p => p.Funciones).OrderBy(p => p.Titulo).ToListAsync();
+			// Obtener todas las películas incluyendo funciones, reservas y asientos reservados para calcular disponibilidad
+			List<Pelicula> peliculas = await contextoBD.Peliculas
+                .Include(p => p.Funciones).ThenInclude(f => f.Reservas).ThenInclude(r => r.Asientos)
+                .OrderBy(p => p.Titulo).ToListAsync();
             return peliculas.Select(PeliculaMapper.MapearADTO).ToList();
         }
 
         public async Task<PeliculaDTO?> ObtenerPorId(int id) {
-			// Obtener la película con el ID especificado de la base de datos, incluyendo sus funciones.
-			Pelicula? pelicula = await contextoBD.Peliculas.Include(p => p.Funciones).FirstOrDefaultAsync(p => p.Id == id);
+			// Obtener la película con el ID especificado incluyendo funciones, reservas y asientos reservados para calcular disponibilidad
+			Pelicula? pelicula = await contextoBD.Peliculas
+                .Include(p => p.Funciones).ThenInclude(f => f.Reservas).ThenInclude(r => r.Asientos)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
 			// Si no se encuentra la película, retornar null
 			if (pelicula == null) return null;
