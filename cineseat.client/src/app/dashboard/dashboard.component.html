@@ -7,22 +7,35 @@
 
   <!-- Barra de filtros -->
   <app-buscador
-    (textoCambia)="textoBusqueda = $event"
-    (generoCambia)="filtrarPorGenero($event)"
+    (textoCambia)="aplicarFiltros(generoSeleccionado, $event)"
+    (generoCambia)="aplicarFiltros($event, textoBusqueda)"
   ></app-buscador>
 
-  <!-- Lista de cards por película -->
-  <ul class="lista-dashboard">
+  <!-- Estado: cargando -->
+  <ul class="lista-dashboard" *ngIf="cargando">
+    <li class="card-dashboard card-dashboard--esqueleto" *ngFor="let i of [1,2,3]">
+      <div class="card-dashboard__header">
+        <div class="card-dashboard__info">
+          <div class="esqueleto esqueleto--titulo"></div>
+          <div class="esqueleto esqueleto--meta"></div>
+        </div>
+      </div>
+      <div class="esqueleto esqueleto--tabla"></div>
+    </li>
+  </ul>
 
-    <li class="card-dashboard" *ngFor="let item of datosPeliculas">
+  <!-- Estado: con películas -->
+  <ul class="lista-dashboard" *ngIf="!cargando && peliculasMostradas.length > 0">
+
+    <li class="card-dashboard" *ngFor="let item of peliculasMostradas">
 
       <!-- Encabezado de la card -->
       <div class="card-dashboard__header">
         <div class="card-dashboard__info">
-          <h3 class="card-dashboard__titulo">{{ item.pelicula?.titulo }}</h3>
+          <h3 class="card-dashboard__titulo">{{ item.titulo }}</h3>
           <p class="card-dashboard__meta">
-            {{ item.pelicula?.genero }} · {{ item.pelicula?.duracion }}
-            <span class="card-dashboard__funciones">· {{ item.funciones?.length }} función(es)</span>
+            {{ item.genero }} · {{ formatearDuracion(item.duracionHoras, item.duracionMinutos) }}
+            <span class="card-dashboard__funciones">· {{ item.funciones.length }} función(es)</span>
           </p>
         </div>
       </div>
@@ -34,9 +47,11 @@
           <tr class="tabla-funciones__encabezado">
             <th>Función</th>
             <th>Ocupación</th>
-            <th>%</th>
+            <th>% de ocupación</th>
             <th>Boletos</th>
-            <th>Ingresos</th>
+            <th>Ingresos brutos</th>
+            <th>Cargo servicio</th>
+            <th>Total</th>
           </tr>
         </thead>
 
@@ -46,26 +61,28 @@
 
             <!-- Separador de fecha -->
             <tr class="tabla-funciones__fecha">
-              <td colspan="5"><span>{{ formatearFecha(grupo.fecha) }}</span></td>
+              <td colspan="7"><span>{{ formatearFecha(grupo.fecha) }}</span></td>
             </tr>
 
             <!-- Filas de funciones de esa fecha -->
             <tr class="tabla-funciones__fila" *ngFor="let funcion of grupo.funciones">
-              <td class="funcion-nombre">Sala {{ funcion.sala }} · {{ funcion.hora }} · {{ funcion.tipo }}</td>
+              <td class="funcion-nombre">Sala {{ funcion.sala }} · {{ funcion.hora | slice:0:5 }} · {{ funcion.tipo }}</td>
               <td>
                 <div class="barra-ocupacion">
                   <div
                     class="barra-ocupacion__relleno"
-                    [class.barra-ocupacion--alta]="funcion.porcentaje > 70"
-                    [class.barra-ocupacion--media]="funcion.porcentaje > 45 && funcion.porcentaje <= 70"
-                    [class.barra-ocupacion--baja]="funcion.porcentaje <= 45"
-                    [style.--porcentaje]="funcion.porcentaje + '%'"
+                    [class.barra-ocupacion--alta]="funcion.porcentajeOcupacion > 70"
+                    [class.barra-ocupacion--media]="funcion.porcentajeOcupacion > 45 && funcion.porcentajeOcupacion <= 70"
+                    [class.barra-ocupacion--baja]="funcion.porcentajeOcupacion <= 45"
+                    [style.--porcentaje]="funcion.porcentajeOcupacion + '%'"
                   ></div>
                 </div>
               </td>
-              <td class="funcion-pct">{{ funcion.porcentaje }}%</td>
+              <td class="funcion-pct">{{ funcion.porcentajeOcupacion }}%</td>
               <td class="funcion-boletos">{{ funcion.boletos }}</td>
-              <td class="funcion-ingresos">${{ funcion.ingresos }}</td>
+              <td class="funcion-ingresos">${{ funcion.ingresosBrutos }}</td>
+              <td class="funcion-ingresos">${{ funcion.cargoServicio }}</td>
+              <td class="funcion-ingresos">${{ funcion.ingresosTotales }}</td>
             </tr>
 
           </ng-container>
@@ -77,7 +94,9 @@
             <td></td>
             <td></td>
             <td class="funcion-boletos">{{ item.totalBoletos }}</td>
-            <td class="funcion-ingresos total-ingresos">${{ item.totalIngresos }}</td>
+            <td class="funcion-ingresos">${{ item.totalIngresosBrutos }}</td>
+            <td class="funcion-ingresos">${{ item.totalCargoServicio }}</td>
+            <td class="funcion-ingresos total-ingresos">${{ item.totalIngresosTotales }}</td>
           </tr>
         </tfoot>
 
@@ -87,8 +106,14 @@
 
   </ul>
 
-  <!-- Estado vacío -->
-  <div class="estado-vacio" *ngIf="datosPeliculas.length === 0">
+  <!-- Estado: sin resultados de filtro -->
+  <div class="estado-vacio" *ngIf="!cargando && peliculas.length > 0 && peliculasMostradas.length === 0">
+    <i class="fa-solid fa-magnifying-glass estado-vacio__icono icono-3xl"></i>
+    <p class="estado-vacio__texto">No hay películas que coincidan con la búsqueda.</p>
+  </div>
+
+  <!-- Estado: sin datos disponibles -->
+  <div class="estado-vacio" *ngIf="!cargando && peliculas.length === 0">
     <i class="fa-solid fa-folder estado-vacio__icono icono-3xl"></i>
     <p class="estado-vacio__texto">No hay datos de funciones disponibles.</p>
   </div>

@@ -31,6 +31,7 @@ type: project
 - `IPeliculaServicio` / `PeliculaServicio` — Crear, ObtenerTodas, ObtenerPorId, Editar, Eliminar; privado MapearADTO
 - `IFuncionServicio` / `FuncionServicio` — Crear, Editar, Eliminar; privado MapearADTO
 - `IReservaServicio` / `ReservaServicio` — ObtenerAsientosOcupados(funcionId), Crear; valida existencia de Funcion/Usuario y conflictos de asiento antes de persistir
+- `IDashboardServicio` / `DashboardServicio` — ObtenerMetricas(); carga películas con Include completo (Funciones→Reservas→Asientos y Funciones→Reservas→Pago), AsNoTracking, ordena por Titulo; calcula boletos, porcentaje ocupación, ingresos por función y totales por película
 
 ### Convención clave: campo Sala
 - En BD se guarda como string "Sala X" (ej. "Sala 3")
@@ -53,6 +54,8 @@ type: project
 - `ReservasController` (ruta base: `api/reservas`):
   - GET /api/reservas/funcion/{funcionId}/asientos-ocupados — público, retorna string[]
   - POST /api/reservas — público, 200 con ReservaDTO o 400 con { mensaje }
+- `DashboardController` (ruta base: `api/dashboard`):
+  - GET /api/dashboard — público (sin [Authorize]), 200 con List<DashboardPeliculaDTO>
 
 ### Autenticación JWT (cookie HttpOnly)
 - Cookie "cineseat_token", SameSite=Strict, Path=/
@@ -66,6 +69,7 @@ type: project
 - `AddScoped<IPeliculaServicio, PeliculaServicio>()`
 - `AddScoped<IFuncionServicio, FuncionServicio>()`
 - `AddScoped<IReservaServicio, ReservaServicio>()`
+- `AddScoped<IDashboardServicio, DashboardServicio>()`
 - `AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(...)`
 - Pipeline: `UseAuthentication()` antes de `UseAuthorization()`
 

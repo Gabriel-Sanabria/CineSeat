@@ -1,50 +1,74 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { finalize, retry } from 'rxjs/operators';
+import { DashboardPelicula } from '../models/dashboard.model';
+import { DashboardService } from '../services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
 
+  // Propiedades para controlar el estado de búsqueda y filtrado
   textoBusqueda: string = '';
   generoSeleccionado: string = 'Todas';
 
-  // Datos de ejemplo para visualizar mientras se desarrolla la lógica:
-  datosPeliculas: any[] = [
-    {
-      pelicula: { titulo: 'La Sombra del Tiempo', genero: 'Thriller', duracion: '2h 08m' },
-      funciones: [
-        { fecha: '2026-04-28', hora: '14:30', sala: 1, tipo: '2D', porcentaje: 82, boletos: 41, ingresos: 3690 },
-        { fecha: '2026-04-28', hora: '17:00', sala: 2, tipo: '3D', porcentaje: 55, boletos: 28, ingresos: 3360 },
-        { fecha: '2026-04-28', hora: '19:30', sala: 1, tipo: '2D', porcentaje: 38, boletos: 19, ingresos: 1710 },
-        { fecha: '2026-04-29', hora: '14:30', sala: 3, tipo: '2D', porcentaje: 60, boletos: 30, ingresos: 2700 },
-        { fecha: '2026-04-29', hora: '21:45', sala: 4, tipo: 'IMAX', porcentaje: 90, boletos: 36, ingresos: 5760 },
-      ],
-      totalBoletos: 154,
-      totalIngresos: 17220
-    },
-    {
-      pelicula: { titulo: 'Cosmos Eternal', genero: 'Sci-Fi', duracion: '2h 32m' },
-      funciones: [
-        { fecha: '2026-04-28', hora: '15:00', sala: 2, tipo: '3D', porcentaje: 72, boletos: 36, ingresos: 4320 },
-        { fecha: '2026-04-28', hora: '18:30', sala: 4, tipo: 'IMAX', porcentaje: 95, boletos: 38, ingresos: 6080 },
-        { fecha: '2026-04-29', hora: '18:30', sala: 4, tipo: 'IMAX', porcentaje: 50, boletos: 20, ingresos: 3200 },
-      ],
-      totalBoletos: 94,
-      totalIngresos: 13600
-    },
-    {
-      pelicula: { titulo: 'Noche Dorada', genero: 'Romance', duracion: '2h 01m' },
-      funciones: [
-        { fecha: '2026-04-28', hora: '16:00', sala: 3, tipo: '2D', porcentaje: 40, boletos: 20, ingresos: 1800 },
-        { fecha: '2026-04-29', hora: '16:00', sala: 3, tipo: '2D', porcentaje: 62, boletos: 31, ingresos: 2790 },
-        { fecha: '2026-04-29', hora: '20:00', sala: 5, tipo: '2D', porcentaje: 30, boletos: 15, ingresos: 1350 },
-      ],
-      totalBoletos: 66,
-      totalIngresos: 5940
-    },
-  ];
+  // Lista completa de películas con métricas obtenida del servidor
+  peliculas: DashboardPelicula[] = [];
+
+  // Lista de películas filtradas según el género y texto de búsqueda activos
+  peliculasMostradas: DashboardPelicula[] = [];
+
+  // Estado de carga mientras se espera la respuesta del servidor
+  cargando: boolean = true;
+
+  // Inyección de dependencias del componente
+  constructor(private dashboardService: DashboardService, private toastr: ToastrService) { }
+
+  ngOnInit(): void {
+    // Cargar las métricas de películas al inicializar el componente
+    this.dashboardService.obtenerMetricas()
+      .pipe(retry({ count: 3, delay: 1000 }), finalize(() => this.cargando = false))
+      .subscribe({
+        next: (datos) => {
+          // Asignar la lista de películas con métricas obtenida del servidor
+          this.peliculas = datos ?? [];
+
+          // Inicializar la lista mostrada con todos los resultados
+          this.aplicarFiltros(this.generoSeleccionado, this.textoBusqueda);
+        },
+        error: (errorHttp) => {
+          // Mensaje de advertencia predeterminado si el servidor no devuelve uno
+          let advertencia = 'Ocurrió un error al cargar las métricas del dashboard.';
+
+          // Intentar extraer el mensaje de error devuelto por el servidor
+          const cuerpo = errorHttp?.error;
+          if (cuerpo?.errors) advertencia = Object.values(cuerpo.errors).flat()[0] as string;
+          if (cuerpo?.mensaje) advertencia = cuerpo.mensaje;
+
+          // Mostrar el mensaje de advertencia al usuario
+          this.toastr.warning(advertencia);
+        }
+      });
+  }
+
+  aplicarFiltros(genero: string, texto: string): void {
+    // Actualizar las propiedades de búsqueda y género seleccionado con los valores proporcionados
+    this.generoSeleccionado = genero;
+    this.textoBusqueda = texto;
+
+    // Convertir el texto de búsqueda a minúsculas y eliminar espacios en blanco para una comparación más flexible
+    const textoBusqueda = texto.toLowerCase().trim();
+
+    // Filtrar la lista de películas según el género seleccionado y el texto de búsqueda en el título
+    this.peliculasMostradas = this.peliculas.filter(pelicula => {
+      const coincideGenero = genero === 'Todas' || pelicula.genero === genero;
+      const coincideTexto = !textoBusqueda || pelicula.titulo.toLowerCase().includes(textoBusqueda);
+      return coincideGenero && coincideTexto;
+    });
+  }
 
   agruparPorFecha(funciones: any[]): { fecha: string; funciones: any[] }[] {
     const mapa = new Map<string, any[]>();
@@ -63,10 +87,8 @@ export class DashboardComponent {
     return `${dia} ${meses[+mes - 1]} ${anio}`;
   }
 
-  filtrarPorGenero(genero: string): void {
-    this.generoSeleccionado = genero;
+  formatearDuracion(horas: number, minutos: number): string {
+    // Formatear los minutos con dos dígitos para mantener consistencia visual (ej. "2h 08m")
+    return `${horas}h ${String(minutos).padStart(2, '0')}m`;
   }
-
-  // TODO: implementar — cargar datos reales desde el servicio
-  ngOnInit(): void { }
 }

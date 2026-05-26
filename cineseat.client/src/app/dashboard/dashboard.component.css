@@ -88,7 +88,20 @@
 
 .tabla-funciones th:nth-child(5),
 .tabla-funciones td:nth-child(5) {
-  width: 80px;
+  width: 100px;
+  text-align: right;
+}
+
+.tabla-funciones th:nth-child(6),
+.tabla-funciones td:nth-child(6) {
+  width: 100px;
+  text-align: right;
+}
+
+.tabla-funciones th:nth-child(7),
+.tabla-funciones td:nth-child(7) {
+  width: 100px;
+  text-align: right;
   padding-right: 20px;
 }
 
@@ -135,7 +148,7 @@
 }
 
 .barra-ocupacion--baja {
-  background: var(--superficie-1);
+  background: var(--color-error);
 }
 
 .funcion-pct {
@@ -183,6 +196,40 @@
 .total-ingresos {
   color: var(--dorado);
   font-size: 13px;
+}
+
+/* Skeleton de carga: imita la estructura de una card mientras llegan los datos */
+.card-dashboard--esqueleto {
+  pointer-events: none;
+}
+
+.esqueleto {
+  background: linear-gradient(90deg, var(--superficie-2) 25%, var(--superficie-3) 50%, var(--superficie-2) 75%);
+  background-size: 200% 100%;
+  animation: pulso-esqueleto 1.5s infinite;
+  border-radius: 3px;
+}
+
+.esqueleto--titulo {
+  height: 16px;
+  width: 55%;
+  margin-bottom: 8px;
+}
+
+.esqueleto--meta {
+  height: 11px;
+  width: 35%;
+}
+
+.esqueleto--tabla {
+  height: 120px;
+  margin: 0 20px 16px;
+  border-radius: 3px;
+}
+
+@keyframes pulso-esqueleto {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .estado-vacio {
