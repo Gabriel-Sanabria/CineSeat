@@ -63,7 +63,7 @@ El middleware `JwtBearer` está configurado con `OnMessageReceived` para leer el
 | `POST` | `/api/usuarios/validar` | Login — valida credenciales y establece la cookie |
 | `POST` | `/api/usuarios/cerrar-sesion` | Logout — elimina la cookie |
 
-`UsuarioServicio` llama a `tokenServicio.GenerarComoCookie(...)` en `Crear` y `ValidarCredenciales`, y a `tokenServicio.EliminarCookie()` en `CerrarSesion`. El DTO de respuesta es `UsuarioActualDTO` con los campos `Id` y `Correo`.
+`UsuarioServicio` llama a `tokenServicio.GenerarComoCookie(...)` en `Crear` y `ValidarCredenciales`, y a `tokenServicio.EliminarCookie()` en `CerrarSesion`. El DTO de respuesta es `UsuarioDTO` con los campos `Id` y `Correo`.
 
 ---
 
@@ -117,4 +117,4 @@ Cuando no marca la opción:
 - `CineSeat.Server/Program.cs` — registro del middleware JwtBearer con lectura desde cookie
 - `CineSeat.Server/Controllers/UsuariosController.cs` — endpoints de registro, login y logout
 - `CineSeat.Server/Services/TokenServicio.cs` — generación y eliminación de la cookie JWT
-- `CineSeat.Server/DTOs/UsuarioActualDTO.cs` — contrato de respuesta con `Id` y `Correo`
+- `CineSeat.Server/DTOs/UsuarioDTO.cs` — contrato de respuesta con `Id` y `Correo`

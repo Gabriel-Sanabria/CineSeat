@@ -5,14 +5,18 @@ namespace CineSeat.Server.Mappers {
 
     public static class FuncionMapper {
 
-        private const int CapacidadSala = 100;
+        // Capacidad fija de cada sala; compartida con otros servicios que la necesiten
+        public const int CapacidadSala = 100;
+
+        // Extrae el número de sala a partir del texto "Sala X"
+        public static int ExtraerNumeroSala(string sala) => int.Parse(sala.Replace("Sala ", ""));
 
         public static FuncionDTO MapearADTO(Funcion funcion) {
 			// Mapear la función a un DTO, extrayendo el número de sala del string "Sala X"
 			return new FuncionDTO {
                 Id = funcion.Id,
                 PeliculaId = funcion.PeliculaId,
-                Sala = int.Parse(funcion.Sala.Replace("Sala ", "")),
+                Sala = ExtraerNumeroSala(funcion.Sala),
                 Fecha = funcion.Fecha,
                 Hora = funcion.Hora,
                 Tipo = funcion.Tipo,

@@ -11,7 +11,7 @@ export class TarjetaPeliculaComponent {
   @Input() modo: 'ver' | 'editar' = 'ver';
   @Output() clickAccion = new EventEmitter<Pelicula>();
 
-  // TODO: implementar
+  // Emite el evento de clic con la película seleccionada hacia el componente padre
   accionClick(): void {
     this.clickAccion.emit(this.pelicula);
   }

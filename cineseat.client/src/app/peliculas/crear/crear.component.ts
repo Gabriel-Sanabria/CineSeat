@@ -5,6 +5,7 @@ import { GENEROS, SALAS, TIPOS_SALA, PRECIO_ENTRADA_DEFAULT } from '../../app.co
 import { Funcion } from '../../models/funcion.model';
 import { Pelicula } from '../../models/pelicula.model';
 import { PeliculaService } from '../../services/pelicula.service';
+import { extraerMensajeError, leerImagenPortada } from '../../utilidades';
 
 @Component({
   selector: 'app-crear',
@@ -67,12 +68,8 @@ export class CrearComponent implements OnInit {
         },
         error: (errorHttp) => {
           // Si ocurre un error al cargar los datos de la película, preparar un mensaje de advertencia
-          let advertencia = 'Ocurrió un error al cargar los datos de la película.';
-
           // Intentar extraer el mensaje de error devuelto por el servidor (error del model state o mensaje de error personalizado)
-          const cuerpo = errorHttp?.error;
-          if (cuerpo?.errors) advertencia = Object.values(cuerpo.errors).flat()[0] as string;
-          if (cuerpo?.mensaje) advertencia = cuerpo.mensaje;
+          const advertencia = extraerMensajeError(errorHttp, 'Ocurrió un error al cargar los datos de la película.');
 
           // Mostrar el mensaje de advertencia al usuario y navegar de vuelta a la página de la lista de películas
           this.cargandoDatos = false;
@@ -100,12 +97,8 @@ export class CrearComponent implements OnInit {
         },
         error: (errorHttp) => {
           // Si ocurre un error durante la creación, preparar un mensaje de advertencia
-          let advertencia = 'Ocurrió un error al crear la película.';
-
           // Intentar extraer el mensaje de error devuelto por el servidor (error del model state o mensaje de error personalizado)
-          const cuerpo = errorHttp?.error;
-          if (cuerpo?.errors) advertencia = Object.values(cuerpo.errors).flat()[0] as string;
-          if (cuerpo?.mensaje) advertencia = cuerpo.mensaje;
+          const advertencia = extraerMensajeError(errorHttp, 'Ocurrió un error al crear la película.');
 
           // Mostrar el mensaje de advertencia al usuario
           this.toastr.warning(advertencia);
@@ -124,12 +117,8 @@ export class CrearComponent implements OnInit {
         },
         error: (errorHttp) => {
           // Si ocurre un error durante la edición, preparar un mensaje de advertencia
-          let advertencia = 'Ocurrió un error al editar la película.';
-
           // Intentar extraer el mensaje de error devuelto por el servidor (error del model state o mensaje de error personalizado)
-          const cuerpo = errorHttp?.error;
-          if (cuerpo?.errors) advertencia = Object.values(cuerpo.errors).flat()[0] as string;
-          if (cuerpo?.mensaje) advertencia = cuerpo.mensaje;
+          const advertencia = extraerMensajeError(errorHttp, 'Ocurrió un error al editar la película.');
 
           // Mostrar el mensaje de advertencia al usuario
           this.toastr.warning(advertencia);
@@ -149,12 +138,8 @@ export class CrearComponent implements OnInit {
       },
       error: (errorHttp) => {
         // Si ocurre un error durante la eliminación, preparar un mensaje de advertencia
-        let advertencia = 'Ocurrió un error al eliminar la película.';
-
         // Intentar extraer el mensaje de error devuelto por el servidor (error del model state o mensaje de error personalizado)
-        const cuerpo = errorHttp?.error;
-        if (cuerpo?.errors) advertencia = Object.values(cuerpo.errors).flat()[0] as string;
-        if (cuerpo?.mensaje) advertencia = cuerpo.mensaje;
+        const advertencia = extraerMensajeError(errorHttp, 'Ocurrió un error al eliminar la película.');
 
         // Mostrar el mensaje de advertencia al usuario
         this.toastr.warning(advertencia);
@@ -188,7 +173,7 @@ export class CrearComponent implements OnInit {
     this.pelicula.funciones.splice(indice, 1);
   }
 
-  alSoltarArchivo(event: DragEvent): void {
+  async alSoltarArchivo(event: DragEvent): Promise<void> {
     // Evitar el comportamiento predeterminado del navegador al soltar un archivo (abrirlo) y actualizar la vista previa de la portada
     event.preventDefault();
     this.arrastrando = false;
@@ -196,31 +181,23 @@ export class CrearComponent implements OnInit {
 
     // Leer el archivo como URL (para preview) y almacenar su contenido en base64 para enviarlo al servidor
     if (archivo && archivo.type.startsWith('image/')) {
-      this.pelicula.urlPortada = URL.createObjectURL(archivo);
-      const reader = new FileReader();
-      reader.onload = () => {
-        const resultado = reader.result as string;
-        this.pelicula.portadaBase64 = resultado.split(',')[1];
-        this.pelicula.mimePortada = archivo.type;
-      };
-      reader.readAsDataURL(archivo);
+      const portada = await leerImagenPortada(archivo);
+      this.pelicula.urlPortada = portada.urlPortada;
+      this.pelicula.portadaBase64 = portada.base64;
+      this.pelicula.mimePortada = portada.mime;
     }
   }
 
-  alSeleccionarArchivo(event: Event): void {
+  async alSeleccionarArchivo(event: Event): Promise<void> {
     // Obtener el archivo seleccionado por el usuario para actualizar la vista previa de la portada
     const archivo = (event.target as HTMLInputElement).files?.[0];
 
     // Leer el archivo como URL (para preview) y almacenar su contenido en base64 para enviarlo al servidor
     if (archivo) {
-      this.pelicula.urlPortada = URL.createObjectURL(archivo);
-      const reader = new FileReader();
-      reader.onload = () => {
-        const resultado = reader.result as string;
-        this.pelicula.portadaBase64 = resultado.split(',')[1];
-        this.pelicula.mimePortada = archivo.type;
-      };
-      reader.readAsDataURL(archivo);
+      const portada = await leerImagenPortada(archivo);
+      this.pelicula.urlPortada = portada.urlPortada;
+      this.pelicula.portadaBase64 = portada.base64;
+      this.pelicula.mimePortada = portada.mime;
     }
 
     // Limpiar el valor para permitir seleccionar otros archivos

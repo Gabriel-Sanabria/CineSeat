@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CineSeat.Server.Controllers {
 
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PeliculasController : ControllerBase {
@@ -16,7 +17,6 @@ namespace CineSeat.Server.Controllers {
         }
 
 		// POST api/peliculas
-		[Authorize]
 		[HttpPost]
         public async Task<ActionResult<PeliculaDTO>> Crear([FromBody] PeliculaCrearDTO dto) {
             try {
@@ -81,7 +81,6 @@ namespace CineSeat.Server.Controllers {
         }
 
 		// PUT api/peliculas/{id}
-		[Authorize]
 		[HttpPut("{id}")]
         public async Task<ActionResult<PeliculaDTO>> Editar(int id, [FromBody] PeliculaCrearDTO dto) {
             try {
@@ -105,7 +104,6 @@ namespace CineSeat.Server.Controllers {
         }
 
 		// DELETE api/peliculas/{id}
-		[Authorize]
 		[HttpDelete("{id}")]
         public async Task<IActionResult> Eliminar(int id) {
             try {

@@ -1,13 +1,12 @@
 using CineSeat.Server.Data;
 using CineSeat.Server.DTOs;
+using CineSeat.Server.Mappers;
 using CineSeat.Server.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CineSeat.Server.Services {
 
     public class DashboardServicio : IDashboardServicio {
-
-        private const int CapacidadSala = 100;
 
         private readonly AppDBContext contextoBD;
 
@@ -37,7 +36,7 @@ namespace CineSeat.Server.Services {
                         int boletos = funcion.Reservas.Sum(r => r.Asientos.Count);
 
                         // Calcular el porcentaje de ocupación redondeado en relación a la capacidad fija de la sala.
-                        int porcentajeOcupacion = (int)Math.Round((double)boletos * 100 / CapacidadSala);
+                        int porcentajeOcupacion = (int)Math.Round((double)boletos * 100 / FuncionMapper.CapacidadSala);
 
                         // Calcular los ingresos brutos como la suma de los subtotales de los pagos de la función.
                         decimal ingresosBrutos = funcion.Reservas
@@ -58,7 +57,7 @@ namespace CineSeat.Server.Services {
                             FuncionId = funcion.Id,
                             Fecha = funcion.Fecha,
                             Hora = funcion.Hora,
-                            Sala = int.Parse(funcion.Sala.Replace("Sala ", "")),
+                            Sala = FuncionMapper.ExtraerNumeroSala(funcion.Sala),
                             Tipo = funcion.Tipo,
                             Boletos = boletos,
                             PorcentajeOcupacion = porcentajeOcupacion,

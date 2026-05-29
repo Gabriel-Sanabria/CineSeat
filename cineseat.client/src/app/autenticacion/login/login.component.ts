@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { UsuarioActual } from '../../models/usuario.model';
 import { UsuarioService } from '../../services/usuario.service';
 import { TITULO_APP } from '../../app.constants';
+import { extraerMensajeError } from '../../utilidades';
 
 type TabAutenticacion = 'login' | 'registro';
 
@@ -69,12 +70,8 @@ export class LoginComponent implements OnInit {
       },
       error: (errorHttp) => {
         // Si ocurre un error durante la validación, preparar un mensaje de advertencia
-        let advertencia = 'Ocurrió un error al iniciar sesión.';
-
         // Intentar extraer el mensaje de error devuelto por el servidor (error del model state o mensaje de error personalizado)
-        const cuerpo = errorHttp?.error;
-        if (cuerpo?.errors) advertencia = Object.values(cuerpo.errors).flat()[0] as string;
-        if (cuerpo?.mensaje) advertencia = cuerpo.mensaje;
+        const advertencia = extraerMensajeError(errorHttp, 'Ocurrió un error al iniciar sesión.');
 
         // Mostrar el mensaje de advertencia al usuario
         this.toastr.warning(advertencia);
@@ -96,12 +93,8 @@ export class LoginComponent implements OnInit {
       },
       error: (errorHttp) => {
         // Si ocurre un error durante el registro, preparar un mensaje de advertencia
-        let advertencia = 'Ocurrió un error al registrar el usuario.';
-
         // Intentar extraer el mensaje de error devuelto por el servidor (error del model state o mensaje de error personalizado)
-        const cuerpo = errorHttp?.error;
-        if (cuerpo?.errors) advertencia = Object.values(cuerpo.errors).flat()[0] as string;
-        if (cuerpo?.mensaje) advertencia = cuerpo.mensaje;
+        const advertencia = extraerMensajeError(errorHttp, 'Ocurrió un error al registrar el usuario.');
 
         // Mostrar el mensaje de advertencia al usuario
         this.toastr.warning(advertencia);

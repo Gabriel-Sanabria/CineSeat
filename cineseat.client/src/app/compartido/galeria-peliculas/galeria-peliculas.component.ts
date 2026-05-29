@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { finalize, retry } from 'rxjs/operators';
 import { Pelicula } from '../../models/pelicula.model';
 import { PeliculaService } from '../../services/pelicula.service';
+import { extraerMensajeError, filtrarPeliculas } from '../../utilidades';
 
 type ContextoGaleria = 'cartelera' | 'peliculas';
 
@@ -50,12 +51,9 @@ export class GaleriaPeliculasComponent implements OnInit {
         },
         error: (errorHttp) => {
           // Si ocurre un error durante la carga, preparar un mensaje de advertencia según el contexto
-          let advertencia = this.contexto === 'cartelera' ? 'Ocurrió un error al cargar la cartelera.' : 'Ocurrió un error al cargar las películas.';
-
           // Intentar extraer el mensaje de error devuelto por el servidor (error del model state o mensaje de error personalizado)
-          const cuerpo = errorHttp?.error;
-          if (cuerpo?.errors) advertencia = Object.values(cuerpo.errors).flat()[0] as string;
-          if (cuerpo?.mensaje) advertencia = cuerpo.mensaje;
+          const mensajePorDefecto = this.contexto === 'cartelera' ? 'Ocurrió un error al cargar la cartelera.' : 'Ocurrió un error al cargar las películas.';
+          const advertencia = extraerMensajeError(errorHttp, mensajePorDefecto);
 
           // Mostrar el mensaje de advertencia al usuario
           this.toastr.warning(advertencia);
@@ -68,15 +66,8 @@ export class GaleriaPeliculasComponent implements OnInit {
     this.generoSeleccionado = genero;
     this.textoBusqueda = texto;
 
-    // Convertir el texto de búsqueda a minúsculas y eliminar espacios en blanco para una comparación más flexible
-    const textoBusqueda = texto.toLowerCase().trim();
-
     // Filtrar la lista de películas según el género seleccionado y el texto de búsqueda en el título
-    this.peliculasMostradas = this.peliculas.filter(pelicula => {
-      const coincideGenero = genero === 'Todas' || pelicula.genero === genero;
-      const coincideTexto = !textoBusqueda || pelicula.titulo.toLowerCase().includes(textoBusqueda);
-      return coincideGenero && coincideTexto;
-    });
+    this.peliculasMostradas = filtrarPeliculas(this.peliculas, genero, texto);
   }
 
   alClickTarjeta(pelicula: Pelicula): void {

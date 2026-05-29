@@ -7,7 +7,7 @@
 | `Pelicula` → `Funcion` | 1:N | Una **Pelicula** puede tener muchas **Funciones** programadas. Cada **Funcion** pertenece a exactamente una **Pelicula**. |
 | `Funcion` → `Reserva` | 1:N | Una **Funcion** puede tener muchas **Reservas**. Cada **Reserva** corresponde a exactamente una **Funcion**. |
 | `Usuario` → `Reserva` | 1:N | Un **Usuario** puede realizar muchas **Reservas**. Cada **Reserva** pertenece a exactamente un **Usuario**. |
-| `Reserva` → `AsientoReservado` | 1:N | Una **Reserva** puede incluir varios **AsientosReservados**. Cada **AsientoReservado** pertenece a exactamente una **Reserva**. |
+| `Reserva` → `Asiento` | 1:N | Una **Reserva** puede incluir varios **Asientos**. Cada **Asiento** pertenece a exactamente una **Reserva**. |
 | `Reserva` → `Pago` | 1:1 | Cada **Reserva** origina exactamente un **Pago**. Cada **Pago** corresponde a exactamente una **Reserva**. |
 
 ---
@@ -18,7 +18,7 @@ graph LR
     FUNCION[FUNCION]
     RESERVA[RESERVA]
     USUARIO[USUARIO]
-    ASIENTO_RESERVADO["ASIENTO_RESERVADO"]
+    ASIENTO[ASIENTO]
     PAGO[PAGO]
 
     tiene{tiene}
@@ -37,7 +37,7 @@ graph LR
     realiza ---|"1,1"| RESERVA
 
     RESERVA ---|"1,N"| contiene
-    contiene ---|"1,1"| ASIENTO_RESERVADO
+    contiene ---|"1,1"| ASIENTO
 
     RESERVA ---|"1,1"| origina
     origina ---|"1,1"| PAGO
@@ -86,7 +86,7 @@ graph LR
 | FuncionId | int | FK → Funcion | Función reservada |
 | FechaCreacion | DateTime | requerido | Fecha y hora UTC de la reserva |
 
-### AsientoReservado
+### Asiento
 | Campo | Tipo | Restricciones | Descripción |
 |---|---|---|---|
 | ReservaId | int | PK compuesta, FK → Reserva | Reserva a la que pertenece |

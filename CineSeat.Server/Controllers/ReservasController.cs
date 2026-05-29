@@ -1,9 +1,11 @@
 using CineSeat.Server.DTOs;
 using CineSeat.Server.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CineSeat.Server.Controllers {
 
+    [Authorize]
     [ApiController]
     [Route("api/reservas")]
     public class ReservasController : ControllerBase {

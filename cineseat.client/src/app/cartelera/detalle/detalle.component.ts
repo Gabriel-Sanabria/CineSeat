@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Funcion } from '../../models/funcion.model';
 import { Pelicula } from '../../models/pelicula.model';
 import { PeliculaService } from '../../services/pelicula.service';
+import { extraerMensajeError } from '../../utilidades';
 
 @Component({
   selector: 'app-detalle',
@@ -48,12 +49,8 @@ export class DetalleComponent implements OnInit {
         },
         error: (errorHttp) => {
           // Si ocurre un error al cargar los datos de la película, preparar un mensaje de advertencia
-          let advertencia = 'Ocurrió un error al cargar los datos de la película.';
-
           // Intentar extraer el mensaje de error devuelto por el servidor (error del model state o mensaje de error personalizado)
-          const cuerpo = errorHttp?.error;
-          if (cuerpo?.errors) advertencia = Object.values(cuerpo.errors).flat()[0] as string;
-          if (cuerpo?.mensaje) advertencia = cuerpo.mensaje;
+          const advertencia = extraerMensajeError(errorHttp, 'Ocurrió un error al cargar los datos de la película.');
 
           // Mostrar el mensaje de advertencia al usuario y navegar de vuelta a la página de la cartelera
           this.toastr.warning(advertencia);
