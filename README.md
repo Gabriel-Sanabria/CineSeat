@@ -5,6 +5,16 @@
 
 ---
 
+## 📸 Capturas
+
+<div align="center">
+  <img src="Capturas/CineSeat%201.png" alt="CineSeat 1" style="margin-bottom: 20px;" />
+  <img src="Capturas/CineSeat%202.png" alt="CineSeat 2" style="margin-bottom: 20px;" />
+  <img src="Capturas/CineSeat%203.png" alt="CineSeat 3" />
+</div>
+
+---
+
 ## 🛠️ Tecnologías
 
 - **C#** — Lenguaje de programación del backend
